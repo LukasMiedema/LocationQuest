@@ -1,0 +1,22 @@
+{
+  "name": "locationquestion-frontend",
+  "version": "1.0.0",
+  "description": "Front-end for the LocationQuestion project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gulp": "gulp"
+  },
+  "author": "Lukas Miedema",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-webpack": "^1.5.0",
+    "ts-loader": "^1.2.0",
+    "typescript": "^2.0.9"
+  },
+  "dependencies": {
+    "vue": "^2.0.5",
+    "vue-router": "^2.0.1"
+  }
+}
