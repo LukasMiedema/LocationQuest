@@ -24,8 +24,6 @@ buildscript {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-		classpath "com.moowork.gradle:gradle-node-plugin:0.13"
-		classpath 'cz.malohlava:visteg:1.0.0'
 	}
 	configurations.classpath {
 		resolutionStrategy {
@@ -49,7 +47,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'maven'
 apply plugin: 'base'
 apply plugin: 'nu.studer.jooq'
-apply plugin: 'com.moowork.node'
 
 jar {
 	baseName = 'locationquest'
@@ -68,6 +65,8 @@ dependencies {
 	compile('org.springframework.session:spring-session')
 	compile('org.springframework.boot:spring-boot-starter-validation')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('com.vaadin:vaadin-spring-boot-starter:1.1.1')
+
 	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 	runtime('com.h2database:h2')
 	runtime('org.postgresql:postgresql')
@@ -137,9 +136,6 @@ task entityGenerationClean << {
 
 compileKotlin.dependsOn generateLocationGameJooqSchemaSource
 generateLocationGameJooqSchemaSource.finalizedBy entityGenerationClean
-
-// Front-end
-processResources.dependsOn npm_run_gulp_package
 
 
 sourceSets {
