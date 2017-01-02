@@ -17,8 +17,8 @@ import javax.validation.constraints.Size;
 import nl.lukasmiedema.locationquest.entity.tables.TeamPlayer;
 
 import org.jooq.Field;
-import org.jooq.Record2;
-import org.jooq.Row2;
+import org.jooq.Record3;
+import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
 
 
@@ -35,11 +35,11 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Entity
 @Table(name = "TEAM_PLAYER", schema = "LOCATION_GAME", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "TEAM_NAME"})
+    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "GAME_ID", "TEAM_NAME"})
 })
-public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> implements Record2<UUID, String> {
+public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> implements Record3<UUID, Integer, String> {
 
-    private static final long serialVersionUID = -450366314;
+    private static final long serialVersionUID = 1789931209;
 
     /**
      * Setter for <code>LOCATION_GAME.TEAM_PLAYER.PLAYER_SESSION_ID</code>.
@@ -59,10 +59,27 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
     }
 
     /**
+     * Setter for <code>LOCATION_GAME.TEAM_PLAYER.GAME_ID</code>.
+     */
+    public TeamPlayerRecord setGameId(Integer value) {
+        set(1, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>LOCATION_GAME.TEAM_PLAYER.GAME_ID</code>.
+     */
+    @Column(name = "GAME_ID", nullable = false, precision = 10)
+    @NotNull
+    public Integer getGameId() {
+        return (Integer) get(1);
+    }
+
+    /**
      * Setter for <code>LOCATION_GAME.TEAM_PLAYER.TEAM_NAME</code>.
      */
     public TeamPlayerRecord setTeamName(String value) {
-        set(1, value);
+        set(2, value);
         return this;
     }
 
@@ -73,7 +90,7 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
     @NotNull
     @Size(max = 2147483647)
     public String getTeamName() {
-        return (String) get(1);
+        return (String) get(2);
     }
 
     // -------------------------------------------------------------------------
@@ -84,28 +101,28 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
      * {@inheritDoc}
      */
     @Override
-    public Record2<UUID, String> key() {
-        return (Record2) super.key();
+    public Record3<UUID, Integer, String> key() {
+        return (Record3) super.key();
     }
 
     // -------------------------------------------------------------------------
-    // Record2 type implementation
+    // Record3 type implementation
     // -------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row2<UUID, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<UUID, Integer, String> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row2<UUID, String> valuesRow() {
-        return (Row2) super.valuesRow();
+    public Row3<UUID, Integer, String> valuesRow() {
+        return (Row3) super.valuesRow();
     }
 
     /**
@@ -120,7 +137,15 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
      * {@inheritDoc}
      */
     @Override
-    public Field<String> field2() {
+    public Field<Integer> field2() {
+        return TeamPlayer.TEAM_PLAYER.GAME_ID;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Field<String> field3() {
         return TeamPlayer.TEAM_PLAYER.TEAM_NAME;
     }
 
@@ -136,7 +161,15 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
      * {@inheritDoc}
      */
     @Override
-    public String value2() {
+    public Integer value2() {
+        return getGameId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String value3() {
         return getTeamName();
     }
 
@@ -153,7 +186,16 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
      * {@inheritDoc}
      */
     @Override
-    public TeamPlayerRecord value2(String value) {
+    public TeamPlayerRecord value2(Integer value) {
+        setGameId(value);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TeamPlayerRecord value3(String value) {
         setTeamName(value);
         return this;
     }
@@ -162,9 +204,10 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
      * {@inheritDoc}
      */
     @Override
-    public TeamPlayerRecord values(UUID value1, String value2) {
+    public TeamPlayerRecord values(UUID value1, Integer value2, String value3) {
         value1(value1);
         value2(value2);
+        value3(value3);
         return this;
     }
 
@@ -182,10 +225,11 @@ public class TeamPlayerRecord extends UpdatableRecordImpl<TeamPlayerRecord> impl
     /**
      * Create a detached, initialised TeamPlayerRecord
      */
-    public TeamPlayerRecord(UUID playerSessionId, String teamName) {
+    public TeamPlayerRecord(UUID playerSessionId, Integer gameId, String teamName) {
         super(TeamPlayer.TEAM_PLAYER);
 
         set(0, playerSessionId);
-        set(1, teamName);
+        set(1, gameId);
+        set(2, teamName);
     }
 }

@@ -1,0 +1,39 @@
+<div th:fragment="list (games)" class="ui link cards" xmlns:th="http://www.thymeleaf.org">
+	<!--/*@thymesVar id="games" type="java.util.List<nl.lukasmiedema.locationquest.dto.GameInfoDto>"*/-->
+	<div class="ui container" th:if="${games.empty}">~ Dust ~</div>
+	<div class="ui card clickable" th:each="game: ${games}" th:attr="data-href=|games/${game.id}|">
+
+		<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.dto.GameInfoDto"*/-->
+		<div class="content">
+			<div class="header" th:text="${game.name}"></div>
+			<div class="ui list">
+				<div class="item">
+					<i class="clock icon"></i>
+					<div class="content" th:text="${{game.timestamp}}"></div>
+				</div>
+				<div class="item">
+					<i class="icon" th:classappend="${game.allowNewMembers} ? 'pencil' : 'lock'"></i>
+					<div class="content" th:text="${game.allowNewMembers} ? 'Inschrijving open' : 'Inschrijving gesloten'"></div>
+				</div>
+				<div class="item">
+					<i class="icon" th:classappend="${game.active} ? 'flag outline' : 'trophy'"></i>
+					<div class="content" th:text="${game.active} ? 'Actief' : 'Afgelopen'"></div>
+				</div>
+				<div class="item">
+					<div class="content">
+						<i class="group icon" th:classappend="not ${game.teamName} ? 'disabled'"></i>
+						<div class="ui label" th:if="${game.teamName}"
+							 th:style="|background-color: #${game.teamColorHex}|"
+							 th:text="|${game.teamName} (${game.memberCount})|">
+						</div>
+						<div class="ui label" th:unless="${game.teamName}">Geen team</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui bottom attached button" th:classappend="${game.teamName} ? 'disabled'">
+			<i class="icon" th:classappend="${game.teamName} ? 'checkmark' : 'add'"></i>
+			<th:block th:text="${game.teamName} ? 'Ingeschreven' : 'Inschrijven'"/>
+		</div>
+	</div>
+</div>

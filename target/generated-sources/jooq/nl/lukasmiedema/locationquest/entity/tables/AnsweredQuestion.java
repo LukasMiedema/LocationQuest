@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class AnsweredQuestion extends TableImpl<AnsweredQuestionRecord> {
 
-    private static final long serialVersionUID = 1388010433;
+    private static final long serialVersionUID = -1881888077;
 
     /**
      * The reference instance of <code>LOCATION_GAME.ANSWERED_QUESTION</code>
@@ -122,7 +122,7 @@ public class AnsweredQuestion extends TableImpl<AnsweredQuestionRecord> {
      */
     @Override
     public List<ForeignKey<AnsweredQuestionRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AnsweredQuestionRecord, ?>>asList(Keys.CONSTRAINT_CE, Keys.CONSTRAINT_CE0, Keys.CONSTRAINT_CE01);
+        return Arrays.<ForeignKey<AnsweredQuestionRecord, ?>>asList(Keys.CONSTRAINT_CE, Keys.CONSTRAINT_CE01);
     }
 
     /**

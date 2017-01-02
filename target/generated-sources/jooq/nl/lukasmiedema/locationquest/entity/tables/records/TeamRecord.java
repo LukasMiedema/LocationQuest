@@ -7,15 +7,15 @@ package nl.lukasmiedema.locationquest.entity.tables.records;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import nl.lukasmiedema.locationquest.entity.tables.Team;
 
 import org.jooq.Field;
-import org.jooq.Record1;
+import org.jooq.Record2;
 import org.jooq.Record3;
 import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -33,10 +33,12 @@ import org.jooq.impl.UpdatableRecordImpl;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Entity
-@Table(name = "TEAM", schema = "LOCATION_GAME")
+@Table(name = "TEAM", schema = "LOCATION_GAME", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"GAME_ID", "NAME"})
+})
 public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Record3<String, Integer, Integer> {
 
-    private static final long serialVersionUID = -2118473234;
+    private static final long serialVersionUID = -2142833822;
 
     /**
      * Setter for <code>LOCATION_GAME.TEAM.NAME</code>.
@@ -49,8 +51,7 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
     /**
      * Getter for <code>LOCATION_GAME.TEAM.NAME</code>.
      */
-    @Id
-    @Column(name = "NAME", unique = true, nullable = false, length = 2147483647)
+    @Column(name = "NAME", nullable = false, length = 2147483647)
     @NotNull
     @Size(max = 2147483647)
     public String getName() {
@@ -99,8 +100,8 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public Record1<String> key() {
-        return (Record1) super.key();
+    public Record2<Integer, String> key() {
+        return (Record2) super.key();
     }
 
     // -------------------------------------------------------------------------

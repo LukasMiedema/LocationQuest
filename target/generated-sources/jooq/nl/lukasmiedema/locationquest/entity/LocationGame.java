@@ -38,7 +38,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class LocationGame extends SchemaImpl {
 
-    private static final long serialVersionUID = 1022986013;
+    private static final long serialVersionUID = -1893608981;
 
     /**
      * The reference instance of <code>LOCATION_GAME</code>
@@ -110,9 +110,9 @@ public class LocationGame extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.SYSTEM_SEQUENCE_AFB26B5E_3A91_4921_A6CD_2180A8A93E59,
-            Sequences.SYSTEM_SEQUENCE_C76411E9_A21A_45E8_9658_6ACC984AC281,
-            Sequences.SYSTEM_SEQUENCE_F0049FBB_C07F_4A49_8556_4A2C32EB84E7);
+            Sequences.SYSTEM_SEQUENCE_972BBE7D_5632_4151_A2EB_C6EB2EA36AA7,
+            Sequences.SYSTEM_SEQUENCE_AB4F7E2D_BDEA_432B_8A36_3BCBC4B0E200,
+            Sequences.SYSTEM_SEQUENCE_B202EA43_8CDF_4F71_8F61_27B88D66CBDD);
     }
 
     @Override

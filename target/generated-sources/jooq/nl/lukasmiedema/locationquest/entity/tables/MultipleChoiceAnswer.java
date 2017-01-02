@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MultipleChoiceAnswer extends TableImpl<MultipleChoiceAnswerRecord> {
 
-    private static final long serialVersionUID = 1729115743;
+    private static final long serialVersionUID = 795335184;
 
     /**
      * The reference instance of <code>LOCATION_GAME.MULTIPLE_CHOICE_ANSWER</code>
@@ -54,7 +54,7 @@ public class MultipleChoiceAnswer extends TableImpl<MultipleChoiceAnswerRecord> 
     /**
      * The column <code>LOCATION_GAME.MULTIPLE_CHOICE_ANSWER.ANSWER_ID</code>.
      */
-    public final TableField<MultipleChoiceAnswerRecord, Integer> ANSWER_ID = createField("ANSWER_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("(NEXT VALUE FOR LOCATION_GAME.SYSTEM_SEQUENCE_C76411E9_A21A_45E8_9658_6ACC984AC281)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<MultipleChoiceAnswerRecord, Integer> ANSWER_ID = createField("ANSWER_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("(NEXT VALUE FOR LOCATION_GAME.SYSTEM_SEQUENCE_B202EA43_8CDF_4F71_8F61_27B88D66CBDD)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>LOCATION_GAME.MULTIPLE_CHOICE_ANSWER.QUESTION_ID</code>.

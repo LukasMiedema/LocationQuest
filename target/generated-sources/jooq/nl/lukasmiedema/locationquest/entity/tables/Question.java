@@ -37,7 +37,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Question extends TableImpl<QuestionRecord> {
 
-    private static final long serialVersionUID = 901708391;
+    private static final long serialVersionUID = -243772547;
 
     /**
      * The reference instance of <code>LOCATION_GAME.QUESTION</code>
@@ -55,7 +55,7 @@ public class Question extends TableImpl<QuestionRecord> {
     /**
      * The column <code>LOCATION_GAME.QUESTION.QUESTION_ID</code>.
      */
-    public final TableField<QuestionRecord, Integer> QUESTION_ID = createField("QUESTION_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("(NEXT VALUE FOR LOCATION_GAME.SYSTEM_SEQUENCE_AFB26B5E_3A91_4921_A6CD_2180A8A93E59)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<QuestionRecord, Integer> QUESTION_ID = createField("QUESTION_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("(NEXT VALUE FOR LOCATION_GAME.SYSTEM_SEQUENCE_972BBE7D_5632_4151_A2EB_C6EB2EA36AA7)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>LOCATION_GAME.QUESTION.GAME_ID</code>.

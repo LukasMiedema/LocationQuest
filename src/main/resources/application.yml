@@ -7,7 +7,7 @@ spring:
   jooq.sql_dialect: H2
   h2.console.enabled: true
   jackson.serialization:
-      FAIL_ON_EMPTY_BEANS: false
+    FAIL_ON_EMPTY_BEANS: false
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN

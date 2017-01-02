@@ -1,0 +1,12 @@
+<div xmlns:th="http://www.thymeleaf.org">
+	<div class="ui text container">
+		<h4 class="ui horizontal divider header">Mijn spellen</h4>
+		<div th:replace="GameList :: list (${ownGames})"></div>
+	</div>
+	<br/>
+	<br/>
+	<div class="ui text container">
+		<h4 class="ui horizontal divider header">Alle open spellen</h4>
+		<div th:replace="GameList :: list (${openGames})"></div>
+	</div>
+</div>

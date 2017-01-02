@@ -9,8 +9,8 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,10 +27,12 @@ import javax.validation.constraints.Size;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Entity
-@Table(name = "TEAM", schema = "LOCATION_GAME")
+@Table(name = "TEAM", schema = "LOCATION_GAME", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"GAME_ID", "NAME"})
+})
 public class Team implements Serializable {
 
-    private static final long serialVersionUID = 1914803364;
+    private static final long serialVersionUID = 1271377409;
 
     private String  name;
     private Integer gameId;
@@ -54,8 +56,7 @@ public class Team implements Serializable {
         this.color = color;
     }
 
-    @Id
-    @Column(name = "NAME", unique = true, nullable = false, length = 2147483647)
+    @Column(name = "NAME", nullable = false, length = 2147483647)
     @NotNull
     @Size(max = 2147483647)
     public String getName() {

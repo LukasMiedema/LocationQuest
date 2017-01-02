@@ -1,0 +1,26 @@
+<div class="ui text container" xmlns:th="http://www.thymeleaf.org">
+
+	<!--/*@thymesVar id="chooseNameForm" type="nl.lukasmiedema.locationquest.dto.ChooseNameFormDto"*/-->
+	<div class="column" th:object="${chooseNameForm}">
+		<h2>Kies een naam</h2>
+		<p>Bedenk een naam waarmee andere teamleden je kunnen identificeren</p>
+
+		<div th:if="${#fields.hasAnyErrors()}" class="ui error message transition">
+			<i class="close icon"></i>
+			<div class="header">
+				Uh...
+			</div>
+			<ul class="list" th:each="error : ${#fields.detailedErrors()}">
+				<li th:text="${error.getMessage()}"></li>
+			</ul>
+		</div>
+
+		<form action="#" method="post" class="ui large form">
+			<div class="field">
+				<label>Naam</label>
+				<input type="text" th:field="*{name}" />
+			</div>
+			<input type="submit" class="ui primary button" value="Verder" />
+		</form>
+	</div>
+</div>

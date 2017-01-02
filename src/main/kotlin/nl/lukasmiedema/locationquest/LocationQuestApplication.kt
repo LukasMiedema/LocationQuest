@@ -8,12 +8,6 @@ open class LocationQuestApplication {
 	companion object {
 
 		/**
-		 * Prefix used by all REST endpoints. This is a compile-time static, so changing this requires recompilation
-		 * of the whole application (it's used in annotations)
-		 */
-		const val REST_PREFIX = "/api/v1/";
-
-		/**
 		 * Name of the cookie
 		 */
 		const val COOKIE_NAME = "LocationQuestUUID";

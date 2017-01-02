@@ -29,27 +29,31 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Entity
 @Table(name = "TEAM_PLAYER", schema = "LOCATION_GAME", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "TEAM_NAME"})
+    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "GAME_ID", "TEAM_NAME"})
 })
 public class TeamPlayer implements Serializable {
 
-    private static final long serialVersionUID = 901052453;
+    private static final long serialVersionUID = -505034321;
 
-    private UUID   playerSessionId;
-    private String teamName;
+    private UUID    playerSessionId;
+    private Integer gameId;
+    private String  teamName;
 
     public TeamPlayer() {}
 
     public TeamPlayer(TeamPlayer value) {
         this.playerSessionId = value.playerSessionId;
+        this.gameId = value.gameId;
         this.teamName = value.teamName;
     }
 
     public TeamPlayer(
-        UUID   playerSessionId,
-        String teamName
+        UUID    playerSessionId,
+        Integer gameId,
+        String  teamName
     ) {
         this.playerSessionId = playerSessionId;
+        this.gameId = gameId;
         this.teamName = teamName;
     }
 
@@ -61,6 +65,17 @@ public class TeamPlayer implements Serializable {
 
     public TeamPlayer setPlayerSessionId(UUID playerSessionId) {
         this.playerSessionId = playerSessionId;
+        return this;
+    }
+
+    @Column(name = "GAME_ID", nullable = false, precision = 10)
+    @NotNull
+    public Integer getGameId() {
+        return this.gameId;
+    }
+
+    public TeamPlayer setGameId(Integer gameId) {
+        this.gameId = gameId;
         return this;
     }
 
@@ -81,6 +96,7 @@ public class TeamPlayer implements Serializable {
         StringBuilder sb = new StringBuilder("TeamPlayer (");
 
         sb.append(playerSessionId);
+        sb.append(", ").append(gameId);
         sb.append(", ").append(teamName);
 
         sb.append(")");

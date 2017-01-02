@@ -55,8 +55,8 @@ public class Keys {
 
     public static final UniqueKey<PlayerRecord> CONSTRAINT_8 = UniqueKeys0.CONSTRAINT_8;
     public static final UniqueKey<GameRecord> CONSTRAINT_2 = UniqueKeys0.CONSTRAINT_2;
-    public static final UniqueKey<TeamRecord> CONSTRAINT_27 = UniqueKeys0.CONSTRAINT_27;
-    public static final UniqueKey<TeamPlayerRecord> CONSTRAINT_C53 = UniqueKeys0.CONSTRAINT_C53;
+    public static final UniqueKey<TeamRecord> CONSTRAINT_273 = UniqueKeys0.CONSTRAINT_273;
+    public static final UniqueKey<TeamPlayerRecord> CONSTRAINT_C5 = UniqueKeys0.CONSTRAINT_C5;
     public static final UniqueKey<QuestionRecord> CONSTRAINT_E = UniqueKeys0.CONSTRAINT_E;
     public static final UniqueKey<MultipleChoiceAnswerRecord> CONSTRAINT_3 = UniqueKeys0.CONSTRAINT_3;
     public static final UniqueKey<AnsweredQuestionRecord> CONSTRAINT_CE014 = UniqueKeys0.CONSTRAINT_CE014;
@@ -66,13 +66,12 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<GameRecord, PlayerRecord> CONSTRAINT_21 = ForeignKeys0.CONSTRAINT_21;
-    public static final ForeignKey<TeamRecord, GameRecord> CONSTRAINT_273 = ForeignKeys0.CONSTRAINT_273;
+    public static final ForeignKey<TeamRecord, GameRecord> CONSTRAINT_27 = ForeignKeys0.CONSTRAINT_27;
     public static final ForeignKey<TeamPlayerRecord, PlayerRecord> CONSTRAINT_C = ForeignKeys0.CONSTRAINT_C;
-    public static final ForeignKey<TeamPlayerRecord, TeamRecord> CONSTRAINT_C5 = ForeignKeys0.CONSTRAINT_C5;
+    public static final ForeignKey<TeamPlayerRecord, TeamRecord> CONSTRAINT_C53 = ForeignKeys0.CONSTRAINT_C53;
     public static final ForeignKey<QuestionRecord, GameRecord> CONSTRAINT_E9 = ForeignKeys0.CONSTRAINT_E9;
     public static final ForeignKey<MultipleChoiceAnswerRecord, QuestionRecord> CONSTRAINT_3C = ForeignKeys0.CONSTRAINT_3C;
     public static final ForeignKey<AnsweredQuestionRecord, QuestionRecord> CONSTRAINT_CE = ForeignKeys0.CONSTRAINT_CE;
-    public static final ForeignKey<AnsweredQuestionRecord, TeamRecord> CONSTRAINT_CE0 = ForeignKeys0.CONSTRAINT_CE0;
     public static final ForeignKey<AnsweredQuestionRecord, MultipleChoiceAnswerRecord> CONSTRAINT_CE01 = ForeignKeys0.CONSTRAINT_CE01;
 
     // -------------------------------------------------------------------------
@@ -88,8 +87,8 @@ public class Keys {
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<PlayerRecord> CONSTRAINT_8 = createUniqueKey(Player.PLAYER, "CONSTRAINT_8", Player.PLAYER.SESSION_ID);
         public static final UniqueKey<GameRecord> CONSTRAINT_2 = createUniqueKey(Game.GAME, "CONSTRAINT_2", Game.GAME.ID);
-        public static final UniqueKey<TeamRecord> CONSTRAINT_27 = createUniqueKey(Team.TEAM, "CONSTRAINT_27", Team.TEAM.NAME);
-        public static final UniqueKey<TeamPlayerRecord> CONSTRAINT_C53 = createUniqueKey(TeamPlayer.TEAM_PLAYER, "CONSTRAINT_C53", TeamPlayer.TEAM_PLAYER.PLAYER_SESSION_ID, TeamPlayer.TEAM_PLAYER.TEAM_NAME);
+        public static final UniqueKey<TeamRecord> CONSTRAINT_273 = createUniqueKey(Team.TEAM, "CONSTRAINT_273", Team.TEAM.GAME_ID, Team.TEAM.NAME);
+        public static final UniqueKey<TeamPlayerRecord> CONSTRAINT_C5 = createUniqueKey(TeamPlayer.TEAM_PLAYER, "CONSTRAINT_C5", TeamPlayer.TEAM_PLAYER.PLAYER_SESSION_ID, TeamPlayer.TEAM_PLAYER.GAME_ID, TeamPlayer.TEAM_PLAYER.TEAM_NAME);
         public static final UniqueKey<QuestionRecord> CONSTRAINT_E = createUniqueKey(Question.QUESTION, "CONSTRAINT_E", Question.QUESTION.QUESTION_ID);
         public static final UniqueKey<MultipleChoiceAnswerRecord> CONSTRAINT_3 = createUniqueKey(MultipleChoiceAnswer.MULTIPLE_CHOICE_ANSWER, "CONSTRAINT_3", MultipleChoiceAnswer.MULTIPLE_CHOICE_ANSWER.ANSWER_ID);
         public static final UniqueKey<AnsweredQuestionRecord> CONSTRAINT_CE014 = createUniqueKey(AnsweredQuestion.ANSWERED_QUESTION, "CONSTRAINT_CE014", AnsweredQuestion.ANSWERED_QUESTION.QUESTION_ID, AnsweredQuestion.ANSWERED_QUESTION.TEAM_NAME);
@@ -97,13 +96,12 @@ public class Keys {
 
     private static class ForeignKeys0 extends AbstractKeys {
         public static final ForeignKey<GameRecord, PlayerRecord> CONSTRAINT_21 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_8, Game.GAME, "CONSTRAINT_21", Game.GAME.ADMIN_ID);
-        public static final ForeignKey<TeamRecord, GameRecord> CONSTRAINT_273 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_2, Team.TEAM, "CONSTRAINT_273", Team.TEAM.GAME_ID);
+        public static final ForeignKey<TeamRecord, GameRecord> CONSTRAINT_27 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_2, Team.TEAM, "CONSTRAINT_27", Team.TEAM.GAME_ID);
         public static final ForeignKey<TeamPlayerRecord, PlayerRecord> CONSTRAINT_C = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_8, TeamPlayer.TEAM_PLAYER, "CONSTRAINT_C", TeamPlayer.TEAM_PLAYER.PLAYER_SESSION_ID);
-        public static final ForeignKey<TeamPlayerRecord, TeamRecord> CONSTRAINT_C5 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_27, TeamPlayer.TEAM_PLAYER, "CONSTRAINT_C5", TeamPlayer.TEAM_PLAYER.TEAM_NAME);
+        public static final ForeignKey<TeamPlayerRecord, TeamRecord> CONSTRAINT_C53 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_273, TeamPlayer.TEAM_PLAYER, "CONSTRAINT_C53", TeamPlayer.TEAM_PLAYER.GAME_ID, TeamPlayer.TEAM_PLAYER.TEAM_NAME);
         public static final ForeignKey<QuestionRecord, GameRecord> CONSTRAINT_E9 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_2, Question.QUESTION, "CONSTRAINT_E9", Question.QUESTION.GAME_ID);
         public static final ForeignKey<MultipleChoiceAnswerRecord, QuestionRecord> CONSTRAINT_3C = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_E, MultipleChoiceAnswer.MULTIPLE_CHOICE_ANSWER, "CONSTRAINT_3C", MultipleChoiceAnswer.MULTIPLE_CHOICE_ANSWER.QUESTION_ID);
         public static final ForeignKey<AnsweredQuestionRecord, QuestionRecord> CONSTRAINT_CE = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_E, AnsweredQuestion.ANSWERED_QUESTION, "CONSTRAINT_CE", AnsweredQuestion.ANSWERED_QUESTION.QUESTION_ID);
-        public static final ForeignKey<AnsweredQuestionRecord, TeamRecord> CONSTRAINT_CE0 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_27, AnsweredQuestion.ANSWERED_QUESTION, "CONSTRAINT_CE0", AnsweredQuestion.ANSWERED_QUESTION.TEAM_NAME);
         public static final ForeignKey<AnsweredQuestionRecord, MultipleChoiceAnswerRecord> CONSTRAINT_CE01 = createForeignKey(nl.lukasmiedema.locationquest.entity.Keys.CONSTRAINT_3, AnsweredQuestion.ANSWERED_QUESTION, "CONSTRAINT_CE01", AnsweredQuestion.ANSWERED_QUESTION.ANSWER_ID);
     }
 }

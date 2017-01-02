@@ -1,0 +1,13 @@
+<div class="ui text container" xmlns:th="http://www.thymeleaf.org">
+	<h1 th:text="|${status} - ${error}|"></h1>
+	<p th:if="${path}">
+		<b>URL:</b> <span th:text="${path}">Page URL</span>
+	</p>
+
+	<div class="ui divider"></div>
+
+	<a class="ui button basic labeled icon" th:href="@{/}">
+		<i class="arrow left icon"></i>
+		Back to safety
+	</a>
+</div>

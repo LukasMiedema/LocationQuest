@@ -35,7 +35,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Team extends TableImpl<TeamRecord> {
 
-    private static final long serialVersionUID = -1937318115;
+    private static final long serialVersionUID = 693800220;
 
     /**
      * The reference instance of <code>LOCATION_GAME.TEAM</code>
@@ -100,7 +100,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     @Override
     public UniqueKey<TeamRecord> getPrimaryKey() {
-        return Keys.CONSTRAINT_27;
+        return Keys.CONSTRAINT_273;
     }
 
     /**
@@ -108,7 +108,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     @Override
     public List<UniqueKey<TeamRecord>> getKeys() {
-        return Arrays.<UniqueKey<TeamRecord>>asList(Keys.CONSTRAINT_27);
+        return Arrays.<UniqueKey<TeamRecord>>asList(Keys.CONSTRAINT_273);
     }
 
     /**
@@ -116,7 +116,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     @Override
     public List<ForeignKey<TeamRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TeamRecord, ?>>asList(Keys.CONSTRAINT_273);
+        return Arrays.<ForeignKey<TeamRecord, ?>>asList(Keys.CONSTRAINT_27);
     }
 
     /**
