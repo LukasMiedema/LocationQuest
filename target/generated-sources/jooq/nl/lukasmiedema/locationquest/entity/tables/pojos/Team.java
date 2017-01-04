@@ -9,6 +9,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -32,39 +35,43 @@ import javax.validation.constraints.Size;
 })
 public class Team implements Serializable {
 
-    private static final long serialVersionUID = 1271377409;
+    private static final long serialVersionUID = 723058585;
 
-    private String  name;
+    private Integer id;
     private Integer gameId;
+    private String  name;
     private Integer color;
 
     public Team() {}
 
     public Team(Team value) {
-        this.name = value.name;
+        this.id = value.id;
         this.gameId = value.gameId;
+        this.name = value.name;
         this.color = value.color;
     }
 
     public Team(
-        String  name,
+        Integer id,
         Integer gameId,
+        String  name,
         Integer color
     ) {
-        this.name = name;
+        this.id = id;
         this.gameId = gameId;
+        this.name = name;
         this.color = color;
     }
 
-    @Column(name = "NAME", nullable = false, length = 2147483647)
-    @NotNull
-    @Size(max = 2147483647)
-    public String getName() {
-        return this.name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false, precision = 10)
+    public Integer getId() {
+        return this.id;
     }
 
-    public Team setName(String name) {
-        this.name = name;
+    public Team setId(Integer id) {
+        this.id = id;
         return this;
     }
 
@@ -76,6 +83,18 @@ public class Team implements Serializable {
 
     public Team setGameId(Integer gameId) {
         this.gameId = gameId;
+        return this;
+    }
+
+    @Column(name = "NAME", nullable = false, length = 2147483647)
+    @NotNull
+    @Size(max = 2147483647)
+    public String getName() {
+        return this.name;
+    }
+
+    public Team setName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -94,8 +113,9 @@ public class Team implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("Team (");
 
-        sb.append(name);
+        sb.append(id);
         sb.append(", ").append(gameId);
+        sb.append(", ").append(name);
         sb.append(", ").append(color);
 
         sb.append(")");

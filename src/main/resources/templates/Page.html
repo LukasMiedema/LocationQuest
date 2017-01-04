@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="page" type="nl.lukasmiedema.locationquest.dto.Page"*/-->
+<!--/*@thymesVar id="page" type="nl.lukasmiedema.locationquest.dto.PageDto"*/-->
 <head>
-	<title th:text="${title}">Untitled</title>
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" />
 	<meta name="theme-color" content="#DB2828" />
 
@@ -12,30 +11,32 @@
 	<!-- Scripts -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
-	<script type="text/javascript" src="scripts/clickany.js"></script>
+	<script type="text/javascript" th:src="@{/assets/scripts/main.js}"></script>
 
+	<!-- Page styles and scripts -->
+	<th:block th:include="${view} :: head">
+		<title>Untitled</title>
+	</th:block>
 </head>
 <body>
 	<div class="ui menu inverted fixed red">
 		<div class="ui text container">
-			<div class="item header">
+			<a class="item" th:href="@{/}">
 				<i class="location arrow icon"></i>
-				LOCATION QUEST
-			</div>
+			</a>
 
-			<!--/*@thymesVar id="menu" type="nl.lukasmiedema.locationquest.dto.MenuBarDto"*/-->
-			<th:block th:if="${menu.loggedIn}">
+			<th:block th:if="${page.loggedIn}">
 				<div class="ui simple dropdown item">
 					Games <i class="dropdown icon"></i>
 					<div class="menu">
 						<a class="item" th:href="@{/games}">Overzicht</a>
 						<div class="divider"></div>
-						<a th:each="game: ${menu.games}" th:text="${game.name}" th:href="@{/games/{id}(id=${game.id})}" class="item"></a>
+						<a th:each="game: ${page.games}" th:text="${game.name}" th:href="@{/games/{id}(id=${game.id})}" class="item"></a>
 					</div>
 				</div>
 				<a class="item right" th:href="@{/profile}">
 					<i class="user icon"></i>
-					<th:block th:text="${menu.name}" />
+					<th:block th:text="${page.name}" />
 				</a>
 			</th:block>
 		</div>
@@ -44,8 +45,11 @@
 	<br/>
 	<br/>
 	<br/>
-	<div th:replace="${view}">
+
+	<!-- Template body start -->
+	<th:block th:include="${view} :: body">
 		Looks like template resolution failed...
-	</div>
+	</th:block>
+	<!-- Template body end -->
 </body>
 </html>

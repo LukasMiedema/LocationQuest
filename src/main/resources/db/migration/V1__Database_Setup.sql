@@ -18,19 +18,18 @@ CREATE TABLE LOCATION_GAME.GAME (
 
 -- Teams
 CREATE TABLE LOCATION_GAME.TEAM (
-  name VARCHAR NOT NULL,
+  id SERIAL PRIMARY KEY,
   game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(id),
+  name VARCHAR NOT NULL,
   color INTEGER NOT NULL,
-  PRIMARY KEY (game_id, name)
+  UNIQUE KEY (game_id, name)
 );
 
 -- Team principal association table
 CREATE TABLE LOCATION_GAME.TEAM_PLAYER (
   player_session_id UUID NOT NULL REFERENCES LOCATION_GAME.PLAYER(session_id),
-  game_id INTEGER NOT NULL,
-  team_name VARCHAR NOT NULL,
-  PRIMARY KEY (player_session_id, game_id, team_name),
-  FOREIGN KEY (game_id, team_name) REFERENCES LOCATION_GAME.TEAM(game_id, name)
+  team_id INTEGER NOT NULL REFERENCES LOCATION_GAME.TEAM(id),
+  PRIMARY KEY (player_session_id, team_id)
 );
 
 

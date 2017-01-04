@@ -1,0 +1,99 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Kies een team</title>
+	<link rel="stylesheet" th:href="@{/assets/styles/page/teamlist.css}"/>
+	<script th:src="@{/assets/scripts/page/teamlist.js}" type="text/javascript"></script>
+</head>
+<body>
+
+	<!--/*@thymesVar id="teams" type="java.util.List"*/-->
+	<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+	<!--/*@thymesVar id="teamSelectionDto" type="nl.lukasmiedema.locationquest.dto.TeamSelectionDto"*/-->
+	<!--/*@thymesVar id="teamCreationDto" type="nl.lukasmiedema.locationquest.dto.TeamCreationDto"*/-->
+
+	<div class="ui text container" th:switch="true">
+		<th:block th:case="not ${game.active}">
+			<h2><i th:text="${game.name}"></i> is afgelopen</h2>
+			<p>Als je van mening bent dat je in dit spel toch nog gaande is, zoek dan een administrator op.</p>
+		</th:block>
+
+		<th:block th:case="not ${game.allowNewMembers}">
+			<h2>Inschrijving voor <i th:text="${game.name}"></i> is gesloten</h2>
+			<p>Als je toch van mening bent dat je in dit spel mag, zoek dan een administrator op.</p>
+		</th:block>
+
+		<th:block th:case="true">
+			<h2>Inschrijving voor <i th:text="${game.name}"></i></h2>
+			<p>Kies een team</p>
+
+			<form th:action="@{/games/{id}/enroll(id=${game.id})}" method="post" class="ui large form enroll"
+				  th:object="${teamSelectionDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
+				<input type="hidden" id="teamEnrollOption" name="teamId" value="" />
+				<h4 class="ui horizontal divider header">Bestaande teams</h4>
+
+				<div class="ui error message transition">
+					<ul class="list" th:each="error : ${#fields.detailedErrors()}">
+						<li th:text="${error.getMessage()}"></li>
+					</ul>
+				</div>
+
+				<div class="ui list">
+					<!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto" */-->
+					<div class="item" th:if="${teams.empty}">
+						Er zijn nog geen teams gemaakt
+					</div>
+
+					<div class="item" th:each="team: ${teams}">
+						<div class="ui fluid labeled button team-item" th:attr="data-id=${team.id}">
+							<div class="ui fluid team button">
+								<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
+								<th:block th:text="${team.name}"/>
+							</div>
+							<div class="ui left pointing label">
+								<i class="users icon"></i>
+								<th:block th:text="${team.memberCount}"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<input type="submit" class="ui right floated button" value="Bevestigen" th:disabled="${teams.empty}" />
+				<div class="ui clearing header"></div>
+			</form>
+			<br/>
+			<br/>
+			<br/>
+
+			<form th:action="@{/games/{id}/create(id=${game.id})}" method="post" class="ui large form create"
+				  th:object="${teamCreationDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
+				<h4 class="ui horizontal divider header">Of maak een nieuw team</h4>
+
+				<div class="ui error message transition">
+					<ul class="list" th:each="error : ${#fields.detailedErrors()}">
+						<li th:text="${error.getMessage()}"></li>
+					</ul>
+				</div>
+
+				<div class="ui list">
+					<div class="item">
+						<div class="inline fields">
+							<div class="three wide field">
+								<label>Kleur: </label>
+								<input type="color" name="color" th:value="*{color}"/>
+							</div>
+							<div class="thirteen wide field">
+								<label>Naam: </label>
+								<input type="text" name="name" th:value="*{name}" placeholder="Teamnaam" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<input type="submit" class="ui right floated button" value="Maak nieuw team" />
+				<div class="ui clearing header"></div>
+			</form>
+			<br/>
+			<br/>
+		</th:block>
+	</div>
+
+</body>
+</html>

@@ -22,18 +22,19 @@
 				<div class="item">
 					<div class="content">
 						<i class="group icon" th:classappend="not ${game.teamName} ? 'disabled'"></i>
-						<div class="ui label" th:if="${game.teamName}"
-							 th:style="|background-color: #${game.teamColorHex}|"
-							 th:text="|${game.teamName} (${game.memberCount})|">
+						<div class="ui basic label" th:if="${game.teamName}">
+							<div class="ui empty circular label" th:style="|background-color: #${game.teamColorHex}|"></div>
+							<div class="detail" th:text="${game.teamName}"></div>
 						</div>
 						<div class="ui label" th:unless="${game.teamName}">Geen team</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="ui bottom attached button" th:classappend="${game.teamName} ? 'disabled'">
+		<a class="ui bottom attached button"
+			 th:classappend="${game.teamName} or not ${game.allowNewMembers} or not ${game.active} ? 'disabled'">
 			<i class="icon" th:classappend="${game.teamName} ? 'checkmark' : 'add'"></i>
 			<th:block th:text="${game.teamName} ? 'Ingeschreven' : 'Inschrijven'"/>
-		</div>
+		</a>
 	</div>
 </div>

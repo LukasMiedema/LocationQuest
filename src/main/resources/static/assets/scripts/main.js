@@ -1,3 +1,4 @@
+
 /**
  * Quick-n-dirty script which allows any element to become a "link" by using the clickable class and having a
  * data-href attribute.

@@ -15,6 +15,7 @@ import nl.lukasmiedema.locationquest.entity.tables.records.TeamRecord;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -35,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Team extends TableImpl<TeamRecord> {
 
-    private static final long serialVersionUID = 693800220;
+    private static final long serialVersionUID = -1201897783;
 
     /**
      * The reference instance of <code>LOCATION_GAME.TEAM</code>
@@ -51,14 +52,19 @@ public class Team extends TableImpl<TeamRecord> {
     }
 
     /**
-     * The column <code>LOCATION_GAME.TEAM.NAME</code>.
+     * The column <code>LOCATION_GAME.TEAM.ID</code>.
      */
-    public final TableField<TeamRecord, String> NAME = createField("NAME", org.jooq.impl.SQLDataType.VARCHAR.length(2147483647).nullable(false), this, "");
+    public final TableField<TeamRecord, Integer> ID = createField("ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("(NEXT VALUE FOR LOCATION_GAME.SYSTEM_SEQUENCE_14FFF099_0AE6_4108_97CE_63A897139848)", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>LOCATION_GAME.TEAM.GAME_ID</code>.
      */
     public final TableField<TeamRecord, Integer> GAME_ID = createField("GAME_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>LOCATION_GAME.TEAM.NAME</code>.
+     */
+    public final TableField<TeamRecord, String> NAME = createField("NAME", org.jooq.impl.SQLDataType.VARCHAR.length(2147483647).nullable(false), this, "");
 
     /**
      * The column <code>LOCATION_GAME.TEAM.COLOR</code>.
@@ -99,8 +105,16 @@ public class Team extends TableImpl<TeamRecord> {
      * {@inheritDoc}
      */
     @Override
+    public Identity<TeamRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_TEAM;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public UniqueKey<TeamRecord> getPrimaryKey() {
-        return Keys.CONSTRAINT_273;
+        return Keys.CONSTRAINT_27;
     }
 
     /**
@@ -108,7 +122,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     @Override
     public List<UniqueKey<TeamRecord>> getKeys() {
-        return Arrays.<UniqueKey<TeamRecord>>asList(Keys.CONSTRAINT_273);
+        return Arrays.<UniqueKey<TeamRecord>>asList(Keys.CONSTRAINT_27, Keys.CONSTRAINT_273A);
     }
 
     /**
@@ -116,7 +130,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     @Override
     public List<ForeignKey<TeamRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TeamRecord, ?>>asList(Keys.CONSTRAINT_27);
+        return Arrays.<ForeignKey<TeamRecord, ?>>asList(Keys.CONSTRAINT_273);
     }
 
     /**

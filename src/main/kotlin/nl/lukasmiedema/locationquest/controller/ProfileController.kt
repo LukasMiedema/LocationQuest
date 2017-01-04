@@ -1,16 +1,15 @@
 package nl.lukasmiedema.locationquest.controller
 
 import nl.lukasmiedema.locationquest.dto.ChooseNameFormDto
+import nl.lukasmiedema.locationquest.dto.PageDto
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.session.PlayerSessionRepository
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.servlet.http.HttpSession
 import javax.validation.Valid
 
 /**
@@ -27,28 +26,29 @@ open class ProfileController {
 	}
 
 	@GetMapping
-	open fun getChooseName(model: Model, session: HttpSession): String {
-		model.addAttribute("title", "Kies een naam")
-		model.addAttribute("chooseNameForm", ChooseNameFormDto())
+	open fun getChooseName(
+			@ModelAttribute("page") page: PageDto,
+			@ModelAttribute("form") form: ChooseNameFormDto): String {
 		return PROFILE_VIEW
 	}
 
 	@PostMapping
 	open fun postChooseName(
-			@Valid @ModelAttribute("chooseNameForm") chooseNameForm: ChooseNameFormDto,
-			bindingResult: BindingResult, model: Model,	@AuthenticationPrincipal principal: Player?): String {
+			@Valid @ModelAttribute("form") chooseNameFormDto: ChooseNameFormDto,
+			bindingResult: BindingResult,
+			@AuthenticationPrincipal principal: Player?): String {
 
 		// Check if valid
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("title", "Kies een naam")
-			model.addAttribute("chooseNameForm", chooseNameForm)
 			return PROFILE_VIEW
 		}
 
 		// Save the user details
 		val player = principal ?: Player(UUID.randomUUID(), null)
-		player.name = chooseNameForm.name
+		player.name = chooseNameFormDto.name
 		SecurityContextHolder.getContext().authentication = PlayerSessionRepository.SessionAuthentication(player)
+
+		// Redirect to the games page
 		return "redirect:/${GamesController.URL}"
 	}
 }

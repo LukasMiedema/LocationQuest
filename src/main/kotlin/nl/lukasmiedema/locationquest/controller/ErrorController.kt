@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest
  * @author Lukas Miedema
  */
 @Component
-open class CustomErrorViewResolver : ErrorViewResolver {
+open class ErrorController : ErrorViewResolver {
 
 	override fun resolveErrorView(request: HttpServletRequest?, status: HttpStatus?, model: MutableMap<String, Any>?): ModelAndView {
 		val mv = ModelAndView("Error")

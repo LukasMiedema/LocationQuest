@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TeamPlayer extends TableImpl<TeamPlayerRecord> {
 
-    private static final long serialVersionUID = -468520418;
+    private static final long serialVersionUID = 2067843928;
 
     /**
      * The reference instance of <code>LOCATION_GAME.TEAM_PLAYER</code>
@@ -57,14 +57,9 @@ public class TeamPlayer extends TableImpl<TeamPlayerRecord> {
     public final TableField<TeamPlayerRecord, UUID> PLAYER_SESSION_ID = createField("PLAYER_SESSION_ID", org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
-     * The column <code>LOCATION_GAME.TEAM_PLAYER.GAME_ID</code>.
+     * The column <code>LOCATION_GAME.TEAM_PLAYER.TEAM_ID</code>.
      */
-    public final TableField<TeamPlayerRecord, Integer> GAME_ID = createField("GAME_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>LOCATION_GAME.TEAM_PLAYER.TEAM_NAME</code>.
-     */
-    public final TableField<TeamPlayerRecord, String> TEAM_NAME = createField("TEAM_NAME", org.jooq.impl.SQLDataType.VARCHAR.length(2147483647).nullable(false), this, "");
+    public final TableField<TeamPlayerRecord, Integer> TEAM_ID = createField("TEAM_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>LOCATION_GAME.TEAM_PLAYER</code> table reference
@@ -101,7 +96,7 @@ public class TeamPlayer extends TableImpl<TeamPlayerRecord> {
      */
     @Override
     public UniqueKey<TeamPlayerRecord> getPrimaryKey() {
-        return Keys.CONSTRAINT_C5;
+        return Keys.CONSTRAINT_C53;
     }
 
     /**
@@ -109,7 +104,7 @@ public class TeamPlayer extends TableImpl<TeamPlayerRecord> {
      */
     @Override
     public List<UniqueKey<TeamPlayerRecord>> getKeys() {
-        return Arrays.<UniqueKey<TeamPlayerRecord>>asList(Keys.CONSTRAINT_C5);
+        return Arrays.<UniqueKey<TeamPlayerRecord>>asList(Keys.CONSTRAINT_C53);
     }
 
     /**
@@ -117,7 +112,7 @@ public class TeamPlayer extends TableImpl<TeamPlayerRecord> {
      */
     @Override
     public List<ForeignKey<TeamPlayerRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TeamPlayerRecord, ?>>asList(Keys.CONSTRAINT_C, Keys.CONSTRAINT_C53);
+        return Arrays.<ForeignKey<TeamPlayerRecord, ?>>asList(Keys.CONSTRAINT_C, Keys.CONSTRAINT_C5);
     }
 
     /**

@@ -7,6 +7,9 @@ package nl.lukasmiedema.locationquest.entity.tables.records;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -15,9 +18,9 @@ import javax.validation.constraints.Size;
 import nl.lukasmiedema.locationquest.entity.tables.Team;
 
 import org.jooq.Field;
-import org.jooq.Record2;
-import org.jooq.Record3;
-import org.jooq.Row3;
+import org.jooq.Record1;
+import org.jooq.Record4;
+import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
 
 
@@ -36,26 +39,26 @@ import org.jooq.impl.UpdatableRecordImpl;
 @Table(name = "TEAM", schema = "LOCATION_GAME", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"GAME_ID", "NAME"})
 })
-public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Record3<String, Integer, Integer> {
+public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Record4<Integer, Integer, String, Integer> {
 
-    private static final long serialVersionUID = -2142833822;
+    private static final long serialVersionUID = 583478989;
 
     /**
-     * Setter for <code>LOCATION_GAME.TEAM.NAME</code>.
+     * Setter for <code>LOCATION_GAME.TEAM.ID</code>.
      */
-    public TeamRecord setName(String value) {
+    public TeamRecord setId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>LOCATION_GAME.TEAM.NAME</code>.
+     * Getter for <code>LOCATION_GAME.TEAM.ID</code>.
      */
-    @Column(name = "NAME", nullable = false, length = 2147483647)
-    @NotNull
-    @Size(max = 2147483647)
-    public String getName() {
-        return (String) get(0);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false, precision = 10)
+    public Integer getId() {
+        return (Integer) get(0);
     }
 
     /**
@@ -76,10 +79,28 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
     }
 
     /**
+     * Setter for <code>LOCATION_GAME.TEAM.NAME</code>.
+     */
+    public TeamRecord setName(String value) {
+        set(2, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>LOCATION_GAME.TEAM.NAME</code>.
+     */
+    @Column(name = "NAME", nullable = false, length = 2147483647)
+    @NotNull
+    @Size(max = 2147483647)
+    public String getName() {
+        return (String) get(2);
+    }
+
+    /**
      * Setter for <code>LOCATION_GAME.TEAM.COLOR</code>.
      */
     public TeamRecord setColor(Integer value) {
-        set(2, value);
+        set(3, value);
         return this;
     }
 
@@ -89,7 +110,7 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
     @Column(name = "COLOR", nullable = false, precision = 10)
     @NotNull
     public Integer getColor() {
-        return (Integer) get(2);
+        return (Integer) get(3);
     }
 
     // -------------------------------------------------------------------------
@@ -100,36 +121,36 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public Record2<Integer, String> key() {
-        return (Record2) super.key();
+    public Record1<Integer> key() {
+        return (Record1) super.key();
     }
 
     // -------------------------------------------------------------------------
-    // Record3 type implementation
+    // Record4 type implementation
     // -------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row3<String, Integer, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Integer, Integer, String, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row3<String, Integer, Integer> valuesRow() {
-        return (Row3) super.valuesRow();
+    public Row4<Integer, Integer, String, Integer> valuesRow() {
+        return (Row4) super.valuesRow();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Field<String> field1() {
-        return Team.TEAM.NAME;
+    public Field<Integer> field1() {
+        return Team.TEAM.ID;
     }
 
     /**
@@ -144,7 +165,15 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public Field<Integer> field3() {
+    public Field<String> field3() {
+        return Team.TEAM.NAME;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Field<Integer> field4() {
         return Team.TEAM.COLOR;
     }
 
@@ -152,8 +181,8 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public String value1() {
-        return getName();
+    public Integer value1() {
+        return getId();
     }
 
     /**
@@ -168,7 +197,15 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public Integer value3() {
+    public String value3() {
+        return getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer value4() {
         return getColor();
     }
 
@@ -176,8 +213,8 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public TeamRecord value1(String value) {
-        setName(value);
+    public TeamRecord value1(Integer value) {
+        setId(value);
         return this;
     }
 
@@ -194,7 +231,16 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public TeamRecord value3(Integer value) {
+    public TeamRecord value3(String value) {
+        setName(value);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TeamRecord value4(Integer value) {
         setColor(value);
         return this;
     }
@@ -203,10 +249,11 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
      * {@inheritDoc}
      */
     @Override
-    public TeamRecord values(String value1, Integer value2, Integer value3) {
+    public TeamRecord values(Integer value1, Integer value2, String value3, Integer value4) {
         value1(value1);
         value2(value2);
         value3(value3);
+        value4(value4);
         return this;
     }
 
@@ -224,11 +271,12 @@ public class TeamRecord extends UpdatableRecordImpl<TeamRecord> implements Recor
     /**
      * Create a detached, initialised TeamRecord
      */
-    public TeamRecord(String name, Integer gameId, Integer color) {
+    public TeamRecord(Integer id, Integer gameId, String name, Integer color) {
         super(Team.TEAM);
 
-        set(0, name);
+        set(0, id);
         set(1, gameId);
-        set(2, color);
+        set(2, name);
+        set(3, color);
     }
 }

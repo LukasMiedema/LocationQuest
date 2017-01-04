@@ -13,7 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 
 /**
@@ -29,32 +28,28 @@ import javax.validation.constraints.Size;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 @Entity
 @Table(name = "TEAM_PLAYER", schema = "LOCATION_GAME", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "GAME_ID", "TEAM_NAME"})
+    @UniqueConstraint(columnNames = {"PLAYER_SESSION_ID", "TEAM_ID"})
 })
 public class TeamPlayer implements Serializable {
 
-    private static final long serialVersionUID = -505034321;
+    private static final long serialVersionUID = 165921939;
 
     private UUID    playerSessionId;
-    private Integer gameId;
-    private String  teamName;
+    private Integer teamId;
 
     public TeamPlayer() {}
 
     public TeamPlayer(TeamPlayer value) {
         this.playerSessionId = value.playerSessionId;
-        this.gameId = value.gameId;
-        this.teamName = value.teamName;
+        this.teamId = value.teamId;
     }
 
     public TeamPlayer(
         UUID    playerSessionId,
-        Integer gameId,
-        String  teamName
+        Integer teamId
     ) {
         this.playerSessionId = playerSessionId;
-        this.gameId = gameId;
-        this.teamName = teamName;
+        this.teamId = teamId;
     }
 
     @Column(name = "PLAYER_SESSION_ID", nullable = false, precision = 2147483647)
@@ -68,26 +63,14 @@ public class TeamPlayer implements Serializable {
         return this;
     }
 
-    @Column(name = "GAME_ID", nullable = false, precision = 10)
+    @Column(name = "TEAM_ID", nullable = false, precision = 10)
     @NotNull
-    public Integer getGameId() {
-        return this.gameId;
+    public Integer getTeamId() {
+        return this.teamId;
     }
 
-    public TeamPlayer setGameId(Integer gameId) {
-        this.gameId = gameId;
-        return this;
-    }
-
-    @Column(name = "TEAM_NAME", nullable = false, length = 2147483647)
-    @NotNull
-    @Size(max = 2147483647)
-    public String getTeamName() {
-        return this.teamName;
-    }
-
-    public TeamPlayer setTeamName(String teamName) {
-        this.teamName = teamName;
+    public TeamPlayer setTeamId(Integer teamId) {
+        this.teamId = teamId;
         return this;
     }
 
@@ -96,8 +79,7 @@ public class TeamPlayer implements Serializable {
         StringBuilder sb = new StringBuilder("TeamPlayer (");
 
         sb.append(playerSessionId);
-        sb.append(", ").append(gameId);
-        sb.append(", ").append(teamName);
+        sb.append(", ").append(teamId);
 
         sb.append(")");
         return sb.toString();

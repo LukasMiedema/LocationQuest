@@ -28,9 +28,6 @@ class GameInfoDto() {
 
 
 	// Linked properties
-	@Column(name = "MEMBER_COUNT")
-	var memberCount: Int? = null;
-
 	@Column(name = "TEAM_NAME")
 	var teamName: String? = null;
 
