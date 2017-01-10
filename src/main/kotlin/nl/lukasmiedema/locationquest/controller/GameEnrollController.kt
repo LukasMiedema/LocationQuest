@@ -6,22 +6,18 @@ import nl.lukasmiedema.locationquest.dto.TeamSelectionDto
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
-import nl.lukasmiedema.locationquest.entity.tables.records.TeamPlayerRecord
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
-import org.hibernate.validator.constraints.Range
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.awt.Color
 import javax.validation.Valid
-import javax.validation.constraints.NotNull
 
 /**
  * @author Lukas Miedema

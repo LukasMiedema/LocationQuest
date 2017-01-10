@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import org.springframework.web.servlet.ModelAndView
 import sun.audio.AudioPlayer.player
@@ -29,7 +30,7 @@ import javax.servlet.http.HttpServletResponse
 open class MenuInterceptor : HandlerInterceptorAdapter() {
 
 	companion object {
-		private val DEFAULT_LAYOUT = "Page"
+		private val DEFAULT_LAYOUT = "components/Page"
 		private val DEFAULT_VIEW_ATTRIBUTE_NAME = "view"
 	}
 
@@ -67,5 +68,7 @@ open class MenuInterceptor : HandlerInterceptorAdapter() {
 
 		modelAndView.viewName = DEFAULT_LAYOUT
 		modelAndView.addObject(DEFAULT_VIEW_ATTRIBUTE_NAME, originalViewName)
+
+		response.addHeader("Content-Type", "application/xhtml+xml")
 	}
 }

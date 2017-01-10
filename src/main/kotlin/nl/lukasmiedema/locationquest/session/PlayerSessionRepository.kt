@@ -62,23 +62,29 @@ open class PlayerSessionRepository : SessionRepository<ExpiringSession> {
 		if (session != null) {
 			return session;
 		} else {
+			try {
+				val uuid = UUID.fromString(id)
 
-			val uuid = UUID.fromString(id)
-			val player: Player = sql
-					.selectFrom(Tables.PLAYER)
-					.where(Tables.PLAYER.SESSION_ID.eq(uuid))
-					.fetchAnyInto(Player::class.java) ?: return null
+				val player: Player = sql
+						.selectFrom(Tables.PLAYER)
+						.where(Tables.PLAYER.SESSION_ID.eq(uuid))
+						.fetchAnyInto(Player::class.java) ?: return null
 
-			val dbSession = MapSession(uuid.toString())
+				val dbSession = MapSession(uuid.toString())
 
-			// When the session comes from the database, Spring security needs to be made aware of this somehow
-			// Therefore, create a context with the player as principal
-			val context = SecurityContextHolder.createEmptyContext()
-			context.authentication = SessionAuthentication(player)
-			dbSession.setAttribute(SPRING_SECURITY_CONTEXT, context)
+				// When the session comes from the database, Spring security needs to be made aware of this somehow
+				// Therefore, create a context with the player as principal
+				val context = SecurityContextHolder.createEmptyContext()
+				context.authentication = SessionAuthentication(player)
+				dbSession.setAttribute(SPRING_SECURITY_CONTEXT, context)
 
-			// And return the new session
-			return dbSession
+				// And return the new session
+				return dbSession
+
+			} catch (e: IllegalArgumentException) {
+				// The cookie isn't valid --> return null
+				return null
+			}
 		}
 	}
 

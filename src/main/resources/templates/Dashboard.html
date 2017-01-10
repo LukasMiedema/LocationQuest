@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto"*/-->
+<!--/*@thymesVar id="tab" type="java.lang.String"*/-->
+<head>
+	<title th:text="|${game.name} - X|"></title>
+</head>
+<body>
+<div class="ui text container">
+	<div class="ui tiny horizontal divider header">
+		<th:block th:text="${game.name}"/>
+		<div class="ui basic label">
+			<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
+			<div class="detail" th:text="${team.name}"></div>
+		</div>
+	</div>
+
+	<div class="ui menu" th:with="url=(@{/games/{id}/dashboard(id=${game.id})} + '/{tab}')">
+		<a class="item" th:classappend="${tab} eq 'QuestTab' ? 'active'" th:href="@{${url}(tab='')}">
+			<i class="search icon" th:if="${tab} eq 'QuestTab'"></i>
+			Opdracht
+		</a>
+		<a class="item" th:classappend="${tab} eq 'HistoryTab' ? 'active'" th:href="@{${url}(tab='history')}">
+			<i class="history icon" th:if="${tab} eq 'HistoryTab'"></i>
+			Geschiedenis
+		</a>
+		<a class="item" th:classappend="${tab} eq 'TeamTab' ? 'active'" th:href="@{${url}(tab='team')}">
+			<i class="users icon" th:if="${tab} eq 'TeamTab'"></i>
+			Team
+		</a>
+	</div>
+
+	<div class="ui segments" th:include="|dashboard/${tab} :: body|"></div>
+</div>
+</body>
+</html>

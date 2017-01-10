@@ -8,7 +8,8 @@ buildscript {
 
 		h2 = new Expando(
 			driver: 'org.h2.Driver',
-			url: 'jdbc:h2:./locationquest',
+			file: 'build/locationquest.mv.db',
+			url: 'jdbc:h2:./build/locationquest',
 			user: 'sa',
 			password: 'sa',
 		)
@@ -69,9 +70,6 @@ dependencies {
 	// Validation
 	compile("org.hibernate:hibernate-validator")
 
-	// Thymeleaf BS
-	compile("net.sourceforge.nekohtml:nekohtml:1.9.21")
-
 	// Language dependencies
 	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
 
@@ -129,7 +127,7 @@ jooq {
 			}
 			target {
 				packageName = 'nl.lukasmiedema.locationquest.entity'
-				directory = 'target/generated-sources/jooq'
+				directory = 'build/generated-sources/jooq'
 			}
 		}
 	}
@@ -139,7 +137,7 @@ generateLocationGameJooqSchemaSource.dependsOn flywayMigrate
 
 // After completion, the h2 database is purged
 task entityGenerationClean << {
-	delete "locationquest.mv.db"
+	delete h2.file
 }
 
 compileKotlin.dependsOn generateLocationGameJooqSchemaSource

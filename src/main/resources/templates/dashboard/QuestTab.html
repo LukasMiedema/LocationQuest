@@ -1,0 +1,47 @@
+<body xmlns:th="http://www.thymeleaf.org">
+<th:block th:switch="${quest.phase.name()}">
+
+	<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.quest.QuestDto" */-->
+
+	<th:block th:case="PUZZLE">
+		<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.quest.PuzzleQuestDto" */-->
+		<div class="ui segment">
+			<h2 th:text="${quest.title}"></h2>
+			<p th:text="${quest.text}"></p>
+		</div>
+
+		<div class="ui clearing segment">
+			<form class="ui form" method="post" action="#">
+				<div class="field" th:each="option: ${quest.options}">
+					<div class="ui radio checkbox" th:with="id='radiobox' + ${option.answerId}">
+						<input type="radio" name="option" th:value="${option.answerId}" th:id="${id}" />
+						<label th:text="${option.answerLabel}" th:for="${id}"></label>
+					</div>
+				</div>
+				<div clas="field">
+					<input type="submit" class="ui right floated submit button" value="Bevestigen" />
+				</div>
+			</form>
+		</div>
+	</th:block>
+
+	<th:block th:case="TIMEOUT">
+		Timeout
+	</th:block>
+
+	<th:block th:case="FETCH">
+		Quest phase
+	</th:block>
+
+	<th:block th:case="DONE">
+		<i class="flag checkered icon"></i>
+		Alle vragen zijn beantwoord.
+	</th:block>
+
+	<th:block th:case="CLOSED">
+		<i class="clock icon"></i>
+		Dit spel is afgelopen. Er kunnen geen vragen meer beantwoord worden.
+	</th:block>
+
+</th:block>
+</body>

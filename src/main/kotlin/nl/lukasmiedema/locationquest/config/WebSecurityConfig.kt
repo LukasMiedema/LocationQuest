@@ -28,12 +28,7 @@ import javax.servlet.http.HttpServletResponse
 open class WebSecurityConfig : WebSecurityConfigurerAdapter(false) {
 
 	override fun configure(http: HttpSecurity) {
-		http
-			.csrf().disable()
-			.headers()
-					.frameOptions().sameOrigin()
-					.and()
-			.authorizeRequests()
-				.antMatchers("static/**").permitAll() // all static resources are ok
+		// all resources are ok (method security is used on the controllers)
+		http.authorizeRequests().anyRequest().permitAll()
 	}
 }

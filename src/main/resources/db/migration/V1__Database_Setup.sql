@@ -48,8 +48,8 @@ CREATE TABLE LOCATION_GAME.QUESTION (
   game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(id),
   title VARCHAR NOT NULL,
   text TEXT NOT NULL,
-  main_track BOOLEAN NOT NULL DEFAULT TRUE,
   qr_code UUID DEFAULT random_uuid(),
+  puzzle_title TEXT, -- null = not multiple choice
   puzzle_text TEXT -- null = not multiple choice. Advance as if answered correctly
 );
 
@@ -64,10 +64,11 @@ CREATE TABLE LOCATION_GAME.MULTIPLE_CHOICE_ANSWER (
 -- Answered question - created when a team answers a question
 CREATE TABLE LOCATION_GAME.ANSWERED_QUESTION (
   question_id INTEGER NOT NULL REFERENCES LOCATION_GAME.QUESTION(question_id),
-  team_name VARCHAR NOT NULL REFERENCES LOCATION_GAME.TEAM(name),
+  team_id INTEGER NOT NULL REFERENCES LOCATION_GAME.TEAM(id),
+  complete BOOLEAN NOT NULL DEFAULT FALSE,
   answer_id INTEGER REFERENCES LOCATION_GAME.MULTIPLE_CHOICE_ANSWER(answer_id), -- nullable
   timestamp TIMESTAMP NOT NULL DEFAULT now(),
-  PRIMARY KEY (question_id, team_name)
+  PRIMARY KEY (question_id, team_id)
 );
 
 -- Images hosted by the application
