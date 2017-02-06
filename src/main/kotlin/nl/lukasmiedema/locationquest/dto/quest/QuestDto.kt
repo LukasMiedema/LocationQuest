@@ -5,10 +5,10 @@ import javax.persistence.Column
 /**
  * @author Lukas Miedema
  */
-abstract class QuestDto(val title: String) {
+interface QuestDto {
 
 	/**
 	 * The current phase
 	 */
-	abstract val phase: QuestPhase
+	val phase: QuestPhase
 }

@@ -1,5 +1,9 @@
 package nl.lukasmiedema.locationquest.controller
 
+import nl.lukasmiedema.locationquest.dao.QuestDao
+import nl.lukasmiedema.locationquest.dto.GameTabDto
+import nl.lukasmiedema.locationquest.dto.MessageDto
+import nl.lukasmiedema.locationquest.dto.MultipleChoiceAnswerDto
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.dto.quest.*
 import nl.lukasmiedema.locationquest.entity.Tables
@@ -13,10 +17,11 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
+import java.sql.Timestamp
+import java.util.*
+import javax.validation.Valid
 
 /**
  * @author Lukas Miedema
@@ -26,8 +31,19 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping(GamesController.URL + "/{game}/dashboard")
 open class DashboardController {
 
-	@Autowired
-	private lateinit var sql: DSLContext
+	companion object {
+		private val TABS: Array<GameTabDto> = arrayOf(
+				GameTabDto("QuestTab", ""),
+				GameTabDto("HistoryTab", "history"),
+				GameTabDto("TeamTab", "team")
+		)
+	}
+
+	@Autowired private lateinit var sql: DSLContext
+	@Autowired private lateinit var questDao: QuestDao
+
+	@ModelAttribute("tabs")
+	open fun tabs() = TABS
 
 	@ModelAttribute("game")
 	open fun getGame(@PathVariable("game") gameId: Int): Game {
@@ -72,92 +88,132 @@ open class DashboardController {
 		}
 	}
 
+	@ModelAttribute("messages")
+	open fun getMessages() = arrayListOf(MessageDto(MessageDto.MessageType.WARNING, "TESTING"))//ArrayList<MessageDto>()
+
 	@GetMapping
 	open fun getQuest(
-			game: Game,
-			team: TeamInfoDto,
-			model: Model,
-			@AuthenticationPrincipal player: Player): String {
+			@ModelAttribute("game") game: Game,
+			@ModelAttribute("team") team: TeamInfoDto,
+			@ModelAttribute("messages") messages: MutableList<MessageDto>,
+			@RequestParam("claim", required = false) claim: String?,
+			model: Model): String {
 
 		// Determine a quest dto impl
-		val quest : QuestDto?
+		val quest : QuestDto
 
 		// Check game state
 		if (!game.active) {
-
-			quest = CompletedQuestDto("Spel gesloten", QuestPhase.CLOSED)
-
+			quest = CompletedQuestDto(QuestPhase.CLOSED)
 		} else {
 
 			// Get next question
-			val q = Tables.QUESTION.`as`("q")
-			val aq = Tables.ANSWERED_QUESTION.`as`("aq")
-			val nextQuestion: Question? = sql
-					.select(*q.fields())
-					.from(
-							q.leftJoin(aq)
-									.on(aq.QUESTION_ID.eq(q.QUESTION_ID))
-									.and(aq.TEAM_ID.eq(team.id))
-									.and(aq.COMPLETE.notEqual(true))
-					).orderBy(q.QUESTION_ID.asc())
-					.limit(1)
-					.fetchOneInto(Question::class.java)
-
-			if (nextQuestion == null) {
+			val next = questDao.getNextQuestion(game.id!!, team.id!!)
+			if (next == null) {
 
 				// No more questions
-				quest = CompletedQuestDto("Geen vragen meer", QuestPhase.DONE)
+				quest = CompletedQuestDto(QuestPhase.DONE)
 
 			} else {
 
-				// Check if it's already partially answered
-				val nextAnswer: AnsweredQuestion? = sql
-						.selectFrom(Tables.ANSWERED_QUESTION)
-						.where(
-								Tables.ANSWERED_QUESTION.QUESTION_ID.eq(nextQuestion.questionId)
-								.and(Tables.ANSWERED_QUESTION.TEAM_ID.eq(team.id))
-						)
-						.fetchOneInto(AnsweredQuestion::class.java)
-
-				if (nextAnswer == null && nextQuestion.puzzleText != null) {
-
-					// Not partially answered --> not answered at all
-					// Show the puzzle question with all the options
-					val options = sql
-							.selectFrom(Tables.MULTIPLE_CHOICE_ANSWER)
-							.where(Tables.MULTIPLE_CHOICE_ANSWER.QUESTION_ID.eq(nextQuestion.questionId))
-							.fetchInto(MultipleChoiceAnswer::class.java)
-
-					quest = PuzzleQuestDto(nextQuestion.puzzleTitle, nextQuestion.puzzleText, options)
-
-				} else {
-
-					// It's quest-o'-clock, show the quest
-					quest = FetchQuestDto(nextQuestion.title, nextQuestion.text)
+				// Check type
+				when (next.type) {
+					"MULTIPLE_CHOICE" -> quest =
+							PuzzleQuestDto(next.title, next.text, questDao.getQuestionOptions(next.questionId))
+					"QR_TEXT_FETCH" -> quest = FetchQuestDto(next.title, next.text)
+					else -> throw IllegalStateException("Unknown quest type")
 				}
 			}
 		}
 
+		// Add claim message
+		when (claim) {
+			"error" -> messages.add(MessageDto(MessageDto.MessageType.WARNING, "Antwoord kon niet verwerkt worden"))
+			"correct" -> messages.add(MessageDto(MessageDto.MessageType.SUCCESS, "Opdracht goedgekeurd!"))
+			"wrong" -> messages.add(MessageDto(MessageDto.MessageType.ERROR, "Opdracht fout"))
+		}
+
 		model.addAttribute("quest", quest)
-		model.addAttribute("tab", "QuestTab")
+		model.addAttribute("activeTab", "QuestTab")
 		return "Dashboard"
+	}
+
+	@PostMapping("/quest/mc")
+	open fun postMultipleChoiceQuest(
+			@ModelAttribute("game") game: Game,
+			@ModelAttribute("team") team: TeamInfoDto,
+			@ModelAttribute("messages") messages: MutableList<MessageDto>,
+			model: Model,
+			@Valid multipleChoiceAnswerDto: MultipleChoiceAnswerDto,
+			bindingResult: BindingResult): String {
+
+		// Check answer
+		if (bindingResult.hasErrors()) {
+			messages.add(MessageDto(MessageDto.MessageType.WARNING, "Vergeet niet een optie te selecteren"))
+			return getQuest(game, team, messages, null, model)
+		}
+
+		// Determine redirect url
+		val redirect = "redirect:/${GamesController.URL}/${game.id}/dashboard/?claim="
+
+		// Validate
+		val next = questDao.getNextQuestion(game.id!!, team.id!!)
+		if (!game.active || next == null || next.type != "MULTIPLE_CHOICE") {
+			return redirect + "error"
+		}
+
+		val answer = sql
+				.selectFrom(Tables.MULTIPLE_CHOICE_ANSWER)
+				.where(
+						Tables.MULTIPLE_CHOICE_ANSWER.ANSWER_ID.eq(multipleChoiceAnswerDto.option))
+				.fetchOneInto(MultipleChoiceAnswer::class.java)
+
+		// Validate more
+		if (answer == null || answer.questionId != next.questionId) {
+			return redirect + "error"
+		}
+
+		// Save a multiple choice quest answer
+		// It is stored regardless if it was correct
+		val answeredQuest = sql.newRecord(Tables.ANSWERED_QUESTION)
+		answeredQuest.questionId = next.questionId
+		answeredQuest.answerId = answer.answerId
+		answeredQuest.teamId = team.id
+		answeredQuest.timestamp = Timestamp(System.currentTimeMillis())
+		answeredQuest.store()
+
+		// And redirect
+		return redirect + (if (answer.correct) "correct" else "wrong")
 	}
 
 	@GetMapping("history")
 	open fun getHistory(
-			game: Game,
+			@ModelAttribute("game") game: Game,
 			model: Model,
 			@AuthenticationPrincipal player: Player): String {
-		model.addAttribute("tab", "HistoryTab")
+		model.addAttribute("activeTab", "HistoryTab")
 		return "Dashboard"
 	}
 
 	@GetMapping("team")
 	open fun getTeam(
-			game: Game,
+			@ModelAttribute("game") game: Game,
+			@ModelAttribute("team") team: TeamInfoDto,
 			model: Model,
 			@AuthenticationPrincipal player: Player): String {
-		model.addAttribute("tab", "TeamTab")
+
+		val teamMembers = sql
+				.select(*Tables.PLAYER.fields())
+				.from(
+						Tables.PLAYER.join(Tables.TEAM_PLAYER)
+								.on(Tables.PLAYER.SESSION_ID.eq(Tables.TEAM_PLAYER.PLAYER_SESSION_ID)
+								)
+				).where(Tables.TEAM_PLAYER.TEAM_ID.eq(team.id))
+				.fetchInto(Player::class.java)
+
+		model.addAttribute("teamMembers", teamMembers)
+		model.addAttribute("activeTab", "TeamTab")
+		model.addAttribute("player", player)
 		return "Dashboard"
 	}
 }

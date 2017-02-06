@@ -6,12 +6,12 @@ import nl.lukasmiedema.locationquest.entity.tables.pojos.MultipleChoiceAnswer
  * @author Lukas Miedema
  */
 class PuzzleQuestDto(
-		title: String,
+		val title: String,
 		val text: String,
 		val options: List<MultipleChoiceAnswer>
-) : QuestDto(title) {
+) : QuestDto {
 
 	override val phase: QuestPhase
-		get() = QuestPhase.PUZZLE
+		get() = QuestPhase.MULTIPLE_CHOICE
 
 }

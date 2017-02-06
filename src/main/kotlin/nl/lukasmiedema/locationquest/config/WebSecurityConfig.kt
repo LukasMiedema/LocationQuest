@@ -29,6 +29,9 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter(false) {
 
 	override fun configure(http: HttpSecurity) {
 		// all resources are ok (method security is used on the controllers)
-		http.authorizeRequests().anyRequest().permitAll()
+		http
+				.csrf().disable()
+				.headers().frameOptions().sameOrigin().and()
+				.authorizeRequests().anyRequest().permitAll()
 	}
 }

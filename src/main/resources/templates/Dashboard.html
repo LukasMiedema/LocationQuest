@@ -2,8 +2,13 @@
 <!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
 <!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto"*/-->
 <!--/*@thymesVar id="tab" type="java.lang.String"*/-->
+<!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
 <head>
-	<title th:text="|${game.name} - X|"></title>
+	<title>
+		<th:block th:include="|dashboard/${activeTab} :: title|" />
+		-
+		<th:block th:text="${game.name}"/>
+	</title>
 </head>
 <body>
 <div class="ui text container">
@@ -15,22 +20,27 @@
 		</div>
 	</div>
 
-	<div class="ui menu" th:with="url=(@{/games/{id}/dashboard(id=${game.id})} + '/{tab}')">
-		<a class="item" th:classappend="${tab} eq 'QuestTab' ? 'active'" th:href="@{${url}(tab='')}">
-			<i class="search icon" th:if="${tab} eq 'QuestTab'"></i>
-			Opdracht
-		</a>
-		<a class="item" th:classappend="${tab} eq 'HistoryTab' ? 'active'" th:href="@{${url}(tab='history')}">
-			<i class="history icon" th:if="${tab} eq 'HistoryTab'"></i>
-			Geschiedenis
-		</a>
-		<a class="item" th:classappend="${tab} eq 'TeamTab' ? 'active'" th:href="@{${url}(tab='team')}">
-			<i class="users icon" th:if="${tab} eq 'TeamTab'"></i>
-			Team
-		</a>
+	<!-- Notifications -->
+	<div th:each="message: ${messages}"
+		 th:classappend="${message.type.htmlClass}" class="ui message"
+		 th:text="${message.message}">
+		Notification!
 	</div>
 
-	<div class="ui segments" th:include="|dashboard/${tab} :: body|"></div>
+	<div class="ui menu" th:with="url=(@{/games/{id}/dashboard(id=${game.id})} + '/{tab}')">
+
+		<a th:each="tab: ${tabs}"
+		   class="item"
+		   th:classappend="${activeTab} eq ${tab.template} ? 'active'"
+		   th:href="@{${url}(tab=${tab.url})}">
+
+			<i class="search icon" th:if="${activeTab} eq ${tab.template}"></i>
+			<th:block th:include="|dashboard/${tab.template} :: title|" />
+		</a>
+
+	</div>
+
+	<div class="ui segments" th:include="|dashboard/${activeTab} :: body|"></div>
 </div>
 </body>
 </html>
