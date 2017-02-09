@@ -51,7 +51,7 @@ open class GameEnrollController {
 						Tables.TEAM.join(Tables.TEAM_PLAYER)
 								.on(Tables.TEAM.ID.eq(Tables.TEAM_PLAYER.TEAM_ID))
 				)
-				.where(Tables.TEAM_PLAYER.PLAYER_SESSION_ID.eq(player.sessionId))
+				.where(Tables.TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
 				.and(Tables.TEAM.GAME_ID.eq(gameId))
 		)
 		if (alreadyEnrolled) {
@@ -103,7 +103,8 @@ open class GameEnrollController {
 		}
 
 		// Save and continue
-		sql.insertInto(Tables.TEAM_PLAYER).values(player.sessionId, teamSelectionDto.teamId).execute()
+		val tp = Tables.TEAM_PLAYER
+		sql.insertInto(tp, tp.PLAYER_ID, tp.TEAM_ID).values(player.playerId, teamSelectionDto.teamId).execute()
 		return "redirect:/games/$gameId/dashboard"
 	}
 
@@ -130,7 +131,7 @@ open class GameEnrollController {
 				.fetchOne()
 
 		// Save user
-		sql.insertInto(Tables.TEAM_PLAYER).values(player.sessionId, teamRecord.id).execute()
+		sql.insertInto(Tables.TEAM_PLAYER).values(player.playerId, teamRecord.id).execute()
 		return "redirect:/games/$gameId/dashboard"
 	}
 }

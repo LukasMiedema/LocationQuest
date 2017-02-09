@@ -1,6 +1,5 @@
 package nl.lukasmiedema.locationquest.dto
 
-import org.hibernate.validator.constraints.Range
 import javax.validation.constraints.NotNull
 
 /**

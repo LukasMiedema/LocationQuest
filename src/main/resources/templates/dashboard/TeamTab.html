@@ -11,10 +11,8 @@
 	<div class="ui segment" th:each="other: ${teamMembers}">
 		<!--/*@thymesVar id="other" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Player"*/-->
 		<i class="user icon"></i>
-		<th:block th:if="${other.sessionId == player.sessionId}">
-			<i th:text="${other.name}"></i>
-		</th:block>
-		<th:block th:unless="${other.sessionId == player.sessionId}" th:text="${other.name}"/>
+		<i th:if="${other.playerId == player.playerId}" th:text="${other.name}"></i>
+		<th:block th:unless="${other.playerId == player.playerId}" th:text="${other.name}"/>
 	</div>
 </body>
 </html>

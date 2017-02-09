@@ -31,10 +31,19 @@
 				</div>
 			</div>
 		</div>
-		<a class="ui bottom attached button"
-			 th:classappend="${game.teamName} or not ${game.allowNewMembers} or not ${game.active} ? 'disabled'">
-			<i class="icon" th:classappend="${game.teamName} ? 'checkmark' : 'add'"></i>
-			<th:block th:text="${game.teamName} ? 'Ingeschreven' : 'Inschrijven'"/>
-		</a>
+		<th:block th:switch="true">
+			<a th:case="${game.teamName != null}" class="ui bottom attached positive button disabled">
+				<i class="icon checkmark"></i> Ingeschreven
+			</a>
+			<a th:case="not ${game.active}" class="ui bottom attached button disabled">
+				<i class="icon flag checkered"></i> Spel afgelopen
+			</a>
+			<a th:case="not ${game.allowNewMembers}" class="ui bottom attached button disabled">
+				<i class="icon lock"></i> Inschrijving gesloten
+			</a>
+			<a th:case="true" class="ui bottom attached positive button">
+				<i class="icon add"></i> Inschrijven
+			</a>
+		</th:block>
 	</div>
 </div>

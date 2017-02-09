@@ -1,7 +1,6 @@
 package nl.lukasmiedema.locationquest.dto
 
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
-import java.util.*
 
 /**
  * @author Lukas Miedema

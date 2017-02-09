@@ -1,7 +1,5 @@
 package nl.lukasmiedema.locationquest.dto.quest
 
-import javax.persistence.Column
-
 /**
  * @author Lukas Miedema
  */

@@ -5,14 +5,14 @@ INSERT INTO LOCATION_GAME.PLAYER (player_id, name) VALUES
 (3, 'Peter Bheter'),
 (4, 'Definitely a real person');
 
-INSERT INTO LOCATION_GAME.PLAYER_TOKEN (player_id, token) VALUES
-(0, '00000000000000000000000000000000');
+--INSERT INTO LOCATION_GAME.PLAYER_TOKEN (player_id, token) VALUES
+--(0, '00000000000000000000000000000000');
 
 INSERT INTO LOCATION_GAME.GAME (id, name, admin_id, timestamp, active, allow_new_members) VALUES
 (0, 'Test Game 1', 1, now(), true, true),
 (1, 'Test Game 2', 1, now(), false, true),
-(2, 'Test Game 3', 1, now(), true, true),
-(3, 'Test Game 4', 1, now(), true, true);
+(2, 'Test Game 3', 1, now(), true, false),
+(3, 'Test Game 4', 1, now(), false, false);
 
 INSERT INTO LOCATION_GAME.TEAM (id, game_id, name, color) VALUES
 (0, 0, 'TestTeam', 0xff00ff),

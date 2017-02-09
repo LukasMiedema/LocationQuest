@@ -7,7 +7,9 @@ import nl.lukasmiedema.locationquest.dto.MultipleChoiceAnswerDto
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.dto.quest.*
 import nl.lukasmiedema.locationquest.entity.Tables
-import nl.lukasmiedema.locationquest.entity.tables.pojos.*
+import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
+import nl.lukasmiedema.locationquest.entity.tables.pojos.MultipleChoiceAnswer
+import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
 import nl.lukasmiedema.locationquest.exception.UnauthorizedException
 import org.jooq.DSLContext
@@ -20,7 +22,6 @@ import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.sql.Timestamp
-import java.util.*
 import javax.validation.Valid
 
 /**
@@ -78,7 +79,7 @@ open class DashboardController {
 				)
 				.from(t.join(tp).on(t.ID.eq(tp.TEAM_ID)))
 				.where(t.GAME_ID.eq(gameId))
-				.and(tp.PLAYER_SESSION_ID.eq(player.sessionId))
+				.and(tp.PLAYER_ID.eq(player.playerId))
 				.fetchOneInto(TeamInfoDto::class.java)
 
 		if (teamInfo == null) {
@@ -206,7 +207,7 @@ open class DashboardController {
 				.select(*Tables.PLAYER.fields())
 				.from(
 						Tables.PLAYER.join(Tables.TEAM_PLAYER)
-								.on(Tables.PLAYER.SESSION_ID.eq(Tables.TEAM_PLAYER.PLAYER_SESSION_ID)
+								.on(Tables.PLAYER.PLAYER_ID.eq(Tables.TEAM_PLAYER.PLAYER_ID)
 								)
 				).where(Tables.TEAM_PLAYER.TEAM_ID.eq(team.id))
 				.fetchInto(Player::class.java)
