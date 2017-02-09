@@ -34,7 +34,7 @@
 		   th:classappend="${activeTab} eq ${tab.template} ? 'active'"
 		   th:href="@{${url}(tab=${tab.url})}">
 
-			<i class="search icon" th:if="${activeTab} eq ${tab.template}"></i>
+			<th:block th:include="|dashboard/${tab.template} :: icon|" th:if="${activeTab} eq ${tab.template}" />
 			<th:block th:include="|dashboard/${tab.template} :: title|" />
 		</a>
 

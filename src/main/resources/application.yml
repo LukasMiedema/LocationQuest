@@ -10,7 +10,7 @@ spring:
     FAIL_ON_EMPTY_BEANS: false
 
 server:
-  session.cookie.name: 'session'
+  session.cookie.name: 'LocationQuestSession'
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN

@@ -4,14 +4,12 @@
 </head>
 <body>
 	<div class="ui text container">
-		<h4 class="ui horizontal divider header">Mijn spellen</h4>
-		<div th:replace="components/GameList :: list (${ownGames})"></div>
+		<div th:replace="components/GameList :: list ('Mijn spellen', ${ownGames})"></div>
 	</div>
 	<br/>
 	<br/>
 	<div class="ui text container">
-		<h4 class="ui horizontal divider header">Alle spellen</h4>
-		<div th:replace="components/GameList :: list (${openGames})"></div>
+		<div th:replace="components/GameList :: list ('Alle spellen', ${openGames})"></div>
 	</div>
 </body>
 </html>

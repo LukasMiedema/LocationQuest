@@ -61,18 +61,34 @@ open class ProfileController {
 			return PROFILE_VIEW
 		}
 
-		// Save the user details
-		val p = Tables.PLAYER
-		val player : Player = sql
-				.insertInto(p, p.NAME)
-				.values(chooseNameFormDto.name)
-				.returning(*p.fields())
-				.fetchOne().into(Player::class.java)
+		// Check if this is a rename or a registration
+		if (principal == null) {
+			// Login / register
 
-		// Authenticate
-		val auth = this.authenticationManager.authenticate(PlayerAuthentication(player))
-		SecurityContextHolder.getContext().authentication = auth
-		rememberMeServices.loginSuccess(servletRequest, servletResponse, auth)
+			// Save the user details
+			val p = Tables.PLAYER
+			val player: Player = sql
+					.insertInto(p, p.NAME)
+					.values(chooseNameFormDto.name)
+					.returning(*p.fields())
+					.fetchOne().into(Player::class.java)
+
+			// Authenticate
+			val auth = this.authenticationManager.authenticate(PlayerAuthentication(player))
+			SecurityContextHolder.getContext().authentication = auth
+			rememberMeServices.loginSuccess(servletRequest, servletResponse, auth)
+
+		} else {
+
+			// Rename
+			principal.name = chooseNameFormDto.name
+			val p = Tables.PLAYER
+			sql
+					.update(p)
+					.set(p.NAME, principal.name)
+					.where(p.PLAYER_ID.eq(principal.playerId))
+					.execute()
+		}
 
 		// Redirect to the games page
 		return "redirect:/${GamesController.URL}"
