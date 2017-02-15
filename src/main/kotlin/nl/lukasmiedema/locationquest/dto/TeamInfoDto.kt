@@ -7,8 +7,8 @@ import javax.persistence.Column
  */
 class TeamInfoDto {
 
-	@Column(name = "ID")
-	var id: Int? = null;
+	@Column(name = "TEAM_ID")
+	var teamId: Int? = null;
 
 	@Column(name = "NAME")
 	var name: String? = null

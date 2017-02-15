@@ -11,6 +11,7 @@ spring:
 
 server:
   session.cookie.name: 'LocationQuestSession'
+  session.persistent: false
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN

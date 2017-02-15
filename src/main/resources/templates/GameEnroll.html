@@ -26,7 +26,7 @@
 			<h2>Inschrijving voor <i th:text="${game.name}"></i></h2>
 			<p>Kies een team</p>
 
-			<form th:action="@{/games/{id}/enroll(id=${game.id})}" method="post" class="ui large form enroll"
+			<form th:action="@{/games/{id}/enroll(id=${game.gameId})}" method="post" class="ui large form enroll"
 				  th:object="${teamSelectionDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
 				<input type="hidden" id="teamEnrollOption" name="teamId" value="" />
 				<h4 class="ui horizontal divider header">Bestaande teams</h4>
@@ -44,7 +44,7 @@
 					</div>
 
 					<div class="item" th:each="team: ${teams}">
-						<div class="ui fluid labeled button team-item" th:attr="data-id=${team.id}">
+						<div class="ui fluid labeled button team-item" th:attr="data-id=${team.teamId}">
 							<div class="ui fluid team button">
 								<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
 								<th:block th:text="${team.name}"/>
@@ -63,7 +63,7 @@
 			<br/>
 			<br/>
 
-			<form th:action="@{/games/{id}/create(id=${game.id})}" method="post" class="ui large form create"
+			<form th:action="@{/games/{id}/create(id=${game.gameId})}" method="post" class="ui large form create"
 				  th:object="${teamCreationDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
 				<h4 class="ui horizontal divider header">Of maak een nieuw team</h4>
 

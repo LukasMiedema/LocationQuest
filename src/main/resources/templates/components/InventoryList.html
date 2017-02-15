@@ -1,0 +1,13 @@
+<div th:fragment="list (inventory)" class="ui relaxed horizontal list" xmlns:th="http://www.thymeleaf.org">
+
+	<!--/*@thymesVar id="inventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+	<div class="item" th:each="item: ${inventory.items}">
+		<div class="ui mini image">
+			<img th:src="@{/file/{uuid}(uuid=${item.collectible.fileId})}" />
+		</div>
+		<div class="content">
+			<div class="header" th:text="${item.collectible.name}">Cookie</div>
+			<th:block th:text="${item.count}"/>x
+		</div>
+	</div>
+</div>

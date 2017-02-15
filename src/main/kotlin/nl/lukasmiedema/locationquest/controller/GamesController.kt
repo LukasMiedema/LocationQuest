@@ -39,7 +39,7 @@ open class GamesController {
 
 		val ownGames = sql
 				.select(
-						g.ID,
+						g.GAME_ID,
 						g.NAME,
 						g.TIMESTAMP,
 						g.ACTIVE,
@@ -49,9 +49,9 @@ open class GamesController {
 				)
 				.from(
 						tp.join(t) // find the team for every team player
-								.on(t.ID.eq(tp.TEAM_ID))
+								.on(t.TEAM_ID.eq(tp.TEAM_ID))
 						.join(g) // find all games for every team player
-								.on(t.GAME_ID.eq(g.ID))
+								.on(t.GAME_ID.eq(g.GAME_ID))
 				)
 				.where(tp.PLAYER_ID.eq(player.playerId))
 				.fetchInto(GameInfoDto::class.java)
@@ -59,7 +59,7 @@ open class GamesController {
 		// Load all open games
 		val openGames = sql
 				.select(
-						g.ID,
+						g.GAME_ID,
 						g.NAME,
 						g.TIMESTAMP,
 						g.ACTIVE,
@@ -69,9 +69,9 @@ open class GamesController {
 				)
 				.from(
 						g.leftJoin(t.join(tp)
-									.on(tp.TEAM_ID.eq(t.ID))
+									.on(tp.TEAM_ID.eq(t.TEAM_ID))
 									.and(tp.PLAYER_ID.eq(player.playerId)))
-								.on(t.GAME_ID.eq(g.ID))
+								.on(t.GAME_ID.eq(g.GAME_ID))
 				)
 				.fetchInto(GameInfoDto::class.java)
 

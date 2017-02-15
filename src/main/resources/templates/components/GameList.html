@@ -2,7 +2,7 @@
 	<!--/*@thymesVar id="games" type="java.util.List<nl.lukasmiedema.locationquest.dto.GameInfoDto>"*/-->
 	<h4 th:text="${title}" class="ui horizontal divider header"></h4>
 	<div class="ui container" th:if="${games.empty}">~ Dust ~</div>
-	<div class="card clickable" th:each="game: ${games}" th:attr="data-href=|games/${game.id}|">
+	<div class="card clickable" th:each="game: ${games}" th:attr="data-href=|games/${game.gameId}|">
 
 		<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.dto.GameInfoDto"*/-->
 		<div class="content">

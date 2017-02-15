@@ -49,7 +49,7 @@ open class GameEnrollController {
 		val alreadyEnrolled = sql.fetchExists(
 				DSL.selectFrom(
 						Tables.TEAM.join(Tables.TEAM_PLAYER)
-								.on(Tables.TEAM.ID.eq(Tables.TEAM_PLAYER.TEAM_ID))
+								.on(Tables.TEAM.TEAM_ID.eq(Tables.TEAM_PLAYER.TEAM_ID))
 				)
 				.where(Tables.TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
 				.and(Tables.TEAM.GAME_ID.eq(gameId))
@@ -61,7 +61,7 @@ open class GameEnrollController {
 		// Get the game
 		val game: Game = sql
 				.selectFrom(Tables.GAME)
-				.where(Tables.GAME.ID.eq(gameId))
+				.where(Tables.GAME.GAME_ID.eq(gameId))
 				.fetchOneInto(Game::class.java)
 				?: throw ResourceNotFoundException("No such game: $gameId")
 
@@ -72,12 +72,12 @@ open class GameEnrollController {
 
 		val teams = sql
 				.select(
-						t.ID,
+						t.TEAM_ID,
 						t.NAME,
 						t.COLOR,
 						DSL.select(DSL.count())
 								.from(tp)
-								.where(tp.TEAM_ID.eq(t.ID))
+								.where(tp.TEAM_ID.eq(t.TEAM_ID))
 								.asField<Any>("MEMBER_COUNT")
 				)
 				.from(t).where(t.GAME_ID.eq(gameId))
@@ -127,11 +127,11 @@ open class GameEnrollController {
 				.set(Tables.TEAM.GAME_ID, gameId)
 				.set(Tables.TEAM.COLOR, teamCreationDto.colorInt)
 				.set(Tables.TEAM.NAME, teamCreationDto.name)
-				.returning(Tables.TEAM.ID)
+				.returning(Tables.TEAM.TEAM_ID)
 				.fetchOne()
 
 		// Save user
-		sql.insertInto(Tables.TEAM_PLAYER).values(player.playerId, teamRecord.id).execute()
+		sql.insertInto(Tables.TEAM_PLAYER).values(player.playerId, teamRecord.teamId).execute()
 		return "redirect:/games/$gameId/dashboard"
 	}
 }

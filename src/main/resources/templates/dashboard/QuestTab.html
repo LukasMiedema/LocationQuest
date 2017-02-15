@@ -1,55 +1,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Opdracht</title>
+	<title>Quest</title>
 	<icon><i class="search icon"></i></icon>
 </head>
 <body>
-	<th:block th:switch="${quest.phase.name()}">
+	<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
+	<!--/*@thymesVar id="questType" type="nl.lukasmiedema.locationquest.dto.QuestType" */-->
 
-		<div class="ui right corner label" th:classappend="${quest.phase.htmlClass}">
-			<i class="icon" th:classappend="${quest.phase.icon}"></i>
+	<th:block th:switch="${questType.name()}">
+
+		<div class="ui right corner label" th:classappend="${questType.htmlClass}">
+			<i class="icon" th:classappend="${questType.icon}"></i>
 		</div>
 
-		<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.quest.QuestDto" */-->
-		<th:block th:case="MULTIPLE_CHOICE">
-			<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.quest.PuzzleQuestDto" */-->
-			<div class="ui segment">
-				<h2 th:text="${quest.title}"></h2>
-				<p th:text="${quest.text}"></p>
-			</div>
+		<div class="ui segment" th:case="QR_TEXT_FETCH">
+			<h2 th:text="${quest.name}"></h2>
+			<p th:text="${quest.text}"></p>
+		</div>
 
-			<div class="ui clearing segment">
-				<form class="ui form" method="post" th:action="@{/games/{id}/dashboard/quest/mc(id=${game.id})}">
-					<div class="field" th:each="option: ${quest.options}">
-						<div class="ui radio checkbox" th:with="id='radiobox' + ${option.answerId}">
-							<input type="radio" name="option" th:value="${option.answerId}" th:id="${id}" />
-							<label th:text="${option.answerLabel}" th:for="${id}"></label>
-						</div>
-					</div>
-					<div clas="field">
-						<input type="submit" class="ui right floated submit button" value="Bevestigen" />
-					</div>
-				</form>
-			</div>
-		</th:block>
+		<div class="ui segment" th:case="PASSCODE">
+			<h2 th:text="${quest.name}"></h2>
+			<p th:text="${quest.text}"></p>
+			THIS IS A PASSCODE THING YES
+		</div>
 
-		<th:block th:case="QR_TEXT_FETCH">
-			<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.quest.FetchQuestDto" */-->
-			<div class="ui segment">
-				<h2 th:text="${quest.title}"></h2>
-				<p th:text="${quest.text}"></p>
-			</div>
-		</th:block>
+		<div class="ui segment" th:case="DONE">
+			<h2>Dat was het</h2>
+			<p>Alle vragen zijn beantwoord.</p>
+		</div>
 
-		<th:block th:case="DONE">
-			<i class="flag checkered icon"></i>
-			Alle vragen zijn beantwoord.
-		</th:block>
+		<div class="ui segment" th:case="CLOSED">
+			<h2>Dit spel is gesloten</h2>
+			<p>Er kunnen geen vragen meer beantwoord worden.</p>
+		</div>
 
-		<th:block th:case="CLOSED">
-			<i class="clock icon"></i>
-			Dit spel is afgelopen. Er kunnen geen vragen meer beantwoord worden.
-		</th:block>
 	</th:block>
 </body>
 </html>

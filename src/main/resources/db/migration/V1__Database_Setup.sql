@@ -1,9 +1,16 @@
 CREATE SCHEMA LOCATION_GAME;
 
+-- Images and other files hosted by the application
+CREATE TABLE LOCATION_GAME.FILE (
+  file_id UUID PRIMARY KEY,
+  mime_type VARCHAR(50),
+  file BYTEA NOT NULL
+);
+
 -- Users
 CREATE TABLE LOCATION_GAME.PLAYER (
   player_id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
+  name VARCHAR(10) NOT NULL,
   system_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
@@ -21,9 +28,8 @@ CREATE TABLE LOCATION_GAME.PLAYER_CREDENTIALS (
 
 -- Games
 CREATE TABLE LOCATION_GAME.GAME (
-  id SERIAL PRIMARY KEY,
+  game_id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  admin_id INT REFERENCES LOCATION_GAME.PLAYER(player_id),
   timestamp TIMESTAMP NOT NULL DEFAULT now(),
   active BOOLEAN NOT NULL DEFAULT TRUE,
   allow_new_members BOOLEAN NOT NULL DEFAULT TRUE
@@ -31,8 +37,8 @@ CREATE TABLE LOCATION_GAME.GAME (
 
 -- Teams
 CREATE TABLE LOCATION_GAME.TEAM (
-  id SERIAL PRIMARY KEY,
-  game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(id),
+  team_id SERIAL PRIMARY KEY,
+  game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(game_id),
   name VARCHAR NOT NULL,
   color INTEGER NOT NULL,
   UNIQUE KEY (game_id, name)
@@ -41,50 +47,57 @@ CREATE TABLE LOCATION_GAME.TEAM (
 -- Team principal association table
 CREATE TABLE LOCATION_GAME.TEAM_PLAYER (
   player_id INT NOT NULL REFERENCES LOCATION_GAME.PLAYER(player_id),
-  team_id INTEGER NOT NULL REFERENCES LOCATION_GAME.TEAM(id),
+  team_id INTEGER NOT NULL REFERENCES LOCATION_GAME.TEAM(team_id),
   PRIMARY KEY (player_id, team_id)
 );
 
 
--- Question
--- A question has a type and there are multiple types
--- However all types share one table, so lots of the fields are nullable
-CREATE TABLE LOCATION_GAME.QUESTION (
+-- Chapters
+CREATE TABLE LOCATION_GAME.CHAPTER (
+  chapter_id SERIAL PRIMARY KEY,
+  game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(game_id),
+  name VARCHAR(255) NOT NULL,
+  color INT NOT NULL
+);
 
-  -- General fields
-  question_id SERIAL PRIMARY KEY,
-  game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(id),
-  title VARCHAR NOT NULL,
+-- Locations, dependencies and claimed locations
+CREATE TABLE LOCATION_GAME.QUEST (
+  quest_id SERIAL PRIMARY KEY,
+  chapter_id INTEGER NOT NULL REFERENCES LOCATION_GAME.CHAPTER(chapter_id),
+  name VARCHAR(255) NOT NULL,
   text TEXT NOT NULL,
-  type VARCHAR(32) NOT NULL, CHECK (type IN ('QR_MPC_FETCH', 'PASSCODE')),
+  required BOOLEAN NOT NULL DEFAULT TRUE, -- required for the chapter to complete. When false, order is not checked
+  type VARCHAR(30) NOT NULL, CHECK type IN ('QR_TEXT_FETCH', 'PASSCODE'),
 
-  -- PASSCODE fields
-  passcode_text TEXT NULLABLE
+  -- QR code fields, NULL means no qr code
+  qr_code UUID DEFAULT random_uuid(),
+
+  -- Passcode field. NULL means no passcode
+  passcode_text TEXT
 );
 
--- The answers to one multiple choice question
-CREATE TABLE LOCATION_GAME.QR_MPC_FETCH_CODE (
-  answer_id SERIAL PRIMARY KEY,
-  question_id INTEGER NOT NULL REFERENCES LOCATION_GAME.QUESTION(question_id),
-  answer_label TEXT NOT NULL,
-  answer_text TEXT NOT NULL,
-  qr_code UUID NOT NULL,
-  correct BOOLEAN NOT NULL
+-- Collectibles
+CREATE TABLE LOCATION_GAME.COLLECTIBLE (
+  collectible_id SERIAL PRIMARY KEY,
+  name VARCHAR(32) NOT NULL,
+  file_id UUID REFERENCES LOCATION_GAME.FILE(file_id)
 );
 
--- Answered question - created when a team answers a question
-CREATE TABLE LOCATION_GAME.ANSWERED_QUESTION (
-  question_id INTEGER NOT NULL REFERENCES LOCATION_GAME.QUESTION(question_id),
-  team_id INTEGER NOT NULL REFERENCES LOCATION_GAME.TEAM(id),
-  timestamp TIMESTAMP NOT NULL DEFAULT now(),
+-- Links a location to what claiming the location requires and yields
+CREATE TABLE LOCATION_GAME.QUEST_COLLECTIBLE (
+  collectible_id INT NOT NULL REFERENCES LOCATION_GAME.COLLECTIBLE (collectible_id),
+  quest_id INT NOT NULL REFERENCES LOCATION_GAME.QUEST(quest_id),
+  requires INT NOT NULL,
+  yields INT NOT NULL,
 
-  -- Multiple choice
-  answer_id INTEGER REFERENCES LOCATION_GAME.MULTIPLE_CHOICE_ANSWER(answer_id),
-  PRIMARY KEY (question_id, team_id)
+  PRIMARY KEY (collectible_id, quest_id)
 );
 
--- Images hosted by the application
-CREATE TABLE LOCATION_GAME.IMAGES (
-  image_id UUID NOT NULL DEFAULT random_uuid(),
-  image BYTEA NOT NULL
+-- For every team that claims a location
+CREATE TABLE LOCATION_GAME.CLAIMED_QUEST (
+  quest_id INT NOT NULL REFERENCES LOCATION_GAME.QUEST(quest_id),
+  team_id INT NOT NULL REFERENCES LOCATION_GAME.TEAM(team_id),
+  claimed_at TIMESTAMP NOT NULL DEFAULT now(),
+
+  PRIMARY KEY (quest_id, team_id)
 );

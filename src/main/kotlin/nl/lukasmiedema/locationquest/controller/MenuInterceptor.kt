@@ -2,6 +2,7 @@ package nl.lukasmiedema.locationquest.controller
 
 import nl.lukasmiedema.locationquest.dto.PageDto
 import nl.lukasmiedema.locationquest.entity.Tables
+import nl.lukasmiedema.locationquest.entity.Tables.*
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import org.jooq.DSLContext
@@ -36,12 +37,12 @@ open class MenuInterceptor : HandlerInterceptorAdapter() {
 			return PageDto(false, null, null)
 		} else {
 			val games = sql
-					.select(*Tables.GAME.fields())
-					.from(Tables.GAME
-							.join(Tables.TEAM).on(Tables.TEAM.GAME_ID.eq(Tables.GAME.ID))
-							.join(Tables.TEAM_PLAYER).on(Tables.TEAM_PLAYER.TEAM_ID.eq(Tables.TEAM.ID))
+					.select(*GAME.fields())
+					.from(GAME
+							.join(TEAM).on(TEAM.GAME_ID.eq(GAME.GAME_ID))
+							.join(TEAM_PLAYER).on(TEAM_PLAYER.TEAM_ID.eq(TEAM.TEAM_ID))
 					)
-					.where(Tables.TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
+					.where(TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
 					.fetchInto(Game::class.java)
 			return PageDto(true, player.name, games)
 		}
@@ -62,7 +63,5 @@ open class MenuInterceptor : HandlerInterceptorAdapter() {
 
 		modelAndView.viewName = DEFAULT_LAYOUT
 		modelAndView.addObject(DEFAULT_VIEW_ATTRIBUTE_NAME, originalViewName)
-
-		response.addHeader("Content-Type", "application/xhtml+xml")
 	}
 }

@@ -32,7 +32,7 @@
 					<div class="menu">
 						<a class="item" th:href="@{/games}">Overzicht</a>
 						<div class="divider"></div>
-						<a th:each="game: ${page.games}" th:text="${game.name}" th:href="@{/games/{id}(id=${game.id})}" class="item"></a>
+						<a th:each="game: ${page.games}" th:text="${game.name}" th:href="@{/games/{id}(id=${game.gameId})}" class="item"></a>
 					</div>
 				</div>
 				<a class="item right" th:href="@{/profile}">

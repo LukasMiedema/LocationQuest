@@ -7,11 +7,11 @@ import javax.persistence.Column
 /**
  * @author Lukas Miedema
  */
-class GameInfoDto() {
+class GameInfoDto {
 
 	// Properties from Game
-	@Column(name = "ID")
-	var id: Int? = null;
+	@Column(name = "GAME_ID")
+	var gameId: Int? = null;
 
 	@Column(name = "NAME")
 	var name: String? = null;
