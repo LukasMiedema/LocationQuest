@@ -3,7 +3,7 @@ package nl.lukasmiedema.locationquest.controller.dashboard
 import nl.lukasmiedema.locationquest.controller.GamesController
 import nl.lukasmiedema.locationquest.dao.QuestDao
 import nl.lukasmiedema.locationquest.dto.MessageDto
-import nl.lukasmiedema.locationquest.dto.QuestType
+import nl.lukasmiedema.locationquest.dto.QuestPhase
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Quest
@@ -30,23 +30,23 @@ open class QuestController {
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
 			model: Model): String {
 
-		val questType: QuestType
+		val questPhase: QuestPhase
 		val quest: Quest?
 
 		if (!game.active) {
 
 			// Game isn't active --> no quest
-			questType = QuestType.CLOSED
+			questPhase = QuestPhase.CLOSED
 			quest = null
 
 		} else {
 
 			// Get next question
 			quest = questDao.getNextQuest(game.gameId!!, team.teamId!!)
-			questType = if (quest == null) QuestType.DONE else QuestType.valueOf(quest.type)
+			questPhase = if (quest == null) QuestPhase.DONE else QuestPhase.RUNNING
 		}
 
-		model.addAttribute("questType", questType)
+		model.addAttribute("questPhase", questPhase)
 		model.addAttribute("quest", quest)
 
 		model.addAttribute("activeTab", "QuestTab")

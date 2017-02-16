@@ -1,0 +1,35 @@
+/**
+ * History Tab
+ * Make items expandable and collapsible
+ */
+.expandable {
+	cursor: pointer;
+}
+.expandable.collapsed + tr {
+	display: none;
+}
+
+/* Recolor an expanded quest row */
+.expanded-quest {
+	background-color: #f5f5f5;
+}
+
+/* Icons */
+.expandable .collapsed-icon {
+	display: none;
+}
+.expandable.collapsed .collapsed-icon {
+	display: inline-block;
+}
+.expandable.collapsed .expanded-icon {
+	display: none;
+}
+
+/* Requirements */
+.ui.nano.image {
+	width: 20px !important;
+	height: auto !important;
+}
+.ui.nano.image img {
+	max-width: 20px !important;
+}

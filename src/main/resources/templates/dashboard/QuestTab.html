@@ -5,23 +5,17 @@
 </head>
 <body>
 	<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
-	<!--/*@thymesVar id="questType" type="nl.lukasmiedema.locationquest.dto.QuestType" */-->
+	<!--/*@thymesVar id="questPhase" type="nl.lukasmiedema.locationquest.dto.QuestPhase" */-->
 
-	<th:block th:switch="${questType.name()}">
+	<th:block th:switch="${questPhase.name()}">
 
-		<div class="ui right corner label" th:classappend="${questType.htmlClass}">
-			<i class="icon" th:classappend="${questType.icon}"></i>
+		<div class="ui right corner label" th:classappend="${questPhase.htmlClass}">
+			<i class="icon" th:classappend="${questPhase.icon}"></i>
 		</div>
 
-		<div class="ui segment" th:case="QR_TEXT_FETCH">
+		<div class="ui segment" th:case="RUNNING">
 			<h2 th:text="${quest.name}"></h2>
-			<p th:text="${quest.text}"></p>
-		</div>
-
-		<div class="ui segment" th:case="PASSCODE">
-			<h2 th:text="${quest.name}"></h2>
-			<p th:text="${quest.text}"></p>
-			THIS IS A PASSCODE THING YES
+			<p th:text="${quest.fetchText}"></p>
 		</div>
 
 		<div class="ui segment" th:case="DONE">

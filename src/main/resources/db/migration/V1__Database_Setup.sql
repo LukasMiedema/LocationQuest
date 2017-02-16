@@ -65,15 +65,12 @@ CREATE TABLE LOCATION_GAME.QUEST (
   quest_id SERIAL PRIMARY KEY,
   chapter_id INTEGER NOT NULL REFERENCES LOCATION_GAME.CHAPTER(chapter_id),
   name VARCHAR(255) NOT NULL,
-  text TEXT NOT NULL,
+  fetch_text TEXT,
+  scan_text TEXT NOT NULL,
   required BOOLEAN NOT NULL DEFAULT TRUE, -- required for the chapter to complete. When false, order is not checked
-  type VARCHAR(30) NOT NULL, CHECK type IN ('QR_TEXT_FETCH', 'PASSCODE'),
-
-  -- QR code fields, NULL means no qr code
-  qr_code UUID DEFAULT random_uuid(),
-
-  -- Passcode field. NULL means no passcode
-  passcode_text TEXT
+  CHECK (NOT required OR fetch_text IS NOT NULL), -- when required, there has to be a fetch text
+  qr_code UUID NOT NULL DEFAULT random_uuid(),
+  passcode_text TEXT -- NULL means no passcode
 );
 
 -- Collectibles

@@ -1,10 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
 <head>
-	<title>Scan</title>
+	<title>Scan: <th:block th:text="${quest.name}" /></title>
 </head>
 <body>
-
-	<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
 	<div class="ui right corner red label">
 		<i class="search icon"></i>
 	</div>
@@ -25,17 +24,25 @@
 		<div th:replace="components/InventoryList :: list (${yieldsInventory})"></div>
 	</div>
 
-	<div class="ui segment">
-		<p th:text="${quest.text}"></p>
-	</div>
-	<div class="ui clearing secondary segment">
+		<div class="ui segment">
+			<p th:text="${quest.scanText}"></p>
+		</div>
 
-		<a th:href="@{/games/{id}/dashboard(id=${game.gameId})}" class="ui left floated button">Annuleren</a>
+		<div class="ui clearing secondary segment">
+			<form class="ui big form" method="POST" th:action="@{/games/{id}/scan/{code}(id=${game.gameId},code=${quest.qrCode})}">
 
-		<form method="POST" th:action="@{/games/{id}/scan/{code}(id=${game.gameId},code=${quest.qrCode})}">
-			<input type="submit" class="ui right floated primary button"
-				   th:classappend="not ${claimable} ? 'disabled'" value="Bevestig claim" />
-		</form>
-	</div>
+				<th:block th:if="${quest.passcodeText}">
+					<h4>Om deze quest te claimen is een code nodig</h4>
+					<div class="inline field">
+						<label><i class="key icon"></i></label>
+						<input type="text" name="passcode" placeholder="Code" />
+					</div>
+				</th:block>
+
+				<a th:href="@{/games/{id}/dashboard(id=${game.gameId})}" class="ui left floated button">Annuleren</a>
+					<input type="submit" class="ui right floated primary button"
+						   th:classappend="not ${claimable} ? 'disabled'" value="Claim" />
+			</form>
+		</div>
 </body>
 </html>

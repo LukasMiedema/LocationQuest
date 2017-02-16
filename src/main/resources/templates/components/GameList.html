@@ -1,4 +1,4 @@
-<div th:fragment="list (title, games)" class="ui link three stackable cards" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="list (title, games)" class="ui link three doubling cards" xmlns:th="http://www.thymeleaf.org">
 	<!--/*@thymesVar id="games" type="java.util.List<nl.lukasmiedema.locationquest.dto.GameInfoDto>"*/-->
 	<h4 th:text="${title}" class="ui horizontal divider header"></h4>
 	<div class="ui container" th:if="${games.empty}">~ Dust ~</div>

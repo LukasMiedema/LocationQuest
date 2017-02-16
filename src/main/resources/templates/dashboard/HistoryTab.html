@@ -1,9 +1,45 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Geschiedenis</title>
 	<icon><i class="clock icon"></i></icon>
 </head>
 <body>
-	History
+	<table class="ui selectable compact table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Quest</th>
+				<th>Geclaimed op</th>
+				<th>Verlies</th>
+				<th>Winst</th>
+			</tr>
+		</thead>
+		<!--/*@thymesVar id="history" type="java.util.List<nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto>"*/-->
+		<tr th:if="${history.empty}" class="center aligned">
+			<td colspan="5">
+				<i>Hier komen geclaimede quests te staan</i>
+			</td>
+		</tr>
+
+		<th:block th:each="item: ${history}" >
+			<tr th:classappend="${item.quest.required} ? 'expandable collapsed'">
+				<td>
+					<i th:if="${item.quest.required}" class="triangle right icon collapsed-icon"></i>
+					<i th:if="${item.quest.required}" class="triangle down icon expanded-icon"></i>
+				</td>
+				<td th:text="${item.quest.name}"></td>
+				<td th:text="${{item.claimedAt}}"></td>
+				<td><th:block th:replace="components/InventoryList :: shortlist (${item.collectibles}, false)"/></td>
+				<td><th:block th:replace="components/InventoryList :: shortlist (${item.collectibles}, true)" /></td>
+			</tr>
+			<tr th:if="${item.quest.required}" class="expanded-quest">
+				<td></td>
+				<td colspan="4">
+					<h2 th:text="${item.quest.name}"></h2>
+					<p th:text="${item.quest.fetchText}"></p>
+				</td>
+			</tr>
+		</th:block>
+	</table>
 </body>
 </html>

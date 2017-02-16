@@ -1,5 +1,6 @@
 package nl.lukasmiedema.locationquest.dao
 
+import nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto
 import nl.lukasmiedema.locationquest.dto.InventoryDto
 import nl.lukasmiedema.locationquest.dto.QuestCollectibleDto
 import nl.lukasmiedema.locationquest.entity.Tables
@@ -107,6 +108,20 @@ open class QuestDao {
 			.where(QUEST_COLLECTIBLE.QUEST_ID.eq(questId))
 			.fetchArray()
 			.map { QuestCollectibleDto(it.into(QuestCollectible::class.java), it.into(Collectible::class.java)) }
+
+	/**
+	 * Returns all claimed quests by the team, including the quest definitions.
+	 */
+	open fun getClaimedQuests(teamId: Int): List<ClaimedQuestInfoDto> = sql
+			.select(*CLAIMED_QUEST.fields(), *QUEST.fields())
+			.from(CLAIMED_QUEST.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID)))
+			.where(CLAIMED_QUEST.TEAM_ID.eq(teamId))
+			.fetchArray()
+			.map {
+				val quest = it.into(Quest::class.java)
+				val claimedQuest = it.into(ClaimedQuest::class.java)
+				ClaimedQuestInfoDto(claimedQuest, quest, getQuestCollectibles(quest.questId))
+			}
 
 	/**
 	 * Checks if a team has claimed the given quest.

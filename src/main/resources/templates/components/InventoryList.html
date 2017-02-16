@@ -1,13 +1,39 @@
-<div th:fragment="list (inventory)" class="ui relaxed horizontal list" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+	<div th:unless="${inventory.items.empty}" th:fragment="list (inventory)" class="ui relaxed horizontal list">
+		<!--/*
+		A full inventory listing.
+		*/-->
 
-	<!--/*@thymesVar id="inventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
-	<div class="item" th:each="item: ${inventory.items}">
-		<div class="ui mini image">
-			<img th:src="@{/file/{uuid}(uuid=${item.collectible.fileId})}" />
-		</div>
-		<div class="content">
-			<div class="header" th:text="${item.collectible.name}">Cookie</div>
-			<th:block th:text="${item.count}"/>x
+		<!--/*@thymesVar id="inventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+		<div class="item" th:each="item: ${inventory.items}">
+			<div class="ui mini image">
+				<img th:src="@{/file/{uuid}(uuid=${item.collectible.fileId})}" />
+			</div>
+			<div class="content">
+				<div class="header" th:text="${item.collectible.name}">Cookie</div>
+				<th:block th:text="${item.count}"/>x
+			</div>
 		</div>
 	</div>
-</div>
+
+	<div th:unless="${collectibles.empty}" th:fragment="shortlist (collectibles, yields)" class="ui horizontal list">
+		<!--/*
+		A shorter inventory list which doesn't display the item name.
+		It takes a list of QuestCollectibleDto's and a boolean indicating if it should show the
+		yields (true) or the requirements.
+		*/-->
+
+		<!--/*@thymesVar id="collectibles" type="java.util.List<nl.lukasmiedema.locationquest.dto.QuestCollectibleDto>"*/-->
+		<!--/*@thymesVar id="yields" type="java.lang.Boolean"*/-->
+
+		<div class="item" th:each="item: ${collectibles}"
+			 th:with="amount=(${yields} ? ${item.questCollectible.yields} : ${item.questCollectible.requires})">
+			<th:block th:if="${amount} > 0">
+					<th:block th:text="${amount}" />x
+				<div class="ui nano image">
+					<img th:src="@{/file/{uuid}(uuid=${item.collectible.fileId})}" th:alt="${item.collectible.name}" />
+				</div>
+			</th:block>
+		</div>
+	</div>
+</html>
