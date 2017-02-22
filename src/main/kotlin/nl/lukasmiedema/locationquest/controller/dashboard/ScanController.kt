@@ -25,12 +25,15 @@ open class ScanController {
 	@Autowired private lateinit var questDao: QuestDao
 
 	@ModelAttribute("quest")
-	open fun getQuest(@PathVariable("code") code: UUID) =
-			questDao.getQuestByQR(code) ?: throw ResourceNotFoundException("No such quest")
+	open fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
+			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
 
 	@ModelAttribute("required")
 	open fun getRequirements(@ModelAttribute("quest") quest: Quest) =
 			questDao.getQuestCollectibles(quest.questId)
+
+	@ModelAttribute("passcode")
+	open fun getPasscode() = "" // default is empty. This can be overriden
 
 	/**
 	 * Returns details about the posibility of a claim.
@@ -96,7 +99,6 @@ open class ScanController {
 
 		model.addAttribute("yieldsInventory", yieldsInventory)
 		model.addAttribute("requiresInventory", requiresInventory)
-
 		model.addAttribute("claimable", scanCode == ScanCode.CLAIMABLE)
 		model.addAttribute("activeTab", "ScanTab")
 		return "Dashboard"
@@ -107,17 +109,38 @@ open class ScanController {
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			@ModelAttribute("quest") quest: Quest,
-			@ModelAttribute("scanCode") scanCode: ScanCode): String {
+			@RequestParam("passcode", required = false) passcode: String?,
 
+			@ModelAttribute("messages") messages: MutableList<MessageDto>,
+			@ModelAttribute("inventory") inventory: InventoryDto,
+			@ModelAttribute("required") required: List<QuestCollectibleDto>,
+			@ModelAttribute("scanCode") scanCode: ScanCode,
+			model: Model): String {
+
+		// Check if the quest is claimable
 		if (scanCode == ScanCode.CLAIMABLE) {
 
-			// Store
-			val claim = ClaimedQuest(quest.questId, team.teamId!!, Timestamp(System.currentTimeMillis()))
-			questDao.insertClaim(claim)
+			// Check if the passcode is correct, if there is one
+			if (quest.passcodeText != null && quest.passcodeText != passcode) {
 
+				// Wrong code
+				messages.add(MessageDto(MessageDto.MessageType.WARNING, "Code niet geaccepteerd"))
+
+				// Override the passcode model parameter
+				model.addAttribute("passcode", passcode)
+
+			} else {
+
+				// Store
+				val claim = ClaimedQuest(quest.questId, team.teamId!!, Timestamp(System.currentTimeMillis()))
+				questDao.insertClaim(claim)
+
+				// Redirect to the normal page
+				return "redirect:/${GamesController.URL}/${game.gameId}/dashboard?claim=true"
+			}
 		}
 
-		// Redirect to the normal page
-		return "redirect:/${GamesController.URL}/${game.gameId}/dashboard"
+		// Show the view with errors
+		return scanQuest(messages, inventory, required, scanCode, model)
 	}
 }

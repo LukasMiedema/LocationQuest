@@ -1,4 +1,25 @@
 /**
+ * Chapter bar, which uses flexbox
+ */
+.chapter-bar {
+	display: flex;
+}
+.chapter-item {
+	flex-grow: 1;
+	height: 15px;
+	margin: 0 5px;
+	background-color: #e7e7e7;
+}
+.chapter-block {
+	width: 100%;
+	height: 100%;
+}
+.chapter-item.unclaimed .chapter-block {
+	display: none;
+}
+
+
+/**
  * History Tab
  * Make items expandable and collapsible
  */

@@ -21,11 +21,11 @@ INSERT INTO LOCATION_GAME.GAME (game_id, name, timestamp, active, allow_new_memb
 (2, 'Test Game 3', now(), true, false),
 (3, 'Test Game 4', now(), false, false);
 
-INSERT INTO LOCATION_GAME.CHAPTER (chapter_id, game_id, name, color) VALUES
-(0, 0, 'Chapter 1', 0xff00ff),
-(1, 0, 'Chapter 2', 0x00ffff),
-(2, 0, 'Chapter 3', 0xffccff),
-(3, 0, 'Chapter 4', 0xcc0000);
+INSERT INTO LOCATION_GAME.CHAPTER (chapter_id, game_id, color) VALUES
+(0, 0, 0xff00ff),
+(1, 0, 0x00ffff),
+(2, 0, 0xffccff),
+(3, 0, 0xcc0000);
 
 -- Collectibles for the game
 INSERT INTO LOCATION_GAME.COLLECTIBLE (collectible_id, name, file_id) VALUES
@@ -33,9 +33,21 @@ INSERT INTO LOCATION_GAME.COLLECTIBLE (collectible_id, name, file_id) VALUES
 
 -- Locations for the game
 INSERT INTO LOCATION_GAME.QUEST (quest_id, chapter_id, qr_code, required, name, fetch_text, scan_text, passcode_text) VALUES
-(0, 0, 'e87c8995-cca5-41d5-828f-d4698ced3845', false, 'Top Secret Cookie Chest', null, 'Looks like its not so secret anymore', null),
-(1, 0, '2f5ba29d-6ce6-4b63-b060-1f2181d7e6ad', true, 'This requires lots of cookies', 'Go find me 10 cookies please', 'There you are. About time', null),
-(2, 0, '050d10ef-9940-48f2-9abc-bd0aff022a08', false,	'Got some delicious cookies for ya', null, 'Fresh from grandmas oven', 'abcd');
+(0, 0, '050d10ef-9940-48f2-9abc-bd0aff022a00', false, 'Top Secret Cookie Chest', null, 'Looks like its not so secret anymore', null),
+(1, 0, '050d10ef-9940-48f2-9abc-bd0aff022a01', true, 'This requires lots of cookies', 'Go find me 10 cookies please', 'There you are. About time', null),
+(2, 0, '050d10ef-9940-48f2-9abc-bd0aff022a02', false,	'Got some delicious cookies for ya', null, 'Fresh from grandmas oven', 'abcd'),
+(3, 0, '050d10ef-9940-48f2-9abc-bd0aff022a03', true,	'Q3', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(4, 0, '050d10ef-9940-48f2-9abc-bd0aff022a04', true,	'Q4', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(5, 1, '050d10ef-9940-48f2-9abc-bd0aff022a05', true,	'Q5', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(6, 1, '050d10ef-9940-48f2-9abc-bd0aff022a06', true,	'Q6', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(7, 1, '050d10ef-9940-48f2-9abc-bd0aff022a07', true,	'Q7', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(8, 1, '050d10ef-9940-48f2-9abc-bd0aff022a08', true,	'Q8', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(9, 2, '050d10ef-9940-48f2-9abc-bd0aff022a09', true,	'Q9', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(10, 2, '050d10ef-9940-48f2-9abc-bd0aff022a10', true,	'Q10', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(11, 2, '050d10ef-9940-48f2-9abc-bd0aff022a11', true,	'Q11', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(12, 3, '050d10ef-9940-48f2-9abc-bd0aff022a12', true,	'Q12', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(13, 3, '050d10ef-9940-48f2-9abc-bd0aff022a13', true,	'Q13', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(14, 3, '050d10ef-9940-48f2-9abc-bd0aff022a14', true,	'Q14', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null);
 
 INSERT INTO LOCATION_GAME.QUEST_COLLECTIBLE (collectible_id, quest_id, requires, yields) VALUES
 (0, 0, 0, 5),

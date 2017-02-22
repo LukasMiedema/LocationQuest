@@ -1,7 +1,6 @@
 buildscript {
-	ext.kotlin_version = '1.0.4'
 	ext {
-		kotlinVersion = '1.0.4'
+		kotlinVersion = '1.0.6'
 		springBootVersion = '1.4.0.RELEASE'
 		jooqVersion = '3.8.4'
 		h2Version = '1.4.192'
@@ -24,7 +23,6 @@ buildscript {
 		classpath "com.h2database:h2:${h2Version}"
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 	configurations.classpath {
 		resolutionStrategy {
@@ -70,7 +68,7 @@ dependencies {
 	compile("org.hibernate:hibernate-validator")
 
 	// Language dependencies
-	compile("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
 	// Database dependencies
 	runtime('com.h2database:h2')
@@ -81,6 +79,7 @@ dependencies {
 	// Test dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 
@@ -148,4 +147,5 @@ sourceSets {
 		java.srcDirs += 'src/main/kotlin'
 		resources.srcDirs += 'target/generated-resources'
 	}
+	main.java.srcDirs += 'src/main/kotlin'
 }

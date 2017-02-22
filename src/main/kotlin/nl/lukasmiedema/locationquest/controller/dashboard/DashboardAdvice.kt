@@ -1,6 +1,5 @@
 package nl.lukasmiedema.locationquest.controller.dashboard
 
-import nl.lukasmiedema.locationquest.controller.GamesController
 import nl.lukasmiedema.locationquest.dao.QuestDao
 import nl.lukasmiedema.locationquest.dto.GameTabDto
 import nl.lukasmiedema.locationquest.dto.MessageDto
@@ -84,6 +83,11 @@ open class DashboardAdvice {
 			return teamInfo
 		}
 	}
+
+	@ModelAttribute("chapters")
+	open fun getChapters(
+			@ModelAttribute("game") game: Game,
+			@ModelAttribute("team") team: TeamInfoDto) = questDao.getChaptersByGame(game.gameId, team.teamId!!)
 
 	@ModelAttribute("inventory")
 	open fun getInventory(@ModelAttribute("team") team: TeamInfoDto) = questDao.getInventory(team.teamId!!)

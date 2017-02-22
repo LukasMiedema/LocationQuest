@@ -1,5 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
+<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="passcode" type="java.lang.String"*/-->
+<!--/*@thymesVar id="claimable" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="requiresInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+<!--/*@thymesVar id="yieldsInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+
 <head>
 	<title>Scan: <th:block th:text="${quest.name}" /></title>
 </head>
@@ -12,13 +18,10 @@
 		<h2>Scan: <th:block th:text="${quest.name}"/></h2>
 	</div>
 
-	<!--/*@thymesVar id="requiresInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
 	<div class="ui red secondary segment" th:unless="${requiresInventory.items.empty}">
 		<h4>Claimen kost</h4>
 		<div th:replace="components/InventoryList :: list (${requiresInventory})"></div>
 	</div>
-
-	<!--/*@thymesVar id="yieldsInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
 	<div class="ui green secondary segment" th:unless="${yieldsInventory.items.empty}">
 		<h4>Claimen levert op</h4>
 		<div th:replace="components/InventoryList :: list (${yieldsInventory})"></div>
@@ -35,7 +38,7 @@
 					<h4>Om deze quest te claimen is een code nodig</h4>
 					<div class="inline field">
 						<label><i class="key icon"></i></label>
-						<input type="text" name="passcode" placeholder="Code" />
+						<input type="text" name="passcode" placeholder="Code" th:value="${passcode}" />
 					</div>
 				</th:block>
 

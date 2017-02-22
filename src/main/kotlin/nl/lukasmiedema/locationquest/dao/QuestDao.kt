@@ -1,14 +1,12 @@
 package nl.lukasmiedema.locationquest.dao
 
+import nl.lukasmiedema.locationquest.dto.ChapterDto
 import nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto
 import nl.lukasmiedema.locationquest.dto.InventoryDto
 import nl.lukasmiedema.locationquest.dto.QuestCollectibleDto
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.Tables.*
-import nl.lukasmiedema.locationquest.entity.tables.pojos.ClaimedQuest
-import nl.lukasmiedema.locationquest.entity.tables.pojos.Collectible
-import nl.lukasmiedema.locationquest.entity.tables.pojos.Quest
-import nl.lukasmiedema.locationquest.entity.tables.pojos.QuestCollectible
+import nl.lukasmiedema.locationquest.entity.tables.pojos.*
 import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.Record4
@@ -37,23 +35,19 @@ open class QuestDao {
 		// Get the first unanswered question
 		// This is fetched by doing an anti join on the answered questions
 		// sorting by ID and then limiting to 1
-		val quest = QUEST.`as`("quest")
-		val claimed = CLAIMED_QUEST.`as`("claimed")
-		val chapter = CHAPTER.`as`("chapter")
-
 		return sql
-				.select(*quest.fields())
+				.select(*QUEST.fields())
 				.from(
-						quest.join(chapter)
-								.on(quest.CHAPTER_ID.eq(chapter.CHAPTER_ID))
-						.leftJoin(claimed)
-								.on(claimed.QUEST_ID.eq(quest.QUEST_ID))
-								.and(claimed.TEAM_ID.eq(teamId))
+						QUEST.join(CHAPTER)
+								.on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
+						.leftJoin(CLAIMED_QUEST)
+								.on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
+								.and(CLAIMED_QUEST.TEAM_ID.eq(teamId))
 				)
-				.where(claimed.TEAM_ID.isNull)
-				.and(quest.REQUIRED)
-				.and(chapter.GAME_ID.eq(gameId))
-				.orderBy(quest.QUEST_ID.asc())
+				.where(CLAIMED_QUEST.TEAM_ID.isNull)
+				.and(QUEST.REQUIRED)
+				.and(CHAPTER.GAME_ID.eq(gameId))
+				.orderBy(QUEST.QUEST_ID.asc())
 				.limit(1)
 				.fetchOneInto(Quest::class.java)
 	}
@@ -61,13 +55,20 @@ open class QuestDao {
 	/**
 	 * Gets the quest by QR code.
 	 */
-	open fun getQuestByQR(code: UUID): Quest? = sql
-			.selectFrom(QUEST)
+	open fun getQuestByQR(gameId: Int, code: UUID): Quest? = sql
+			.select(*QUEST.fields())
+			.from(QUEST
+					.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
+					.join(GAME).on(GAME.GAME_ID.eq(CHAPTER.GAME_ID))
+			)
 			.where(QUEST.QR_CODE.eq(code))
+			.and(GAME.GAME_ID.eq(gameId))
 			.fetchOneInto(Quest::class.java)
 
 	/**
 	 * Stores the claim into the database.
+	 * This method will always perform an INSERT and as such it will throw an Exception if the
+	 * record already exists.
 	 */
 	open fun insertClaim(claim: ClaimedQuest): Unit {
 		sql.newRecord(CLAIMED_QUEST, claim).store()
@@ -135,4 +136,33 @@ open class QuestDao {
 				.fetchOne(DSL.count())
 		return result > 0
 	}
+
+	/**
+	 * Gets the chapter for a given chapterId.
+	 */
+	open fun getChapter(chapterId: Int): Chapter? = sql
+			.selectFrom(CHAPTER)
+			.where(CHAPTER.CHAPTER_ID.eq(chapterId))
+			.fetchOneInto(Chapter::class.java)
+
+	/**
+	 * Fetches all chapters for a given gameId, with info about if the team already has the chapter.
+	 */
+	open fun getChaptersByGame(gameId: Int, teamId: Int): List<ChapterDto> = sql
+			.select(
+					*CHAPTER.fields(),
+
+					// Select number of claimed quests for this chapter
+					DSL.field(
+						DSL.exists(
+								DSL.selectFrom(CLAIMED_QUEST)
+										.where(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
+										.and(CLAIMED_QUEST.TEAM_ID.eq(teamId))
+						)
+					).`as`("CLAIMED")
+			)
+			.from(CHAPTER.join(QUEST).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID)))
+			.where(CHAPTER.GAME_ID.eq(gameId))
+			.and(QUEST.REQUIRED)
+			.fetchInto(ChapterDto::class.java)
 }

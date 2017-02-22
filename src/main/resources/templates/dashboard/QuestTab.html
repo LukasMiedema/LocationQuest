@@ -6,17 +6,21 @@
 <body>
 	<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
 	<!--/*@thymesVar id="questPhase" type="nl.lukasmiedema.locationquest.dto.QuestPhase" */-->
+	<!--/*@thymesVar id="chapters" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.Chapter>" */-->
 
+	<!-- Next quest -->
 	<th:block th:switch="${questPhase.name()}">
 
 		<div class="ui right corner label" th:classappend="${questPhase.htmlClass}">
 			<i class="icon" th:classappend="${questPhase.icon}"></i>
 		</div>
 
-		<div class="ui segment" th:case="RUNNING">
-			<h2 th:text="${quest.name}"></h2>
-			<p th:text="${quest.fetchText}"></p>
-		</div>
+		<th:block th:case="RUNNING">
+			<div class="ui raised padded text container segment">
+				<h2 class="ui header" th:text="${quest.name}"></h2>
+				<p th:text="${quest.fetchText}"></p>
+			</div>
+		</th:block>
 
 		<div class="ui segment" th:case="DONE">
 			<h2>Dat was het</h2>

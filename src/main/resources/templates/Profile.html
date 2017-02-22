@@ -15,7 +15,7 @@
 					Uh...
 				</div>
 				<ul class="list" th:each="error : ${#fields.detailedErrors()}">
-					<li th:text="${error.getMessage()}"></li>
+					<li th:text="${error.message}"></li>
 				</ul>
 			</div>
 

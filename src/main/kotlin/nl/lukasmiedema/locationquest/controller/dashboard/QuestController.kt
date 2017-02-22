@@ -13,6 +13,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 /**
  * @author Lukas Miedema
@@ -28,6 +29,7 @@ open class QuestController {
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
+			@RequestParam("claim", defaultValue = "false") claimed: Boolean,
 			model: Model): String {
 
 		val questPhase: QuestPhase
@@ -46,9 +48,13 @@ open class QuestController {
 			questPhase = if (quest == null) QuestPhase.DONE else QuestPhase.RUNNING
 		}
 
+		// Add a message if this was a redirect
+		if (claimed) {
+			messages.add(MessageDto(MessageDto.MessageType.SUCCESS, "Quest geclaimed!"))
+		}
+
 		model.addAttribute("questPhase", questPhase)
 		model.addAttribute("quest", quest)
-
 		model.addAttribute("activeTab", "QuestTab")
 		return "Dashboard"
 	}

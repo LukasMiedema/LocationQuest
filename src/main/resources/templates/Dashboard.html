@@ -27,6 +27,16 @@
 	<!--/*@thymesVar id="inventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
 	<div th:replace="components/InventoryList :: list (${inventory})"></div>
 
+	<!-- Chapters -->
+	<div class="ui divider"></div>
+	<div class="chapter-bar">
+		<div th:each="chapter: ${chapters}" class="chapter-item"
+			 th:classappend="${chapter.claimed} ? 'claimed' : 'unclaimed'">
+			<div class="chapter-block" th:style="|background-color: #${chapter.colorHex}|"></div>
+		</div>
+	</div>
+
+	<!-- Tab bar -->
 	<div class="ui menu" th:with="url=(@{/games/{id}/dashboard(id=${game.gameId})} + '/{tab}')">
 
 		<a th:each="tab: ${tabs}"
@@ -47,6 +57,7 @@
 		Notification!
 	</div>
 
+	<!-- Active tab -->
 	<div class="ui segments" th:include="|dashboard/${activeTab} :: body|"></div>
 </div>
 </body>
