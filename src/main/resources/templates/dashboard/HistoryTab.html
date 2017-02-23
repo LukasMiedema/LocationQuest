@@ -1,20 +1,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Geschiedenis</title>
+	<title><th:block th:text="#{dashboard.history.title}"/></title>
 	<icon><i class="clock icon"></i></icon>
 </head>
 <body>
 	<table class="ui selectable compact unstackable table">
 		<thead>
 			<tr>
-				<th colspan="2">Quest</th>
-				<th>Geclaimed op</th>
+				<th colspan="2" th:text="#{dashboard.history.header.quest}"></th>
+				<th th:text="#{dashboard.history.header.claimedAt}"></th>
 			</tr>
 		</thead>
 		<!--/*@thymesVar id="history" type="java.util.List<nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto>"*/-->
 		<tr th:if="${history.empty}" class="center aligned">
 			<td colspan="3">
-				<i>Hier komen geclaimede quests te staan</i>
+				<i th:text="#{dashboard.history.empty}"></i>
 			</td>
 		</tr>
 

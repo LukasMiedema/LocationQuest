@@ -9,12 +9,12 @@ import javax.validation.constraints.Size
  */
 open class TeamCreationDto {
 
-	@NotNull(message = "Er is geen kleur opgegeven")
-	@Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "\${validatedValue} is geen HTML kleur")
+	@NotNull(message = "{enroll.create.error.noColor}")
+	@Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "{enroll.create.error.invalidColor}")
 	var color: String? = null
 
-	@NotNull(message = "Er is geen naam opgegeven")
-	@Size(min = 3, max = 10, message = "Teamnaam moet tussen {min} en {max} tekens lang zijn")
+	@NotNull(message = "{enroll.create.error.noName}")
+	@Size(min = 3, max = 10, message = "{enroll.create.error.nameLength}")
 	var name: String? = null
 
 	val colorInt: Int?

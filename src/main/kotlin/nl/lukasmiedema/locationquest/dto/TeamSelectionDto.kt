@@ -7,6 +7,6 @@ import javax.validation.constraints.NotNull
  */
 class TeamSelectionDto {
 
-	@NotNull(message = "Klik eerst een team aan")
+	@NotNull(message = "{enroll.choose.error.noTeam}")
 	var teamId: Int? = null;
 }

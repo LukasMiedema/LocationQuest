@@ -1,13 +1,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Team</title>
+	<title><th:block th:text="#{dashboard.team.title}"/></title>
 	<icon><i class="users icon"></i></icon>
 </head>
 <body>
 	<!--/*@thymesVar id="teamMembers" type="java.util.List"*/-->
 	<!--/*@thymesVar id="player" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Player"*/-->
 	<div class="ui segment">
-		<h4>Teamleden (<th:block th:text="${team.memberCount}" />)</h4>
+		<h4 th:text="#{dashboard.team.memberCount(${team.memberCount})}"></h4>
 	</div>
 	<div class="ui segment" th:each="other: ${teamMembers}">
 		<!--/*@thymesVar id="other" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Player"*/-->

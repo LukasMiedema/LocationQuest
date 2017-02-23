@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		kotlinVersion = '1.0.6'
-		springBootVersion = '1.4.0.RELEASE'
+		springBootVersion = '1.5.1.RELEASE'
 		jooqVersion = '3.8.4'
 		h2Version = '1.4.192'
 
@@ -69,7 +69,7 @@ dependencies {
 	compile("com.vladsch.flexmark:flexmark:0.15.3")
 
 	// Validation
-	compile("org.hibernate:hibernate-validator")
+	compile("org.hibernate:hibernate-validator:5.4.0.Final")
 
 	// Language dependencies
 	compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")

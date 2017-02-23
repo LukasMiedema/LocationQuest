@@ -8,8 +8,8 @@ import javax.validation.constraints.Size
  */
 class ChooseNameFormDto() {
 
-	@NotNull
-	@Size(min = 3, max = 10, message = "Naam moet tussen {min} en {max} tekens lang zijn")
+	@NotNull(message = "{profile.error.noName}")
+	@Size(min = 3, max = 10, message = "{profile.error.nameLength}")
 	var name: String? = null
 
 	override fun toString(): String {

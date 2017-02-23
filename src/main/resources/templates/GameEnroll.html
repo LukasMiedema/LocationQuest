@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Kies een team</title>
+	<title th:text="#{enroll.title}"></title>
 	<link rel="stylesheet" th:href="@{/assets/styles/page/GameEnroll.css}"/>
 	<script th:src="@{/assets/scripts/page/GameEnroll.js}" type="text/javascript"></script>
 </head>
@@ -13,25 +13,25 @@
 
 	<div class="ui text container" th:switch="true">
 		<th:block th:case="not ${game.active}">
-			<h2><i th:text="${game.name}"></i> is afgelopen</h2>
-			<p>Als je van mening bent dat je in dit spel toch nog gaande is, zoek dan een administrator op.</p>
+			<h2 th:text="#{enroll.finished(${game.name})}"></h2>
+			<p th:text="#{enroll.finished.description}"></p>
 		</th:block>
 
 		<th:block th:case="not ${game.allowNewMembers}">
-			<h2>Inschrijving voor <i th:text="${game.name}"></i> is gesloten</h2>
-			<p>Als je toch van mening bent dat je in dit spel mag, zoek dan een administrator op.</p>
+			<h2 th:text="#{enroll.closed(${game.name})}"></h2>
+			<p th:text="#{enroll.closed.description}"></p>
 		</th:block>
 
 		<th:block th:case="true">
-			<h2>Inschrijving voor <i th:text="${game.name}"></i></h2>
-			<p>Kies een team</p>
+			<h2 th:text="#{enroll.header(${game.name})}"></h2>
+			<p th:text="#{enroll.choose}"></p>
 
 			<form th:action="@{/games/{id}/enroll(id=${game.gameId})}" method="post" class="ui large form enroll"
 				  th:object="${teamSelectionDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
 				<input type="hidden" id="teamEnrollOption" name="teamId" value="" />
-				<h4 class="ui horizontal divider header">Bestaande teams</h4>
+				<h4 class="ui horizontal divider header" th:text="#{enroll.choose.existing}"></h4>
 
-				<div class="ui error message transition">
+				<div class="ui error code transition">
 					<ul class="list" th:each="error : ${#fields.detailedErrors()}">
 						<li th:text="${error.getMessage()}"></li>
 					</ul>
@@ -39,9 +39,7 @@
 
 				<div class="ui list">
 					<!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto" */-->
-					<div class="item" th:if="${teams.empty}">
-						Er zijn nog geen teams gemaakt
-					</div>
+					<div class="item" th:if="${teams.empty}" th:text="#{enroll.choose.empty}"></div>
 
 					<div class="item" th:each="team: ${teams}">
 						<div class="ui fluid labeled button team-item" th:attr="data-id=${team.teamId}">
@@ -56,7 +54,8 @@
 						</div>
 					</div>
 				</div>
-				<input type="submit" class="ui right floated button" value="Bevestigen" th:disabled="${teams.empty}" />
+				<input type="submit" class="ui right floated button" th:value="#{enroll.choose.confirm}"
+					   th:disabled="${teams.empty}" />
 				<div class="ui clearing header"></div>
 			</form>
 			<br/>
@@ -65,9 +64,9 @@
 
 			<form th:action="@{/games/{id}/create(id=${game.gameId})}" method="post" class="ui large form create"
 				  th:object="${teamCreationDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
-				<h4 class="ui horizontal divider header">Of maak een nieuw team</h4>
+				<h4 class="ui horizontal divider header" th:text="#{enroll.create}"></h4>
 
-				<div class="ui error message transition">
+				<div class="ui error code transition">
 					<ul class="list" th:each="error : ${#fields.detailedErrors()}">
 						<li th:text="${error.getMessage()}"></li>
 					</ul>
@@ -77,17 +76,18 @@
 					<div class="item">
 						<div class="inline fields">
 							<div class="three wide field">
-								<label>Kleur: </label>
+								<label th:text="#{enroll.create.color}"></label>
 								<input type="color" name="color" th:value="*{color}"/>
 							</div>
 							<div class="thirteen wide field">
-								<label>Naam: </label>
-								<input type="text" name="name" th:value="*{name}" placeholder="Teamnaam" />
+								<label th:text="#{enroll.create.name}"></label>
+								<input type="text" name="name" th:value="*{name}"
+									   th:placeholder="#{enroll.create.name.placeholder}" />
 							</div>
 						</div>
 					</div>
 				</div>
-				<input type="submit" class="ui right floated button" value="Maak nieuw team" />
+				<input type="submit" class="ui right floated button" th:value="#{enroll.create.confirm}" />
 				<div class="ui clearing header"></div>
 			</form>
 			<br/>

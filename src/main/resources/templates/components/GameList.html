@@ -1,7 +1,7 @@
 <div th:fragment="list (title, games)" class="ui link three doubling cards" xmlns:th="http://www.thymeleaf.org">
 	<!--/*@thymesVar id="games" type="java.util.List<nl.lukasmiedema.locationquest.dto.GameInfoDto>"*/-->
 	<h4 th:text="${title}" class="ui horizontal divider header"></h4>
-	<div class="ui container" th:if="${games.empty}">~ Dust ~</div>
+	<div class="ui container" th:if="${games.empty}" th:text="#{games.noOwnedGames}"></div>
 	<div class="card clickable" th:each="game: ${games}" th:attr="data-href=|games/${game.gameId}|">
 
 		<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.dto.GameInfoDto"*/-->
@@ -14,11 +14,11 @@
 				</div>
 				<div class="item">
 					<i class="icon" th:classappend="${game.allowNewMembers} ? 'pencil' : 'lock'"></i>
-					<div class="content" th:text="${game.allowNewMembers} ? 'Inschrijving open' : 'Inschrijving gesloten'"></div>
+					<div class="content" th:text="${game.allowNewMembers} ? #{games.enrollment.open} : #{games.enrollment.closed}"></div>
 				</div>
 				<div class="item">
 					<i class="icon" th:classappend="${game.active} ? 'flag outline' : 'trophy'"></i>
-					<div class="content" th:text="${game.active} ? 'Actief' : 'Afgelopen'"></div>
+					<div class="content" th:text="${game.active} ? #{games.active} : #{games.finished}"></div>
 				</div>
 				<div class="item">
 					<div class="content">
@@ -27,23 +27,23 @@
 							<div class="ui empty mini circular label" th:style="|background-color: #${game.teamColorHex}|"></div>
 							<div class="detail" th:text="${game.teamName}"></div>
 						</div>
-						<div class="ui label" th:unless="${game.teamName}">Geen team</div>
+						<div class="ui label" th:unless="${game.teamName}" th:text="#{games.noTeam}"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<th:block th:switch="true">
 			<a th:case="${game.teamName != null}" class="ui bottom attached positive button disabled">
-				<i class="icon checkmark"></i> Ingeschreven
+				<i class="icon checkmark"></i> <th:block th:text="#{games.enrolled}" />
 			</a>
 			<a th:case="not ${game.active}" class="ui bottom attached button disabled">
-				<i class="icon flag checkered"></i> Spel afgelopen
+				<i class="icon flag checkered"></i> <th:block th:text="#{games.gameEnded}" />
 			</a>
 			<a th:case="not ${game.allowNewMembers}" class="ui bottom attached button disabled">
-				<i class="icon lock"></i> Inschrijving gesloten
+				<i class="icon lock"></i> <th:block th:text="#{games.enrollment.closed}" />
 			</a>
 			<a th:case="true" class="ui bottom attached positive button">
-				<i class="icon add"></i> Inschrijven
+				<i class="icon add"></i> <th:block th:text="#{games.enroll}" />
 			</a>
 		</th:block>
 	</div>

@@ -51,9 +51,9 @@
 	</div>
 
 	<!-- Notifications -->
-	<div th:each="message: ${messages}"
-		 th:classappend="${message.type.htmlClass}" class="ui message"
-		 th:text="${message.message}">
+	<div th:each="code: ${messages}"
+		 th:classappend="${code.type.htmlClass}" class="ui message"
+		 th:text="${code.message}">
 		Notification!
 	</div>
 

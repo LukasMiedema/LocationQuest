@@ -8,7 +8,7 @@
 <!--/*@thymesVar id="chapter" type="nl.lukasmiedema.locationquest.dto.ChapterDto" */-->
 
 <head>
-	<title>Scan: <th:block th:text="${quest.name}" /></title>
+	<title><th:block th:text="#{dashboard.scan.title(${quest.name})}"/></title>
 </head>
 <body>
 	<div class="ui segment">
@@ -25,11 +25,11 @@
 	</div>
 
 	<div class="ui red secondary segment" th:unless="${requiresInventory.items.empty}">
-		<h4>Claimen kost</h4>
+		<h4 th:text="#{dashboard.scan.claim.costs}"></h4>
 		<div th:replace="components/InventoryList :: list (${requiresInventory})"></div>
 	</div>
 	<div class="ui green secondary segment" th:unless="${yieldsInventory.items.empty}">
-		<h4>Claimen levert op</h4>
+		<h4 th:text="#{dashboard.scan.claim.yields}"></h4>
 		<div th:replace="components/InventoryList :: list (${yieldsInventory})"></div>
 	</div>
 
@@ -41,16 +41,17 @@
 		<form class="ui big form" method="POST" th:action="@{/games/{id}/scan/{code}(id=${game.gameId},code=${quest.qrCode})}">
 
 			<th:block th:if="${quest.passcodeText}">
-				<h4>Om deze quest te claimen is een code nodig</h4>
+				<h4 th:text="#{dashboard.scan.code.header}"></h4>
 				<div class="inline field">
 					<label><i class="key icon"></i></label>
-					<input type="text" name="passcode" placeholder="Code" th:value="${passcode}" />
+					<input type="text" name="passcode" th:placeholder="#{dashboard.scan.code.placeholder}" th:value="${passcode}" />
 				</div>
 			</th:block>
 
-			<a th:href="@{/games/{id}/dashboard(id=${game.gameId})}" class="ui left floated button">Annuleren</a>
+			<a th:href="@{/games/{id}/dashboard(id=${game.gameId})}" class="ui left floated button"
+			   th:text="#{dashboard.scan.cancel}"></a>
 			<input type="submit" class="ui right floated primary button"
-				   th:classappend="not ${claimable} ? 'disabled'" value="Claim" />
+				   th:classappend="not ${claimable} ? 'disabled'" th:value="#{dashboard.scan.claim}" />
 		</form>
 	</div>
 </body>

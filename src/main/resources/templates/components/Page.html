@@ -28,9 +28,9 @@
 
 			<th:block th:if="${page.loggedIn}">
 				<div class="ui simple dropdown item">
-					Games <i class="dropdown icon"></i>
+					<th:block th:text="#{menubar.games}"></th:block> <i class="dropdown icon"></i>
 					<div class="menu">
-						<a class="item" th:href="@{/games}">Overzicht</a>
+						<a class="item" th:href="@{/games}" th:text="#{menubar.games.overview}"></a>
 						<div class="divider"></div>
 						<a th:each="game: ${page.games}" th:text="${game.name}" th:href="@{/games/{id}(id=${game.gameId})}" class="item"></a>
 					</div>

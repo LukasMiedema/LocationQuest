@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Quest</title>
+	<title><th:block th:text="#{dashboard.quest.title}"/></title>
 	<icon><i class="search icon"></i></icon>
 </head>
 <body>
@@ -27,13 +27,13 @@
 		</th:block>
 
 		<div class="ui segment" th:case="DONE">
-			<h2>Dat was het</h2>
-			<p>Alle vragen zijn beantwoord.</p>
+			<h2 th:text="#{dashboard.quest.finished}"></h2>
+			<p th:text="#{dashboard.quest.finished.description}"></p>
 		</div>
 
 		<div class="ui segment" th:case="CLOSED">
-			<h2>Dit spel is gesloten</h2>
-			<p>Er kunnen geen vragen meer beantwoord worden.</p>
+			<h2 th:text="#{dashboard.quest.closed}"></h2>
+			<p th:text="#{dashboard.quest.closed.description}"></p>
 		</div>
 
 	</th:block>

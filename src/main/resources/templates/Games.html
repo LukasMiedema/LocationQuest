@@ -1,15 +1,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Games</title>
+	<title th:text="#{games.title}">Games</title>
 </head>
 <body>
 	<div class="ui text container">
-		<div th:replace="components/GameList :: list ('Mijn spellen', ${ownGames})"></div>
+		<div th:replace="components/GameList :: list (#{games.mine}, ${ownGames})"></div>
 	</div>
 	<br/>
 	<br/>
 	<div class="ui text container">
-		<div th:replace="components/GameList :: list ('Alle spellen', ${openGames})"></div>
+		<div th:replace="components/GameList :: list (#{games.all}, ${openGames})"></div>
 	</div>
 </body>
 </html>

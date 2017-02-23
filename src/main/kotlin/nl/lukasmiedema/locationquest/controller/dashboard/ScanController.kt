@@ -8,6 +8,7 @@ import nl.lukasmiedema.locationquest.entity.tables.pojos.Collectible
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Quest
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
+import nl.lukasmiedema.locationquest.service.I18nService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,6 +24,7 @@ import java.util.*
 open class ScanController {
 
 	@Autowired private lateinit var questDao: QuestDao
+	@Autowired private lateinit var i18n: I18nService
 
 	@ModelAttribute("quest")
 	open fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
@@ -87,13 +89,13 @@ open class ScanController {
 			ScanCode.CLAIMABLE -> Unit // all ok
 
 			ScanCode.UNSATISFIED_DEPENDENCY -> messages.add(MessageDto(MessageDto.MessageType.WARNING,
-					"Deze quest heeft items nodig die je nog niet hebt"))
+					i18n["dashboard.scan.unsatisfiedDependency"]))
 
 			ScanCode.DUPLICATE -> messages.add(MessageDto(MessageDto.MessageType.WARNING,
-					"Deze quest is al geclaimed door je team"))
+					i18n["dashboard.scan.duplicate"]))
 
 			ScanCode.INELIGIBLE -> messages.add(MessageDto(MessageDto.MessageType.WARNING,
-					"Deze quest kan nog niet geclaimed worden. Doe je ze wel in de goede volgorde?"))
+					i18n["dashboard.scan.ineligible"]))
 		}
 
 		model.addAttribute("claimable", scanCode == ScanCode.CLAIMABLE)
@@ -120,7 +122,7 @@ open class ScanController {
 			if (quest.passcodeText != null && quest.passcodeText != passcode) {
 
 				// Wrong code
-				messages.add(MessageDto(MessageDto.MessageType.WARNING, "Code niet geaccepteerd"))
+				messages.add(MessageDto(MessageDto.MessageType.WARNING, i18n["dashboard.scan.wrongCode"]))
 
 				// Override the passcode model parameter
 				model.addAttribute("passcode", passcode)

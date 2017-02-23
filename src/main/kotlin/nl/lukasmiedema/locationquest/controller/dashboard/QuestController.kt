@@ -8,7 +8,10 @@ import nl.lukasmiedema.locationquest.dto.QuestPhase
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Quest
+import nl.lukasmiedema.locationquest.service.I18nService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping(GamesController.URL + "/{game}/dashboard")
 open class QuestController {
 
+	@Autowired private lateinit var i18n: I18nService
 	@Autowired private lateinit var questDao: QuestDao
 
 	@GetMapping
@@ -54,7 +58,7 @@ open class QuestController {
 
 		// Add a message if this was a redirect
 		if (claimed) {
-			messages.add(MessageDto(MessageDto.MessageType.SUCCESS, "Quest geclaimed!"))
+			messages.add(MessageDto(MessageDto.MessageType.SUCCESS, i18n["dashboard.scan.accepted"]))
 		}
 
 		model.addAttribute("questPhase", questPhase)
