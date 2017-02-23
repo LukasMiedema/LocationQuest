@@ -23,8 +23,8 @@
 				<div class="item">
 					<div class="content">
 						<i class="group icon" th:classappend="not ${game.teamName} ? 'disabled'"></i>
-						<div class="ui basic label" th:if="${game.teamName}">
-							<div class="ui empty circular label" th:style="|background-color: #${game.teamColorHex}|"></div>
+						<div class="ui basic mini label" th:if="${game.teamName}">
+							<div class="ui empty mini circular label" th:style="|background-color: #${game.teamColorHex}|"></div>
 							<div class="detail" th:text="${game.teamName}"></div>
 						</div>
 						<div class="ui label" th:unless="${game.teamName}">Geen team</div>

@@ -26,6 +26,12 @@
 		<!--/*@thymesVar id="collectibles" type="java.util.List<nl.lukasmiedema.locationquest.dto.QuestCollectibleDto>"*/-->
 		<!--/*@thymesVar id="yields" type="java.lang.Boolean"*/-->
 
+		<div class="item">
+			<div class="ui red circular label" th:if="${yields}">
+				<i class="plus icon"></i>
+			</div>
+		</div>
+
 		<div class="item" th:each="item: ${collectibles}"
 			 th:with="amount=(${yields} ? ${item.questCollectible.yields} : ${item.questCollectible.requires})">
 			<th:block th:if="${amount} > 0">

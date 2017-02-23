@@ -21,11 +21,11 @@ INSERT INTO LOCATION_GAME.GAME (game_id, name, timestamp, active, allow_new_memb
 (2, 'Test Game 3', now(), true, false),
 (3, 'Test Game 4', now(), false, false);
 
-INSERT INTO LOCATION_GAME.CHAPTER (chapter_id, game_id, color) VALUES
-(0, 0, 0xff00ff),
-(1, 0, 0x00ffff),
-(2, 0, 0xffccff),
-(3, 0, 0xcc0000);
+INSERT INTO LOCATION_GAME.CHAPTER (chapter_id, game_id, color, name) VALUES
+(0, 0, 0xff00ff, 'Hoofdstuk 1'),
+(1, 0, 0x00ffff, 'Hoofdstuk 2'),
+(2, 0, 0xffccff, 'Hoofdstuk 3'),
+(3, 0, 0xcc0000, 'Hoofdstuk 4');
 
 -- Collectibles for the game
 INSERT INTO LOCATION_GAME.COLLECTIBLE (collectible_id, name, file_id) VALUES
@@ -34,7 +34,7 @@ INSERT INTO LOCATION_GAME.COLLECTIBLE (collectible_id, name, file_id) VALUES
 -- Locations for the game
 INSERT INTO LOCATION_GAME.QUEST (quest_id, chapter_id, qr_code, required, name, fetch_text, scan_text, passcode_text) VALUES
 (0, 0, '050d10ef-9940-48f2-9abc-bd0aff022a00', false, 'Top Secret Cookie Chest', null, 'Looks like its not so secret anymore', null),
-(1, 0, '050d10ef-9940-48f2-9abc-bd0aff022a01', true, 'This requires lots of cookies', 'Go find me 10 cookies please', 'There you are. About time', null),
+(1, 0, '050d10ef-9940-48f2-9abc-bd0aff022a01', true, 'This requires lots of cookies', '<script>alert("so yes");</script>', '#There you are.# About time', null),
 (2, 0, '050d10ef-9940-48f2-9abc-bd0aff022a02', false,	'Got some delicious cookies for ya', null, 'Fresh from grandmas oven', 'abcd'),
 (3, 0, '050d10ef-9940-48f2-9abc-bd0aff022a03', true,	'Q3', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
 (4, 0, '050d10ef-9940-48f2-9abc-bd0aff022a04', true,	'Q4', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),

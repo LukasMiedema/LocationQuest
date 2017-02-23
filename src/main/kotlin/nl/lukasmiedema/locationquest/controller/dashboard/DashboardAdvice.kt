@@ -9,6 +9,7 @@ import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
 import nl.lukasmiedema.locationquest.exception.UnauthorizedException
+import nl.lukasmiedema.locationquest.service.MarkdownService
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,6 +38,10 @@ open class DashboardAdvice {
 
 	@Autowired private lateinit var sql: DSLContext
 	@Autowired private lateinit var questDao: QuestDao
+	@Autowired private lateinit var markdown: MarkdownService
+
+	@ModelAttribute("markdown")
+	open fun markdown() = markdown // make the markdown service available for all templates to use
 
 	@ModelAttribute("tabs")
 	open fun tabs() = TABS
@@ -87,7 +92,7 @@ open class DashboardAdvice {
 	@ModelAttribute("chapters")
 	open fun getChapters(
 			@ModelAttribute("game") game: Game,
-			@ModelAttribute("team") team: TeamInfoDto) = questDao.getChaptersByGame(game.gameId, team.teamId!!)
+			@ModelAttribute("team") team: TeamInfoDto) = questDao.getQuestChapterByGameAndTeam(game.gameId, team.teamId!!)
 
 	@ModelAttribute("inventory")
 	open fun getInventory(@ModelAttribute("team") team: TeamInfoDto) = questDao.getInventory(team.teamId!!)

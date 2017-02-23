@@ -1,9 +1,6 @@
 package nl.lukasmiedema.locationquest.dao
 
-import nl.lukasmiedema.locationquest.dto.ChapterDto
-import nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto
-import nl.lukasmiedema.locationquest.dto.InventoryDto
-import nl.lukasmiedema.locationquest.dto.QuestCollectibleDto
+import nl.lukasmiedema.locationquest.dto.*
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.Tables.*
 import nl.lukasmiedema.locationquest.entity.tables.pojos.*
@@ -53,7 +50,8 @@ open class QuestDao {
 	}
 
 	/**
-	 * Gets the quest by QR code.
+	 * Gets the quest by QR code. Even though QR codes are (typically) globally unique, the game id is also provided to validate
+	 * if the quest is actually part of the current game. Null is returned if either do not match.
 	 */
 	open fun getQuestByQR(gameId: Int, code: UUID): Quest? = sql
 			.select(*QUEST.fields())
@@ -98,30 +96,65 @@ open class QuestDao {
 	}
 
 	/**
-	 * Gets the items needed to claim this quest.
+	 * Returns a pair of the yields inventory and requires inventory for the quest.
 	 */
-	open fun getQuestCollectibles(questId: Int): List<QuestCollectibleDto> = sql
-			.select(*COLLECTIBLE.fields(), *QUEST_COLLECTIBLE.fields())
-			.from(
-					QUEST_COLLECTIBLE
-							.join(COLLECTIBLE).on(COLLECTIBLE.COLLECTIBLE_ID.eq(QUEST_COLLECTIBLE.COLLECTIBLE_ID))
-			)
-			.where(QUEST_COLLECTIBLE.QUEST_ID.eq(questId))
-			.fetchArray()
-			.map { QuestCollectibleDto(it.into(QuestCollectible::class.java), it.into(Collectible::class.java)) }
+	open fun getQuestItems(questId: Int): QuestInventoryDto {
+		// Get all collectible data
+		val items = sql
+				.select(*COLLECTIBLE.fields(), *QUEST_COLLECTIBLE.fields())
+				.from(
+						QUEST_COLLECTIBLE
+								.join(COLLECTIBLE).on(COLLECTIBLE.COLLECTIBLE_ID.eq(QUEST_COLLECTIBLE.COLLECTIBLE_ID))
+				)
+				.where(QUEST_COLLECTIBLE.QUEST_ID.eq(questId))
+				.fetchArray()
+				.map { QuestCollectibleDto(it.into(QuestCollectible::class.java), it.into(Collectible::class.java)) }
+
+		// Convert
+		val yieldsInventory = InventoryDto(
+				items.map({ InventoryDto.InventoryItem(it.collectible, it.questCollectible.yields) })
+						.filter { it.count != 0 })
+
+		val requiresInventory = InventoryDto(
+				items.map({ InventoryDto.InventoryItem(it.collectible, it.questCollectible.requires) })
+						.filter { it.count != 0 })
+
+		return QuestInventoryDto(yieldsInventory, requiresInventory)
+	}
 
 	/**
 	 * Returns all claimed quests by the team, including the quest definitions.
 	 */
 	open fun getClaimedQuests(teamId: Int): List<ClaimedQuestInfoDto> = sql
-			.select(*CLAIMED_QUEST.fields(), *QUEST.fields())
-			.from(CLAIMED_QUEST.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID)))
+			.select(*CLAIMED_QUEST.fields(), *QUEST.fields(), *CHAPTER.fields())
+			.from(CLAIMED_QUEST
+					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
+					.join(CHAPTER).on(CHAPTER.CHAPTER_ID.eq(QUEST.CHAPTER_ID)))
 			.where(CLAIMED_QUEST.TEAM_ID.eq(teamId))
 			.fetchArray()
 			.map {
-				val quest = it.into(Quest::class.java)
-				val claimedQuest = it.into(ClaimedQuest::class.java)
-				ClaimedQuestInfoDto(claimedQuest, quest, getQuestCollectibles(quest.questId))
+				val quest = it.into(*QUEST.fields()).into(Quest::class.java)
+				val claimedQuest = it.into(*CLAIMED_QUEST.fields()).into(ClaimedQuest::class.java)
+				val chapter = it.into(*CHAPTER.fields()).into(ChapterDto::class.java)
+				ClaimedQuestInfoDto(chapter, claimedQuest, quest)
+			}
+
+	/**
+	 * Returns a single claimed quest for a given quest and team id. If the team has not yet claimed the quest,
+	 * null will be returned.
+	 */
+	open fun getClaimedQuest(questId: Int, teamId: Int) = sql
+			.select(*CLAIMED_QUEST.fields(), *QUEST.fields(), *CHAPTER.fields())
+			.from(CLAIMED_QUEST
+					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
+					.join(CHAPTER).on(CHAPTER.CHAPTER_ID.eq(QUEST.CHAPTER_ID)))
+			.where(CLAIMED_QUEST.QUEST_ID.eq(questId))
+			.and(CLAIMED_QUEST.TEAM_ID.eq(teamId))
+			.fetchOne {
+				val quest = it.into(*QUEST.fields()).into(Quest::class.java)
+				val claimedQuest = it.into(*CLAIMED_QUEST.fields()).into(ClaimedQuest::class.java)
+				val chapter = it.into(*CHAPTER.fields()).into(ChapterDto::class.java)
+				ClaimedQuestInfoDto(chapter, claimedQuest, quest)
 			}
 
 	/**
@@ -140,15 +173,17 @@ open class QuestDao {
 	/**
 	 * Gets the chapter for a given chapterId.
 	 */
-	open fun getChapter(chapterId: Int): Chapter? = sql
+	open fun getChapter(chapterId: Int): ChapterDto? = sql
 			.selectFrom(CHAPTER)
 			.where(CHAPTER.CHAPTER_ID.eq(chapterId))
-			.fetchOneInto(Chapter::class.java)
+			.fetchOneInto(ChapterDto::class.java)
 
 	/**
-	 * Fetches all chapters for a given gameId, with info about if the team already has the chapter.
+	 * Fetches all quests with chapter info for a given gameId, with info about if the team already has the chapter.
+	 * This returns one entry for every quest in the system, with chapter info for the quest it belongs to and a
+	 * boolean indicating if the chapter has been claimed.
 	 */
-	open fun getChaptersByGame(gameId: Int, teamId: Int): List<ChapterDto> = sql
+	open fun getQuestChapterByGameAndTeam(gameId: Int, teamId: Int): List<ChapterDto> = sql
 			.select(
 					*CHAPTER.fields(),
 

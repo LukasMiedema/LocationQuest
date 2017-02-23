@@ -2,6 +2,7 @@ package nl.lukasmiedema.locationquest.controller.dashboard
 
 import nl.lukasmiedema.locationquest.controller.GamesController
 import nl.lukasmiedema.locationquest.dao.QuestDao
+import nl.lukasmiedema.locationquest.dto.ChapterDto
 import nl.lukasmiedema.locationquest.dto.MessageDto
 import nl.lukasmiedema.locationquest.dto.QuestPhase
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
@@ -34,18 +35,21 @@ open class QuestController {
 
 		val questPhase: QuestPhase
 		val quest: Quest?
+		val chapter: ChapterDto?
 
 		if (!game.active) {
 
 			// Game isn't active --> no quest
 			questPhase = QuestPhase.CLOSED
 			quest = null
+			chapter = null
 
 		} else {
 
 			// Get next question
 			quest = questDao.getNextQuest(game.gameId!!, team.teamId!!)
 			questPhase = if (quest == null) QuestPhase.DONE else QuestPhase.RUNNING
+			chapter = if (quest == null) null else questDao.getChapter(quest.chapterId)
 		}
 
 		// Add a message if this was a redirect
@@ -55,6 +59,7 @@ open class QuestController {
 
 		model.addAttribute("questPhase", questPhase)
 		model.addAttribute("quest", quest)
+		model.addAttribute("chapter", chapter)
 		model.addAttribute("activeTab", "QuestTab")
 		return "Dashboard"
 	}

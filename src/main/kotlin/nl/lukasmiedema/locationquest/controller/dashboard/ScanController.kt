@@ -28,12 +28,21 @@ open class ScanController {
 	open fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
 			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
 
-	@ModelAttribute("required")
-	open fun getRequirements(@ModelAttribute("quest") quest: Quest) =
-			questDao.getQuestCollectibles(quest.questId)
+	@ModelAttribute("items")
+	open fun getQuestItems(@ModelAttribute("quest") quest: Quest) =
+			questDao.getQuestItems(quest.questId)
+
+	@ModelAttribute("yieldsInventory")
+	open fun getYieldsInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.yieldsInventory
+
+	@ModelAttribute("requiresInventory")
+	open fun getRequiresInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.requiresInventory
 
 	@ModelAttribute("passcode")
-	open fun getPasscode() = "" // default is empty. This can be overriden
+	open fun getPasscode() = "" // default is empty. This can be overridden by the controller
+
+	@ModelAttribute("chapter")
+	open fun getChapter(@ModelAttribute("quest") quest: Quest) = questDao.getChapter(quest.chapterId)
 
 	/**
 	 * Returns details about the posibility of a claim.
@@ -41,7 +50,7 @@ open class ScanController {
 	@ModelAttribute("scanCode")
 	open fun getClaimDetails(
 			@ModelAttribute("quest") quest: Quest,
-			@ModelAttribute("required") required: List<QuestCollectibleDto>,
+			@ModelAttribute("requiresInventory") requiresInventory: InventoryDto,
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			@ModelAttribute("inventory") inventory: InventoryDto): ScanCode {
@@ -58,7 +67,7 @@ open class ScanController {
 		}
 
 		// Check dependencies
-		if (!inventory.has(required)) {
+		if (!inventory.has(requiresInventory)) {
 			return ScanCode.UNSATISFIED_DEPENDENCY
 		}
 
@@ -70,7 +79,6 @@ open class ScanController {
 	open fun scanQuest(
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
 			@ModelAttribute("inventory") inventory: InventoryDto,
-			@ModelAttribute("required") required: List<QuestCollectibleDto>,
 			@ModelAttribute("scanCode") scanCode: ScanCode,
 			model: Model): String {
 
@@ -88,17 +96,6 @@ open class ScanController {
 					"Deze quest kan nog niet geclaimed worden. Doe je ze wel in de goede volgorde?"))
 		}
 
-		// Create inventory dtos for yields and requires
-		val yieldsInventory = InventoryDto(
-				required.map({ InventoryDto.InventoryItem(it.collectible, it.questCollectible.yields) })
-						.filter { it.count != 0 })
-
-		val requiresInventory = InventoryDto(
-				required.map({ InventoryDto.InventoryItem(it.collectible, it.questCollectible.requires) })
-						.filter { it.count != 0 })
-
-		model.addAttribute("yieldsInventory", yieldsInventory)
-		model.addAttribute("requiresInventory", requiresInventory)
 		model.addAttribute("claimable", scanCode == ScanCode.CLAIMABLE)
 		model.addAttribute("activeTab", "ScanTab")
 		return "Dashboard"
@@ -113,7 +110,6 @@ open class ScanController {
 
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
 			@ModelAttribute("inventory") inventory: InventoryDto,
-			@ModelAttribute("required") required: List<QuestCollectibleDto>,
 			@ModelAttribute("scanCode") scanCode: ScanCode,
 			model: Model): String {
 
@@ -141,6 +137,6 @@ open class ScanController {
 		}
 
 		// Show the view with errors
-		return scanQuest(messages, inventory, required, scanCode, model)
+		return scanQuest(messages, inventory, scanCode, model)
 	}
 }

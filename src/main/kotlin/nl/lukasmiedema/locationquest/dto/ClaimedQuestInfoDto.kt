@@ -10,9 +10,9 @@ import java.sql.Timestamp
  * @author Lukas Miedema
  */
 data class ClaimedQuestInfoDto(
+		val chapter: ChapterDto,
 		val claimedQuest: ClaimedQuest,
-		val quest: Quest,
-		val collectibles: List<QuestCollectibleDto>) {
+		val quest: Quest) {
 
 	/**
 	 * Claimed at annotated with a datetime format for Thymeleaf.

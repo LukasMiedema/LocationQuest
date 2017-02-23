@@ -56,7 +56,8 @@ CREATE TABLE LOCATION_GAME.TEAM_PLAYER (
 CREATE TABLE LOCATION_GAME.CHAPTER (
   chapter_id SERIAL PRIMARY KEY,
   game_id INTEGER NOT NULL REFERENCES LOCATION_GAME.GAME(game_id),
-  color INT NOT NULL
+  color INT NOT NULL,
+  name VARCHAR(50) NOT NULL
 );
 
 -- Locations, dependencies and claimed locations

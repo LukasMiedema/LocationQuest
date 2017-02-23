@@ -17,15 +17,10 @@ data class InventoryDto(private val lookupTable: Map<Int, InventoryItem>) {
 	operator fun get(collectibleId: Int): Int = lookupTable[collectibleId]?.count ?: 0
 
 	/**
-	 * Checks if the inventory has the items provided in the map
+	 * Checks if the inventory has the items in the other inventory.
 	 */
-	fun has(required: List<QuestCollectibleDto>): Boolean {
-		for (c in required) {
-			if (this[c.collectible.collectibleId] < c.questCollectible.requires) {
-				return false
-			}
-		}
-		return true
+	fun has(other: InventoryDto): Boolean {
+		return other.items.all { this[it.collectible.collectibleId] >= it.count }
 	}
 
 	/**

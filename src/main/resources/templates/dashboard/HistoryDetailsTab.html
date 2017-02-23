@@ -1,0 +1,51 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="item" type="nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto" */-->
+<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="passcode" type="java.lang.String"*/-->
+<!--/*@thymesVar id="claimable" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="requiresInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+<!--/*@thymesVar id="yieldsInventory" type="nl.lukasmiedema.locationquest.dto.InventoryDto"*/-->
+
+<head>
+	<title>Geschiedenis: <th:block th:text="${item.quest.name}" /></title>
+</head>
+<body>
+	<div class="ui segment">
+		<div class="inline-chapter-block" th:style="|background-color: #${item.chapter.colorHex};|"></div>
+		<th:block th:text="${item.chapter.name}" />
+	</div>
+
+	<div class="ui segment">
+		<h2>Geschiedenis: <th:block th:text="${item.quest.name}"/></h2>
+	</div>
+	<div class="ui segment">
+		<i class="check icon"></i>
+		Geclaimed om <th:block th:text="${{item.claimedAt}}" />
+	</div>
+	<div class="ui red secondary segment" th:unless="${requiresInventory.items.empty}">
+		<h4>Claimen koste</h4>
+		<div th:replace="components/InventoryList :: list (${requiresInventory})"></div>
+	</div>
+	<div class="ui green secondary segment" th:unless="${yieldsInventory.items.empty}">
+		<h4>Claimen leverde op</h4>
+		<div th:replace="components/InventoryList :: list (${yieldsInventory})"></div>
+	</div>
+
+	<div class="ui segment" th:if="${item.quest.required}">
+		<p th:utext="${markdown.toHtml(item.quest.fetchText)}"></p>
+	</div>
+
+	<div class="ui clearing secondary segment">
+		<div class="ui big form">
+			<th:block th:if="${item.quest.passcodeText}">
+				<h4>Gebruikte code</h4>
+				<div class="inline field">
+					<label><i class="key icon"></i></label>
+					<input type="text" name="passcode" disabled="disabled" placeholder="Code" th:value="${item.quest.passcodeText}" />
+				</div>
+			</th:block>
+			<a th:href="@{/games/{id}/dashboard/history(id=${game.gameId})}" class="ui left primary floated button">Terug</a>
+		</div>
+	</div>
+</body>
+</html>
