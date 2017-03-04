@@ -1,5 +1,6 @@
 package nl.lukasmiedema.locationquest.controller
 
+import nl.lukasmiedema.locationquest.dao.FileDao
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.tables.pojos.File
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
@@ -24,15 +25,12 @@ import java.util.*
 @RequestMapping("file/{fileId}")
 open class FileController {
 
-	@Autowired private lateinit var sql: DSLContext
+	@Autowired private lateinit var fileDao: FileDao
 
 	@ResponseBody
 	@GetMapping
 	open fun getFile(@PathVariable("fileId") fileId: UUID): ResponseEntity<ByteArray> {
-		val file = sql
-				.selectFrom(Tables.FILE)
-				.where(Tables.FILE.FILE_ID.eq(fileId))
-				.fetchOneInto(File::class.java) ?: throw ResourceNotFoundException("No file for $fileId")
+		val file = fileDao.getFile(fileId)?: throw ResourceNotFoundException("No file for $fileId")
 
 		val headers = HttpHeaders()
 		if (file.mimeType != null) {

@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="#{login.title}"></title>
+</head>
+<body>
+	<div class="ui text container">
+
+		<!--/*@thymesVar id="form" type="nl.lukasmiedema.locationquest.dto.LoginFormDto"*/-->
+		<div class="column" th:object="${form}">
+			<h2 th:text="#{login.title}"></h2>
+			<p>
+				<th:block th:text="#{login.description}"/>
+				<a th:href="@{/profile}" th:text="#{login.normalLogin}"></a>
+			</p>
+
+			<div th:if="${#fields.hasAnyErrors()}" class="ui error message transition">
+				<div class="header" th:text="#{login.validationError}"></div>
+				<ul class="list" th:each="error : ${#fields.detailedErrors()}">
+					<li th:text="${error.message}"></li>
+				</ul>
+			</div>
+
+			<form action="#" method="post" class="ui large form">
+				<div class="field" th:classappend="${#fields.hasErrors('email')} ? error">
+					<label th:text="#{login.email.label}"></label>
+					<input type="text" th:field="*{email}" />
+				</div>
+				<div class="field" th:classappend="${#fields.hasErrors('password')} ? error">
+					<label th:text="#{login.password.label}"></label>
+					<input type="password" th:field="*{password}" />
+				</div>
+				<input type="submit" class="ui primary button" th:value="#{login.continue}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

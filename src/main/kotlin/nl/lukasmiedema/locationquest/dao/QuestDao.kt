@@ -131,6 +131,7 @@ open class QuestDao {
 					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
 					.join(CHAPTER).on(CHAPTER.CHAPTER_ID.eq(QUEST.CHAPTER_ID)))
 			.where(CLAIMED_QUEST.TEAM_ID.eq(teamId))
+			.orderBy(CLAIMED_QUEST.CLAIMED_AT.desc())
 			.fetchArray()
 			.map {
 				val quest = it.into(*QUEST.fields()).into(Quest::class.java)
@@ -183,21 +184,26 @@ open class QuestDao {
 	 * This returns one entry for every quest in the system, with chapter info for the quest it belongs to and a
 	 * boolean indicating if the chapter has been claimed.
 	 */
-	open fun getQuestChapterByGameAndTeam(gameId: Int, teamId: Int): List<ChapterDto> = sql
-			.select(
-					*CHAPTER.fields(),
+	open fun getQuestChapterByGameAndTeam(gameId: Int, teamId: Int): List<ChapterDto> {
+		val record = sql
+				.select(
+						*CHAPTER.fields(),
 
-					// Select number of claimed quests for this chapter
-					DSL.field(
-						DSL.exists(
-								DSL.selectFrom(CLAIMED_QUEST)
-										.where(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
-										.and(CLAIMED_QUEST.TEAM_ID.eq(teamId))
-						)
-					).`as`("CLAIMED")
-			)
-			.from(CHAPTER.join(QUEST).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID)))
-			.where(CHAPTER.GAME_ID.eq(gameId))
-			.and(QUEST.REQUIRED)
-			.fetchInto(ChapterDto::class.java)
+						// Select number of claimed quests for this chapter
+						DSL.field(
+								DSL.exists(
+										DSL.selectFrom(CLAIMED_QUEST)
+												.where(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
+												.and(CLAIMED_QUEST.TEAM_ID.eq(teamId))
+								)
+						).`as`("claimed")
+				)
+				.from(CHAPTER.join(QUEST).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID)))
+				.where(CHAPTER.GAME_ID.eq(gameId))
+				.and(QUEST.REQUIRED)
+				.orderBy(CHAPTER.CHAPTER_ID.asc(), QUEST.QUEST_ID.asc())
+				.fetch()
+
+		return record.map { it.into(ChapterDto::class.java) }
+	}
 }

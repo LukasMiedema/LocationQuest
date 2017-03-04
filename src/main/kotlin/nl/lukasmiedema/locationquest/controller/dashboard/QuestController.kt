@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam
  * @author Lukas Miedema
  */
 @Controller
-@RequestMapping(GamesController.URL + "/{game}/dashboard")
+@RequestMapping("games/{game}/dashboard")
 open class QuestController {
 
 	@Autowired private lateinit var i18n: I18nService

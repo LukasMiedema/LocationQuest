@@ -10,7 +10,7 @@
 			<h2 th:text="#{profile.title}"></h2>
 			<p th:text="#{profile.description}"></p>
 
-			<div th:if="${#fields.hasAnyErrors()}" class="ui error code transition">
+			<div th:if="${#fields.hasAnyErrors()}" class="ui error message transition">
 				<div class="header" th:text="#{profile.validationError}"></div>
 				<ul class="list" th:each="error : ${#fields.detailedErrors()}">
 					<li th:text="${error.message}"></li>

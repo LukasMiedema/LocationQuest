@@ -1,5 +1,6 @@
 package nl.lukasmiedema.locationquest.controller.dashboard
 
+import nl.lukasmiedema.locationquest.dao.GamesDao
 import nl.lukasmiedema.locationquest.dao.QuestDao
 import nl.lukasmiedema.locationquest.dto.GameTabDto
 import nl.lukasmiedema.locationquest.dto.MessageDto
@@ -36,7 +37,7 @@ open class DashboardAdvice {
 		)
 	}
 
-	@Autowired private lateinit var sql: DSLContext
+	@Autowired private lateinit var gamesDao: GamesDao
 	@Autowired private lateinit var questDao: QuestDao
 	@Autowired private lateinit var markdown: MarkdownService
 
@@ -48,15 +49,7 @@ open class DashboardAdvice {
 
 	@ModelAttribute("game")
 	open fun getGame(@PathVariable("game") gameId: Int): Game {
-		val game = sql
-				.selectFrom(Tables.GAME)
-				.where(Tables.GAME.GAME_ID.eq(gameId))
-				.fetchOneInto(Game::class.java)
-		if (game == null) {
-			throw ResourceNotFoundException("No such game")
-		} else {
-			return game
-		}
+		return gamesDao.getGame(gameId) ?: throw ResourceNotFoundException("No such game")
 	}
 
 	@ModelAttribute("team")
@@ -64,29 +57,7 @@ open class DashboardAdvice {
 			@PathVariable("game") gameId: Int,
 			@AuthenticationPrincipal player: Player): TeamInfoDto {
 
-		val t = Tables.TEAM.`as`("t")
-		val tp = Tables.TEAM_PLAYER.`as`("tp")
-
-		val teamInfo = sql
-				.select(
-						t.TEAM_ID,
-						t.NAME,
-						t.COLOR,
-						DSL.select(DSL.count())
-								.from(Tables.TEAM_PLAYER)
-								.where(Tables.TEAM_PLAYER.TEAM_ID.eq(t.TEAM_ID))
-								.asField<Any>("MEMBER_COUNT")
-				)
-				.from(t.join(tp).on(t.TEAM_ID.eq(tp.TEAM_ID)))
-				.where(t.GAME_ID.eq(gameId))
-				.and(tp.PLAYER_ID.eq(player.playerId))
-				.fetchOneInto(TeamInfoDto::class.java)
-
-		if (teamInfo == null) {
-			throw UnauthorizedException("Not enrolled")
-		} else {
-			return teamInfo
-		}
+		return gamesDao.getTeamDetailed(gameId, player.playerId) ?: throw UnauthorizedException("Not enrolled")
 	}
 
 	@ModelAttribute("chapters")

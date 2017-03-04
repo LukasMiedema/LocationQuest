@@ -1,0 +1,10 @@
+[Unit]
+Description=LocationQuest
+
+[Service]
+User=locationquest
+ExecStart=/home/locationquest/LocationQuest.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

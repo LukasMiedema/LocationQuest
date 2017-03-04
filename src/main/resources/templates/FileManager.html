@@ -1,0 +1,50 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="#{fileManager.title}"></title>
+</head>
+<body>
+
+<!--/*@thymesVar id="files" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.File>"*/-->
+
+<div class="ui text container">
+	<div class="ui tiny horizontal divider header" th:text="#{fileManager.title}"></div>
+	<table class="ui table">
+		<thead>
+			<tr>
+				<th th:text="#{fileManager.mime}"></th>
+				<th th:text="#{fileManager.uuid}"></th>
+				<th th:text="#{fileManager.preview}"></th>
+				<th><i class="pencil icon"></i></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="file: ${files}">
+				<td th:text="${file.mimeType}"></td>
+				<td>
+					<a th:href="@{/file/{uuid}(uuid=${file.fileId})}" th:text="${file.fileId}"></a>
+				</td>
+				<td>
+					<div class="ui mini image">
+						<object style="max-width:100%;max-height:100%;"
+								th:type="${file.mimeType}"
+								th:data="@{/file/{uuid}(uuid=${file.fileId})}"></object>
+					</div>
+				</td>
+				<td>
+					<a th:href="@{/admin/files/{uuid}(uuid=${file.fileId})}" th:text="#{fileManager.edit}"></a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<a th:href="@{/admin/files/new}">
+						<i class="plus icon"></i>
+						<th:block th:text="#{fileManager.createNew}" />
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</body>
+</html>

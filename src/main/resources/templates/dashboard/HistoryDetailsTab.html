@@ -31,7 +31,7 @@
 		<div th:replace="components/InventoryList :: list (${yieldsInventory})"></div>
 	</div>
 
-	<div class="ui segment" th:if="${item.quest.required}">
+	<div class="ui markdown segment" th:if="${item.quest.required}">
 		<p th:utext="${markdown.toHtml(item.quest.fetchText)}"></p>
 	</div>
 

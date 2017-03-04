@@ -20,7 +20,7 @@
 	<!-- Next quest -->
 	<th:block th:switch="${questPhase.name()}">
 		<th:block th:case="RUNNING">
-			<div class="ui segment">
+			<div class="ui markdown segment">
 				<h2 class="ui header" th:text="${quest.name}"></h2>
 				<p th:utext="${markdown.toHtml(quest.fetchText)}"></p>
 			</div>

@@ -1,8 +1,20 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<title th:text="#{games.title}">Games</title>
 </head>
 <body>
+	<th:block>
+		<div class="ui text container" sec:authorize="hasRole('ADMIN')">
+			<h4 th:text="#{games.admin.header}" class="ui horizontal divider header"></h4>
+			<div class="ui bulleted list">
+				<div class="item">
+					<a th:href="@{admin/files}" th:text="#{games.admin.manageFiles}"></a>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<br/>
+	</th:block>
 	<div class="ui text container">
 		<div th:replace="components/GameList :: list (#{games.mine}, ${ownGames})"></div>
 	</div>

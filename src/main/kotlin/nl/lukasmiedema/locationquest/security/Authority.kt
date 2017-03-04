@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority
 enum class Authority : GrantedAuthority {
 	ADMIN, PARTICIPANT;
 
-	override fun getAuthority(): String = toString()
+	override fun getAuthority(): String = "ROLE_" + name
 
 	companion object {
 		val ADMIN_AUTHORITIES = listOf(ADMIN, PARTICIPANT)

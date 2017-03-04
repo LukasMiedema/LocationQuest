@@ -1,6 +1,7 @@
 package nl.lukasmiedema.locationquest.controller.dashboard
 
 import nl.lukasmiedema.locationquest.controller.GamesController
+import nl.lukasmiedema.locationquest.dao.GamesDao
 import nl.lukasmiedema.locationquest.dao.QuestDao
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.entity.Tables
@@ -19,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping
  * @author Lukas Miedema
  */
 @Controller
-@RequestMapping(GamesController.URL + "/{game}/dashboard/team")
+@RequestMapping("games/{game}/dashboard/team")
 open class TeamController {
 
-	@Autowired private lateinit var sql: DSLContext
-	@Autowired private lateinit var questDao: QuestDao
-
+	@Autowired private lateinit var gamesDao: GamesDao
 
 	@GetMapping
 	open fun getTeam(
@@ -33,14 +32,7 @@ open class TeamController {
 			model: Model,
 			@AuthenticationPrincipal player: Player): String {
 
-		val teamMembers = sql
-				.select(*Tables.PLAYER.fields())
-				.from(
-						Tables.PLAYER.join(Tables.TEAM_PLAYER)
-								.on(Tables.PLAYER.PLAYER_ID.eq(Tables.TEAM_PLAYER.PLAYER_ID)
-								)
-				).where(Tables.TEAM_PLAYER.TEAM_ID.eq(team.teamId))
-				.fetchInto(Player::class.java)
+		val teamMembers = gamesDao.getTeamMembers(team.teamId!!)
 
 		model.addAttribute("teamMembers", teamMembers)
 		model.addAttribute("activeTab", "TeamTab")

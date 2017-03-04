@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/locationquest
+    username: locationquest
+    password: locationquest
+    driver-class-name: org.postgresql.Driver
+  jooq.sql_dialect: POSTGRES_9_4
+  h2.console.enabled: false

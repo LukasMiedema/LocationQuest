@@ -1,5 +1,6 @@
 package nl.lukasmiedema.locationquest.controller
 
+import nl.lukasmiedema.locationquest.dao.GamesDao
 import nl.lukasmiedema.locationquest.dto.TeamCreationDto
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.dto.TeamSelectionDto
@@ -24,10 +25,10 @@ import javax.validation.Valid
  */
 @Controller
 @PreAuthorize("isAuthenticated()")
-@RequestMapping(GamesController.URL)
+@RequestMapping("games")
 open class GameEnrollController {
 
-	@Autowired private lateinit var sql: DSLContext
+	@Autowired private lateinit var gamesDao: GamesDao
 
 	@ModelAttribute
 	open fun teamSelectionDto() = TeamSelectionDto()
@@ -46,42 +47,14 @@ open class GameEnrollController {
 			@AuthenticationPrincipal player: Player): String {
 
 		// Check if the user is already in a team for this game
-		val alreadyEnrolled = sql.fetchExists(
-				DSL.selectFrom(
-						Tables.TEAM.join(Tables.TEAM_PLAYER)
-								.on(Tables.TEAM.TEAM_ID.eq(Tables.TEAM_PLAYER.TEAM_ID))
-				)
-				.where(Tables.TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
-				.and(Tables.TEAM.GAME_ID.eq(gameId))
-		)
+		val alreadyEnrolled = gamesDao.isEnrolled(gameId, player.playerId)
 		if (alreadyEnrolled) {
 			return "redirect:/games/$gameId/dashboard"
 		}
 
-		// Get the game
-		val game: Game = sql
-				.selectFrom(Tables.GAME)
-				.where(Tables.GAME.GAME_ID.eq(gameId))
-				.fetchOneInto(Game::class.java)
-				?: throw ResourceNotFoundException("No such game: $gameId")
-
-
-		// Load all team info
-		val t = Tables.TEAM.`as`("t")
-		val tp = Tables.TEAM_PLAYER.`as`("tp")
-
-		val teams = sql
-				.select(
-						t.TEAM_ID,
-						t.NAME,
-						t.COLOR,
-						DSL.select(DSL.count())
-								.from(tp)
-								.where(tp.TEAM_ID.eq(t.TEAM_ID))
-								.asField<Any>("MEMBER_COUNT")
-				)
-				.from(t).where(t.GAME_ID.eq(gameId))
-				.fetchInto(TeamInfoDto::class.java);
+		// Get the game and teams
+		val game: Game = gamesDao.getGame(gameId) ?: throw ResourceNotFoundException("No such game: $gameId")
+		val teams = gamesDao.getTeamsDetailed(gameId)
 
 		model.addAttribute("teams", teams)
 		model.addAttribute("game", game)
@@ -102,9 +75,10 @@ open class GameEnrollController {
 			return getChooseGameTeam(model, gameId, player)
 		}
 
+		// TODO: check if game is open!
+
 		// Save and continue
-		val tp = Tables.TEAM_PLAYER
-		sql.insertInto(tp, tp.PLAYER_ID, tp.TEAM_ID).values(player.playerId, teamSelectionDto.teamId).execute()
+		gamesDao.enroll(teamSelectionDto.teamId!!, player.playerId)
 		return "redirect:/games/$gameId/dashboard"
 	}
 
@@ -121,17 +95,12 @@ open class GameEnrollController {
 			return getChooseGameTeam(model, gameId, player)
 		}
 
-		// Save team
-		val teamRecord = sql
-				.insertInto(Tables.TEAM)
-				.set(Tables.TEAM.GAME_ID, gameId)
-				.set(Tables.TEAM.COLOR, teamCreationDto.colorInt)
-				.set(Tables.TEAM.NAME, teamCreationDto.name)
-				.returning(Tables.TEAM.TEAM_ID)
-				.fetchOne()
+		// TODO: check if game is open!
 
-		// Save user
-		sql.insertInto(Tables.TEAM_PLAYER).values(player.playerId, teamRecord.teamId).execute()
+		// Save team
+		val newTeam = gamesDao.createTeam(gameId, teamCreationDto.colorInt!!, teamCreationDto.name!!)
+		gamesDao.enroll(newTeam.teamId, player.playerId)
+
 		return "redirect:/games/$gameId/dashboard"
 	}
 }

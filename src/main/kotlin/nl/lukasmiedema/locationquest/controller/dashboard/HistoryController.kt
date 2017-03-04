@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping
  * @author Lukas Miedema
  */
 @Controller
-@RequestMapping(GamesController.URL + "/{game}/dashboard/history")
+@RequestMapping("games/{game}/dashboard/history")
 open class HistoryController {
 
 	@Autowired private lateinit var questDao: QuestDao

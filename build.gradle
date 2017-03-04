@@ -63,6 +63,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
 	compile("org.springframework.boot:spring-boot-devtools")
 
 	// Markdown
@@ -86,17 +87,22 @@ dependencies {
 	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
+// Make the binary 'executable' - prepending a control script
+springBoot {
+	executable = true
+}
 
 // Flyway generates database at compile-time for JOOQ
 flyway {
 	url = h2.url
 	user = h2.user
 	password = h2.password
+	schemas = ['LOCATION_QUEST']
 }
 
 // Jooq generates entities
 jooq {
-	locationGame(sourceSets.main) {
+	locationQuest(sourceSets.main) {
 		jdbc {
 			driver = h2.driver
 			url = h2.url
@@ -110,7 +116,7 @@ jooq {
 			}
 			database {
 				name = 'org.jooq.util.h2.H2Database'
-				inputSchema = 'LOCATION_GAME'
+				inputSchema = 'LOCATION_QUEST'
 			}
 			generate {
 				relations = true
@@ -135,15 +141,15 @@ jooq {
 	}
 }
 
-generateLocationGameJooqSchemaSource.dependsOn flywayMigrate
+generateLocationQuestJooqSchemaSource.dependsOn flywayMigrate
 
 // After completion, the h2 database is purged
 task entityGenerationClean << {
 	delete h2.file
 }
 
-compileKotlin.dependsOn generateLocationGameJooqSchemaSource
-generateLocationGameJooqSchemaSource.finalizedBy entityGenerationClean
+compileKotlin.dependsOn generateLocationQuestJooqSchemaSource
+generateLocationQuestJooqSchemaSource.finalizedBy entityGenerationClean
 
 
 sourceSets {

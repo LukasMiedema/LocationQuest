@@ -1,5 +1,6 @@
 package nl.lukasmiedema.locationquest.controller
 
+import nl.lukasmiedema.locationquest.dao.GamesDao
 import nl.lukasmiedema.locationquest.dto.PageDto
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.Tables.*
@@ -29,21 +30,14 @@ open class MenuInterceptor : HandlerInterceptorAdapter() {
 		private val DEFAULT_VIEW_ATTRIBUTE_NAME = "view"
 	}
 
-	@Autowired private lateinit var sql: DSLContext
+	@Autowired private lateinit var gamesDao: GamesDao
 
 	@ModelAttribute("page")
 	open fun getPage(@AuthenticationPrincipal player: Player?): PageDto {
 		if (player == null) {
 			return PageDto(false, null, null)
 		} else {
-			val games = sql
-					.select(*GAME.fields())
-					.from(GAME
-							.join(TEAM).on(TEAM.GAME_ID.eq(GAME.GAME_ID))
-							.join(TEAM_PLAYER).on(TEAM_PLAYER.TEAM_ID.eq(TEAM.TEAM_ID))
-					)
-					.where(TEAM_PLAYER.PLAYER_ID.eq(player.playerId))
-					.fetchInto(Game::class.java)
+			val games = gamesDao.getEnrolledGames(player.playerId)
 			return PageDto(true, player.name, games)
 		}
 	}

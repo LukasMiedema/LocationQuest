@@ -8,7 +8,7 @@ import javax.persistence.Column
  */
 data class ChapterDto
 
-	@ConstructorProperties("GAME_ID", "CHAPTER_ID", "COLOR", "NAME", "CLAIMED")
+	@ConstructorProperties("game_id", "chapter_id", "color", "name", "claimed")
 	constructor(val gameId: Int, val chapterId: Int, val color: Int, val name: String, val claimed: Boolean) {
 
 	val colorHex: String?;

@@ -15,3 +15,5 @@ server:
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN
+
+flyway.schemas: 'LOCATION_QUEST'

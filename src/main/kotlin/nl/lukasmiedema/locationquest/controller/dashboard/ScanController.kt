@@ -20,7 +20,7 @@ import java.util.*
  * @author Lukas Miedema
  */
 @Controller
-@RequestMapping(GamesController.URL + "/{game}/scan/{code}")
+@RequestMapping("games/{game}/scan/{code}")
 open class ScanController {
 
 	@Autowired private lateinit var questDao: QuestDao
@@ -134,7 +134,7 @@ open class ScanController {
 				questDao.insertClaim(claim)
 
 				// Redirect to the normal page
-				return "redirect:/${GamesController.URL}/${game.gameId}/dashboard?claim=true"
+				return "redirect:/games/${game.gameId}/dashboard?claim=true"
 			}
 		}
 
