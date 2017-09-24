@@ -1,3 +1,6 @@
+-- Schema
+CREATE SCHEMA "LOCATION_QUEST";
+
 -- Images and other files hosted by the application
 CREATE TABLE "LOCATION_QUEST"."FILE" (
   "file_id" UUID PRIMARY KEY,

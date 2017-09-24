@@ -1,8 +1,8 @@
 package nl.lukasmiedema.locationquest.service
 
 import nl.lukasmiedema.locationquest.security.PlayerAuthentication
+import nl.lukasmiedema.locationquest.security.PlayerAuthenticationProvider
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.RememberMeServices
 import org.springframework.stereotype.Service
@@ -14,16 +14,15 @@ import javax.servlet.http.HttpServletResponse
  * @author Lukas Miedema
  */
 @Service
-open class AuthenticationService {
-
-	@Autowired private lateinit var authenticationManager: AuthenticationManager
-	@Autowired private lateinit var rememberMeServices: RememberMeServices
+class AuthenticationService @Autowired constructor(
+		val provider: PlayerAuthenticationProvider,
+		val rememberMeServices: RememberMeServices) {
 
 	/**
 	 * Authenticate the current context.
 	 */
-	open fun authenticate(req: HttpServletRequest, resp: HttpServletResponse, auth: PlayerAuthentication) {
-		val authenticatedAuth = this.authenticationManager.authenticate(auth)
+	fun authenticate(req: HttpServletRequest, resp: HttpServletResponse, auth: PlayerAuthentication) {
+		val authenticatedAuth = this.provider.authenticate(auth)
 		SecurityContextHolder.getContext().authentication = authenticatedAuth
 		rememberMeServices.loginSuccess(req, resp, authenticatedAuth)
 	}

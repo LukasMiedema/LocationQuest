@@ -23,13 +23,13 @@ import java.util.*
  */
 @Controller
 @RequestMapping("file/{fileId}")
-open class FileController {
+class FileController {
 
 	@Autowired private lateinit var fileDao: FileDao
 
 	@ResponseBody
 	@GetMapping
-	open fun getFile(@PathVariable("fileId") fileId: UUID): ResponseEntity<ByteArray> {
+	fun getFile(@PathVariable("fileId") fileId: UUID): ResponseEntity<ByteArray> {
 		val file = fileDao.getFile(fileId)?: throw ResourceNotFoundException("No file for $fileId")
 
 		val headers = HttpHeaders()

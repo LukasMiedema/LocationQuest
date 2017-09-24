@@ -41,12 +41,16 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'kotlin'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'maven'
 apply plugin: 'base'
 apply plugin: 'nu.studer.jooq'
+
+group = 'nl.lukasmiedema.locationquest'
+version = '0.0.1-INDEV'
 
 jar {
 	baseName = 'locationquest'
