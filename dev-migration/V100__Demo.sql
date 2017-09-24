@@ -24,10 +24,10 @@ INSERT INTO "LOCATION_QUEST"."GAME" (game_id, name, timestamp, active, allow_new
 (3, 'Test Game 4', now(), false, false);
 
 INSERT INTO "LOCATION_QUEST"."CHAPTER" (chapter_id, game_id, color, name) VALUES
-(0, 0, 0xff00ff, 'Hoofdstuk 1'),
-(1, 0, 0x00ffff, 'Hoofdstuk 2'),
-(2, 0, 0xffccff, 'Hoofdstuk 3'),
-(3, 0, 0xcc0000, 'Hoofdstuk 4');
+(0, 0, CAST(X'ff00ff' as INT), 'Hoofdstuk 1'),
+(1, 0, CAST(X'00ffff' as INT), 'Hoofdstuk 2'),
+(2, 0, CAST(X'ffccff' as INT), 'Hoofdstuk 3'),
+(3, 0, CAST(X'cc0000' as INT), 'Hoofdstuk 4');
 
 -- Collectibles for the game
 INSERT INTO "LOCATION_QUEST"."COLLECTIBLE" (collectible_id, name, file_id) VALUES
@@ -59,11 +59,11 @@ INSERT INTO "LOCATION_QUEST"."QUEST_COLLECTIBLE" (collectible_id, quest_id, requ
 
 -- Teams and players
 INSERT INTO "LOCATION_QUEST"."TEAM" (team_id, game_id, name, color) VALUES
-(0, 0, 'TestTeam', 0xff00ff),
-(1, 0, 'TeamTwo', 0x00ffff),
-(2, 0, 'TeamThree', 0x00ff00),
-(3, 1, 'OtherGameTeam', 0xffbbff),
-(4, 2, 'Best Team EVER', 0xbbbbff);
+(0, 0, 'TestTeam', CAST(X'ff00ff' as INT)),
+(1, 0, 'TeamTwo', CAST(X'00ffff' as INT)),
+(2, 0, 'TeamThree', CAST(X'00ff00' as INT)),
+(3, 1, 'OtherGameTeam', CAST(X'ffbbff' as INT)),
+(4, 2, 'Best Team EVER', CAST(X'bbbbff' as INT));
 
 INSERT INTO "LOCATION_QUEST"."TEAM_PLAYER" (player_id, team_id) VALUES
 (0, 0),

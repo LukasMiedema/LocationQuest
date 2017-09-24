@@ -8,7 +8,7 @@ buildscript {
 		h2 = new Expando(
 			driver: 'org.h2.Driver',
 			file: 'build/locationquest.mv.db',
-			url: 'jdbc:h2:./build/locationquest',
+			url: 'jdbc:h2:./build/locationquest;MODE=PostgreSQL;database_to_upper=false',
 			user: 'sa',
 			password: 'sa',
 		)

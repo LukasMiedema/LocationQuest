@@ -37,6 +37,6 @@ class GameInfoDto {
 	/**
 	 * Returns the team color as a hex string (i.e. ff00bb, without #)
 	 */
-	val teamColorHex: String?;
+	val teamColorHex: String?
 		get() = teamColor?.let { String.format("%06X", 0xFFFFFF and it) }
 }

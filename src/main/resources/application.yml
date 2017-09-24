@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:locationquest
+    url: 'jdbc:h2:mem:sketchlab;MODE=PostgreSQL;database_to_upper=false'
     username: sa
     password: sa
     driver-class-name: org.h2.Driver

@@ -22,6 +22,6 @@ class TeamInfoDto {
 	/**
 	 * Returns the team color as a hex string (i.e. ff00bb, without #)
 	 */
-	val colorHex: String?;
+	val colorHex: String?
 		get() = color?.let { String.format("%06X", 0xFFFFFF and it) }
 }

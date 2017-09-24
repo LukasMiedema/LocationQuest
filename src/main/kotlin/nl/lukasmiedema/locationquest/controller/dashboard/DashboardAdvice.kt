@@ -70,4 +70,7 @@ open class DashboardAdvice {
 
 	@ModelAttribute("messages")
 	open fun getMessages() = ArrayList<MessageDto>()
+
+	//@ModelAttribute("chapters")
+	//open fun getChapters(@ModelAttribute("game") game: Game) = questDao.getChaptersByGame(game.gameId)
 }

@@ -23,9 +23,9 @@ open class AuthenticationService {
 	 * Authenticate the current context.
 	 */
 	open fun authenticate(req: HttpServletRequest, resp: HttpServletResponse, auth: PlayerAuthentication) {
-		val auth = this.authenticationManager.authenticate(auth)
-		SecurityContextHolder.getContext().authentication = auth
-		rememberMeServices.loginSuccess(req, resp, auth)
+		val authenticatedAuth = this.authenticationManager.authenticate(auth)
+		SecurityContextHolder.getContext().authentication = authenticatedAuth
+		rememberMeServices.loginSuccess(req, resp, authenticatedAuth)
 	}
 
 }
