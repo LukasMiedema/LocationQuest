@@ -8,6 +8,8 @@ spring:
   h2.console.enabled: true
   jackson.serialization:
     FAIL_ON_EMPTY_BEANS: false
+  flyway:
+    schemas: 'LOCATION_QUEST'
 
 server:
   session.cookie.name: 'LocationQuestSession'
@@ -15,5 +17,3 @@ server:
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN
-
-flyway.schemas: 'LOCATION_QUEST'

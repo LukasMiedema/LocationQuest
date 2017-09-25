@@ -2,4 +2,4 @@
 # This file is not bundled into the runnable JAR and will only be used
 # when Spring Boot is started from this directory
 
-flyway.locations: classpath:db/migration, filesystem:dev-migration
+spring.flyway.locations: classpath:db/migration, filesystem:dev-migration
