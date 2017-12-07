@@ -5,7 +5,7 @@
 <!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
 <head>
 	<title>
-		<th:block th:insert="~{'dashboard/' + ${activeTab} + ' :: title'}" />
+		<th:block th:include="${'dashboard/' + activeTab} :: title" />
 		-
 		<th:block th:text="${game.name}"/>
 	</title>
@@ -44,8 +44,8 @@
 		   th:classappend="${activeTab} eq ${tab.template} ? 'active'"
 		   th:href="@{${url}(tab=${tab.url})}">
 
-			<th:block th:insert="~{dashboard/${tab.template} :: icon}" th:if="${activeTab} eq ${tab.template}" />
-			<th:block th:insert="~{dashboard/${tab.template} :: title}" />
+			<th:block th:include="${'dashboard/' + tab.template} :: icon" th:if="${activeTab} eq ${tab.template}" />
+			<th:block th:include="${'dashboard/' + tab.template} :: title" />
 		</a>
 
 	</div>
@@ -58,7 +58,7 @@
 	</div>
 
 	<!-- Active tab -->
-	<div class="ui segments" th:include="~{dashboard/${activeTab} :: body}"></div>
+	<div class="ui segments" th:include="${'dashboard/' + activeTab} :: body"></div>
 </div>
 </body>
 </html>
