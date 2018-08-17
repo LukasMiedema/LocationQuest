@@ -12,10 +12,10 @@ import java.util.*
  * @author Lukas Miedema
  */
 @Configuration
-open class I18nConfig {
+class I18nConfig {
 
 	@Bean
-	open fun localeResolver(): LocaleResolver {
+	fun localeResolver(): LocaleResolver {
 		val resolver = CookieLocaleResolver()
 		resolver.cookieName = "Locale"
 		resolver.setDefaultLocale(Locale("nl"))

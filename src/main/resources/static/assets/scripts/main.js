@@ -5,13 +5,12 @@
  */
 $(document).ready(function() {
 	$(".clickable").click(function(e) {
-		var href = e.currentTarget.getAttribute("data-href")
+		debugger;
+		var href = e.currentTarget.getAttribute("data-href");
 		if (href) {
-			var dest = document.createElement("a")
-			dest.href = href;
-			dest.click()
+			window.location.href = href;
 		} else {
 			console.log("No data-href attribute on " + e.target)
 		}
 	})
-})
+});

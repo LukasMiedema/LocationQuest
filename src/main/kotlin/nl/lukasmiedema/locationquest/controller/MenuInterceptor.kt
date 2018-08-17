@@ -23,17 +23,17 @@ import javax.servlet.http.HttpServletResponse
  */
 @ControllerAdvice
 @Transactional
-open class MenuInterceptor : HandlerInterceptorAdapter() {
+class MenuInterceptor : HandlerInterceptorAdapter() {
 
 	companion object {
-		private val DEFAULT_LAYOUT = "components/Page"
-		private val DEFAULT_VIEW_ATTRIBUTE_NAME = "view"
+		private const val DEFAULT_LAYOUT = "components/Page"
+		private const val DEFAULT_VIEW_ATTRIBUTE_NAME = "view"
 	}
 
 	@Autowired private lateinit var gamesDao: GamesDao
 
 	@ModelAttribute("page")
-	open fun getPage(@AuthenticationPrincipal player: Player?): PageDto {
+	fun getPage(@AuthenticationPrincipal player: Player?): PageDto {
 		if (player == null) {
 			return PageDto(false, null, null)
 		} else {
@@ -51,7 +51,7 @@ open class MenuInterceptor : HandlerInterceptorAdapter() {
 		if (modelAndView == null || !modelAndView.hasView())
 			return
 
-		val originalViewName = modelAndView.viewName
+		val originalViewName = modelAndView.viewName!!
 		if (originalViewName.startsWith("redirect:"))
 			return
 

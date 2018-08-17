@@ -7,7 +7,7 @@ import javax.validation.constraints.Size
 /**
  * @author Lukas Miedema
  */
-open class TeamCreationDto {
+class TeamCreationDto {
 
 	@NotNull(message = "{enroll.create.error.noColor}")
 	@Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "{enroll.create.error.invalidColor}")

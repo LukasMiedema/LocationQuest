@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("games")
-open class GamesController {
+class GamesController {
 
 	@Autowired private lateinit var gamesDao: GamesDao
 
 	@GetMapping
-	open fun getChooseGame(
+	fun getChooseGame(
 			model: Model,
 			@AuthenticationPrincipal player: Player): String {
 

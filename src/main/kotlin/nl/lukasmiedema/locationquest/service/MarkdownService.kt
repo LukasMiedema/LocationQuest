@@ -11,7 +11,7 @@ import com.vladsch.flexmark.util.options.MutableDataSet
  * @author Lukas Miedema
  */
 @Service
-open class MarkdownService {
+class MarkdownService {
 
 	private val parser: Parser
 	private val htmlRenderer: HtmlRenderer
@@ -29,7 +29,7 @@ open class MarkdownService {
 		this.htmlRenderer = htmlRendererBuilder.build()
 	}
 
-	open fun toHtml(markdown: String): String {
+	fun toHtml(markdown: String): String {
 		return this.htmlRenderer.render(this.parser.parse(markdown))
 	}
 }

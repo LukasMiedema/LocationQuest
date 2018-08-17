@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @Controller
 @RequestMapping("/")
-open class IndexController {
+class IndexController {
 
 	@RequestMapping
-	open fun handleIndex(@AuthenticationPrincipal player: Player?): String =
+	fun handleIndex(@AuthenticationPrincipal player: Player?): String =
 			if (player == null) "redirect:/profile" else "redirect:/games"
 }

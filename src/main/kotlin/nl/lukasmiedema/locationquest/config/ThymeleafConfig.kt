@@ -9,10 +9,10 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect
  * @author Lukas Miedema
  */
 @Configuration
-open class ThymeleafConfig {
+class ThymeleafConfig {
 
 	@Bean
-	open fun springSecurityDialect(): SpringSecurityDialect {
+	fun springSecurityDialect(): SpringSecurityDialect {
 		return SpringSecurityDialect()
 	}
 

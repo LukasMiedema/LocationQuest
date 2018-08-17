@@ -32,7 +32,7 @@ import javax.validation.Valid
  */
 @Controller
 @RequestMapping("login")
-open class LoginController {
+class LoginController {
 
 	@Autowired private lateinit var playerDao: PlayerDao
 	@Autowired private lateinit var authenticationService: AuthenticationService
@@ -40,12 +40,12 @@ open class LoginController {
 	@Autowired private lateinit var passwordEncoder: PasswordEncoder
 
 	@GetMapping
-	open fun getLogin(@ModelAttribute("form") form: LoginFormDto): String {
+	fun getLogin(@ModelAttribute("form") form: LoginFormDto): String {
 		return "Login"
 	}
 
 	@PostMapping
-	open fun postLogin(
+	fun postLogin(
 			servletRequest: HttpServletRequest,
 			servletResponse: HttpServletResponse,
 			@Valid @ModelAttribute("form") form: LoginFormDto,

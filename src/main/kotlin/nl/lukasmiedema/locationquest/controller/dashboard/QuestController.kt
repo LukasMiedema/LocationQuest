@@ -24,13 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam
  */
 @Controller
 @RequestMapping("games/{game}/dashboard")
-open class QuestController {
+class QuestController {
 
 	@Autowired private lateinit var i18n: I18nService
 	@Autowired private lateinit var questDao: QuestDao
 
 	@GetMapping
-	open fun getQuest(
+	fun getQuest(
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,

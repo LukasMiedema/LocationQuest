@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Transactional
 @Repository
-open class PlayerDao {
+class PlayerDao {
 
 	@Autowired private lateinit var sql: DSLContext
 
@@ -21,7 +21,7 @@ open class PlayerDao {
 	 * Insert a new player into the database with the provided name and return
 	 * the new player.
 	 */
-	open fun createNewPlayer(name: String): Player {
+	fun createNewPlayer(name: String): Player {
 		val p = Tables.PLAYER
 		return sql
 				.insertInto(p, p.NAME)
@@ -33,7 +33,7 @@ open class PlayerDao {
 	/**
 	 * Assign a new name to the player with the provided player id.
 	 */
-	open fun renamePlayer(playerId: Int, name: String) {
+	fun renamePlayer(playerId: Int, name: String) {
 		val p = Tables.PLAYER
 		sql
 				.update(p)
@@ -45,7 +45,7 @@ open class PlayerDao {
 	/**
 	 * Retrieves the player admin credentials from the database.
 	 */
-	open fun getCredentials(email: String) : PlayerCredentials? = sql
+	fun getCredentials(email: String) : PlayerCredentials? = sql
 			.selectFrom(Tables.PLAYER_CREDENTIALS)
 			.where(Tables.PLAYER_CREDENTIALS.EMAIL_ADDRESS.eq(email))
 			.fetchOneInto(PlayerCredentials::class.java)
@@ -53,7 +53,7 @@ open class PlayerDao {
 	/**
 	 * Retrieve the player by player id, or null if the player does not exist.
 	 */
-	open fun getPlayer(playerId: Int): Player? = sql
+	fun getPlayer(playerId: Int): Player? = sql
 			.selectFrom(Tables.PLAYER)
 			.where(Tables.PLAYER.PLAYER_ID.eq(playerId))
 			.fetchOneInto(Player::class.java)

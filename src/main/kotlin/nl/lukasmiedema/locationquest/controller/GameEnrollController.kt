@@ -26,22 +26,22 @@ import javax.validation.Valid
 @Controller
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("games")
-open class GameEnrollController {
+class GameEnrollController {
 
 	@Autowired private lateinit var gamesDao: GamesDao
 
 	@ModelAttribute
-	open fun teamSelectionDto() = TeamSelectionDto()
+	fun teamSelectionDto() = TeamSelectionDto()
 
 	@ModelAttribute
-	open fun teamCreationDto(): TeamCreationDto {
+	fun teamCreationDto(): TeamCreationDto {
 		val dto = TeamCreationDto()
 		dto.color = String.format("#%06X", 0xFFFFFF and Color.getHSBColor(Math.random().toFloat(), 1.0f, 1.0f).rgb)
 		return dto
 	}
 
 	@GetMapping("/{game}")
-	open fun getChooseGameTeam(
+	fun getChooseGameTeam(
 			model: Model,
 			@PathVariable("game") gameId: Int,
 			@AuthenticationPrincipal player: Player): String {
@@ -63,7 +63,7 @@ open class GameEnrollController {
 	}
 
 	@PostMapping("/{game}/enroll")
-	open fun postEnroll(
+	fun postEnroll(
 			model: Model,
 			@PathVariable("game") gameId: Int,
 			@AuthenticationPrincipal player: Player,
@@ -83,7 +83,7 @@ open class GameEnrollController {
 	}
 
 	@PostMapping("/{game}/create")
-	open fun postCreate(
+	fun postCreate(
 			model: Model,
 			@PathVariable("game") gameId: Int,
 			@AuthenticationPrincipal player: Player,

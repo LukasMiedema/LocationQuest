@@ -27,7 +27,7 @@ import java.util.*
  */
 @PreAuthorize("isAuthenticated()")
 @ControllerAdvice(basePackageClasses = arrayOf(DashboardAdvice::class))
-open class DashboardAdvice {
+class DashboardAdvice {
 
 	companion object {
 		private val TABS: Array<GameTabDto> = arrayOf(
@@ -42,18 +42,18 @@ open class DashboardAdvice {
 	@Autowired private lateinit var markdown: MarkdownService
 
 	@ModelAttribute("markdown")
-	open fun markdown() = markdown // make the markdown service available for all templates to use
+	fun markdown() = markdown // make the markdown service available for all templates to use
 
 	@ModelAttribute("tabs")
-	open fun tabs() = TABS
+	fun tabs() = TABS
 
 	@ModelAttribute("game")
-	open fun getGame(@PathVariable("game") gameId: Int): Game {
+	fun getGame(@PathVariable("game") gameId: Int): Game {
 		return gamesDao.getGame(gameId) ?: throw ResourceNotFoundException("No such game")
 	}
 
 	@ModelAttribute("team")
-	open fun getTeamInfo(
+	fun getTeamInfo(
 			@PathVariable("game") gameId: Int,
 			@AuthenticationPrincipal player: Player): TeamInfoDto {
 
@@ -61,16 +61,16 @@ open class DashboardAdvice {
 	}
 
 	@ModelAttribute("chapters")
-	open fun getChapters(
+	fun getChapters(
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto) = questDao.getQuestChapterByGameAndTeam(game.gameId, team.teamId!!)
 
 	@ModelAttribute("inventory")
-	open fun getInventory(@ModelAttribute("team") team: TeamInfoDto) = questDao.getInventory(team.teamId!!)
+	fun getInventory(@ModelAttribute("team") team: TeamInfoDto) = questDao.getInventory(team.teamId!!)
 
 	@ModelAttribute("messages")
-	open fun getMessages() = ArrayList<MessageDto>()
+	fun getMessages() = ArrayList<MessageDto>()
 
 	//@ModelAttribute("chapters")
-	//open fun getChapters(@ModelAttribute("game") game: Game) = questDao.getChaptersByGame(game.gameId)
+	//fun getChapters(@ModelAttribute("game") game: Game) = questDao.getChaptersByGame(game.gameId)
 }

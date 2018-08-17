@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @Controller
 @RequestMapping("games/{game}/dashboard/history")
-open class HistoryController {
+class HistoryController {
 
 	@Autowired private lateinit var questDao: QuestDao
 
 	@GetMapping
-	open fun getHistory(
+	fun getHistory(
 			@ModelAttribute("team") team: TeamInfoDto,
 			model: Model,
 			@AuthenticationPrincipal player: Player): String {
@@ -41,7 +41,7 @@ open class HistoryController {
 	}
 
 	@GetMapping("details/{questId}")
-	open fun getDetails(
+	fun getDetails(
 			@PathVariable("questId") questId: Int,
 			@ModelAttribute("team") team: TeamInfoDto,
 			model: Model): String {

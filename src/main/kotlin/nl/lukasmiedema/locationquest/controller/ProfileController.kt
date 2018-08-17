@@ -28,18 +28,18 @@ import javax.validation.Valid
  */
 @Controller
 @RequestMapping("profile")
-open class ProfileController {
+class ProfileController {
 
 	@Autowired private lateinit var playerDao: PlayerDao
 	@Autowired private lateinit var authenticationService: AuthenticationService
 
 	@GetMapping
-	open fun getChooseName(@ModelAttribute("form") form: ChooseNameFormDto): String {
+	fun getChooseName(@ModelAttribute("form") form: ChooseNameFormDto): String {
 		return "Profile"
 	}
 
 	@PostMapping
-	open fun postChooseName(
+	fun postChooseName(
 			servletRequest: HttpServletRequest,
 			servletResponse: HttpServletResponse,
 			@Valid @ModelAttribute("form") chooseNameFormDto: ChooseNameFormDto,

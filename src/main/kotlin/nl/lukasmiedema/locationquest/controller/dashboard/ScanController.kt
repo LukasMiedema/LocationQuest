@@ -21,36 +21,36 @@ import java.util.*
  */
 @Controller
 @RequestMapping("games/{game}/scan/{code}")
-open class ScanController {
+class ScanController {
 
 	@Autowired private lateinit var questDao: QuestDao
 	@Autowired private lateinit var i18n: I18nService
 
 	@ModelAttribute("quest")
-	open fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
+	fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
 			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
 
 	@ModelAttribute("items")
-	open fun getQuestItems(@ModelAttribute("quest") quest: Quest) =
+	fun getQuestItems(@ModelAttribute("quest") quest: Quest) =
 			questDao.getQuestItems(quest.questId)
 
 	@ModelAttribute("yieldsInventory")
-	open fun getYieldsInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.yieldsInventory
+	fun getYieldsInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.yieldsInventory
 
 	@ModelAttribute("requiresInventory")
-	open fun getRequiresInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.requiresInventory
+	fun getRequiresInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.requiresInventory
 
 	@ModelAttribute("passcode")
-	open fun getPasscode() = "" // default is empty. This can be overridden by the controller
+	fun getPasscode() = "" // default is empty. This can be overridden by the controller
 
 	@ModelAttribute("chapter")
-	open fun getChapter(@ModelAttribute("quest") quest: Quest) = questDao.getChapter(quest.chapterId)
+	fun getChapter(@ModelAttribute("quest") quest: Quest) = questDao.getChapter(quest.chapterId)
 
 	/**
 	 * Returns details about the posibility of a claim.
 	 */
 	@ModelAttribute("scanCode")
-	open fun getClaimDetails(
+	fun getClaimDetails(
 			@ModelAttribute("quest") quest: Quest,
 			@ModelAttribute("requiresInventory") requiresInventory: InventoryDto,
 			@ModelAttribute("game") game: Game,
@@ -78,7 +78,7 @@ open class ScanController {
 	}
 
 	@GetMapping
-	open fun scanQuest(
+	fun scanQuest(
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
 			@ModelAttribute("inventory") inventory: InventoryDto,
 			@ModelAttribute("scanCode") scanCode: ScanCode,
@@ -104,7 +104,7 @@ open class ScanController {
 	}
 
 	@PostMapping
-	open fun claimQuest(
+	fun claimQuest(
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			@ModelAttribute("quest") quest: Quest,

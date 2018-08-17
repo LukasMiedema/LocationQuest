@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service
  * @author Lukas Miedema
  */
 @Service
-open class I18nService {
+class I18nService {
 
 	@Autowired private lateinit var messageSource: MessageSource
 
 	/**
 	 * Returns the translated string associated with the code code.
 	 */
-	operator open fun get(code: String, vararg params: Any): String {
+	operator fun get(code: String, vararg params: Any): String {
 		return messageSource.getMessage(code, params, LocaleContextHolder.getLocale())
 	}
 }

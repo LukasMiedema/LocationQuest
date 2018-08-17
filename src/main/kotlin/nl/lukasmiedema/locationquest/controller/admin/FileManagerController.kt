@@ -19,13 +19,13 @@ import javax.validation.Valid
  */
 @Controller
 @RequestMapping("admin/files")
-open class FileManagerController {
+class FileManagerController {
 
 	@Autowired private lateinit var i18n: I18nService
 	@Autowired private lateinit var fileDao: FileDao
 
 	@GetMapping
-	open fun getList(
+	fun getList(
 			model: Model): String {
 
 		// Get all files in the system
@@ -36,7 +36,7 @@ open class FileManagerController {
 	}
 
 	@GetMapping("/new")
-	open fun getEditorNew(model: Model): String {
+	fun getEditorNew(model: Model): String {
 		val fileDto = FileEditDto()
 		fileDto.uuid = UUID.randomUUID()
 		model.addAttribute("file", fileDto)
@@ -45,7 +45,7 @@ open class FileManagerController {
 	}
 
 	@PostMapping("/new")
-	open fun postEditorNew(
+	fun postEditorNew(
 			@Valid @ModelAttribute("file") file: FileEditDto,
 			bindingResult: BindingResult,
 			model: Model): String {
@@ -70,7 +70,7 @@ open class FileManagerController {
 	}
 
 	@GetMapping("/{fileId}")
-	open fun getEditor(
+	fun getEditor(
 			@PathVariable("fileId") fileId: UUID,
 			model: Model): String {
 
@@ -88,7 +88,7 @@ open class FileManagerController {
 	}
 
 	@PostMapping("/{fileId}")
-	open fun postEditor(
+	fun postEditor(
 			@PathVariable("fileId") fileId: UUID,
 			@Valid @ModelAttribute("file") file: FileEditDto,
 			bindingResult: BindingResult,

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * @author Lukas Miedema
  */
 @Configuration
-open class WebMvcConfig : WebMvcConfigurer {
+class WebMvcConfig : WebMvcConfigurer {
 
 	@Autowired private lateinit var menuInterceptor: MenuInterceptor
 	@Autowired private lateinit var messageSource: MessageSource

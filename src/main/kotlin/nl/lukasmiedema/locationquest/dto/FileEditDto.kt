@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull
 /**
  * @author Lukas Miedema
  */
-open class FileEditDto {
+class FileEditDto {
 
 	@NotNull
 	var uuid: UUID? = null

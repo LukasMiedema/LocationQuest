@@ -18,7 +18,7 @@ import java.util.*
  */
 @Repository
 @Transactional
-open class QuestDao {
+class QuestDao {
 
 	@Autowired private lateinit var sql: DSLContext
 
@@ -27,7 +27,7 @@ open class QuestDao {
 	 * has completed all the questions or the team does not exist, null
 	 * is returned.
 	 */
-	open fun getNextQuest(gameId: Int, teamId: Int): Quest? {
+	fun getNextQuest(gameId: Int, teamId: Int): Quest? {
 
 		// Get the first unanswered question
 		// This is fetched by doing an anti join on the answered questions
@@ -53,7 +53,7 @@ open class QuestDao {
 	 * Gets the quest by QR code. Even though QR codes are (typically) globally unique, the game id is also provided to validate
 	 * if the quest is actually part of the current game. Null is returned if either do not match.
 	 */
-	open fun getQuestByQR(gameId: Int, code: UUID): Quest? = sql
+	fun getQuestByQR(gameId: Int, code: UUID): Quest? = sql
 			.select(*QUEST.fields())
 			.from(QUEST
 					.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
@@ -68,14 +68,14 @@ open class QuestDao {
 	 * This method will always perform an INSERT and as such it will throw an Exception if the
 	 * record already exists.
 	 */
-	open fun insertClaim(claim: ClaimedQuest): Unit {
+	fun insertClaim(claim: ClaimedQuest): Unit {
 		sql.newRecord(CLAIMED_QUEST, claim).store()
 	}
 
 	/**
 	 * Returns the items of a team.
 	 */
-	open fun getInventory(teamId: Int): InventoryDto {
+	fun getInventory(teamId: Int): InventoryDto {
 		val data : Array<out Record4<Int, String, UUID, Int>> = sql
 				.select(
 						COLLECTIBLE.COLLECTIBLE_ID,
@@ -98,7 +98,7 @@ open class QuestDao {
 	/**
 	 * Returns a pair of the yields inventory and requires inventory for the quest.
 	 */
-	open fun getQuestItems(questId: Int): QuestInventoryDto {
+	fun getQuestItems(questId: Int): QuestInventoryDto {
 		// Get all collectible data
 		val items = sql
 				.select(*COLLECTIBLE.fields(), *QUEST_COLLECTIBLE.fields())
@@ -125,7 +125,7 @@ open class QuestDao {
 	/**
 	 * Returns all claimed quests by the team, including the quest definitions.
 	 */
-	open fun getClaimedQuests(teamId: Int): List<ClaimedQuestInfoDto> = sql
+	fun getClaimedQuests(teamId: Int): List<ClaimedQuestInfoDto> = sql
 			.select(*CLAIMED_QUEST.fields(), *QUEST.fields(), *CHAPTER.fields())
 			.from(CLAIMED_QUEST
 					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
@@ -144,7 +144,7 @@ open class QuestDao {
 	 * Returns a single claimed quest for a given quest and team id. If the team has not yet claimed the quest,
 	 * null will be returned.
 	 */
-	open fun getClaimedQuest(questId: Int, teamId: Int) = sql
+	fun getClaimedQuest(questId: Int, teamId: Int) = sql
 			.select(*CLAIMED_QUEST.fields(), *QUEST.fields(), *CHAPTER.fields())
 			.from(CLAIMED_QUEST
 					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
@@ -161,7 +161,7 @@ open class QuestDao {
 	/**
 	 * Checks if a team has claimed the given quest.
 	 */
-	open fun isClaimed(questId: Int, teamId: Int): Boolean {
+	fun isClaimed(questId: Int, teamId: Int): Boolean {
 		val result: Int = sql
 				.selectCount()
 				.from(CLAIMED_QUEST)
@@ -174,7 +174,7 @@ open class QuestDao {
 	/**
 	 * Gets the chapter for a given chapterId.
 	 */
-	open fun getChapter(chapterId: Int): ChapterDto? = sql
+	fun getChapter(chapterId: Int): ChapterDto? = sql
 			.selectFrom(CHAPTER)
 			.where(CHAPTER.CHAPTER_ID.eq(chapterId))
 			.fetchOneInto(ChapterDto::class.java)
@@ -184,7 +184,7 @@ open class QuestDao {
 	 * This returns one entry for every quest in the system, with chapter info for the quest it belongs to and a
 	 * boolean indicating if the chapter has been claimed.
 	 */
-	open fun getQuestChapterByGameAndTeam(gameId: Int, teamId: Int): List<ChapterDto> {
+	fun getQuestChapterByGameAndTeam(gameId: Int, teamId: Int): List<ChapterDto> {
 		val record = sql
 				.select(
 						*CHAPTER.fields(),

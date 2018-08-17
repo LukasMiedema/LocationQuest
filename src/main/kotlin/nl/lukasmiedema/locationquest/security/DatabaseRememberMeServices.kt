@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-open class DatabaseRememberMeServices : RememberMeServices {
+class DatabaseRememberMeServices : RememberMeServices {
 
 	private lateinit @Autowired var sql: DSLContext
 

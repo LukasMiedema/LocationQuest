@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-open class WebSecurityConfig : WebSecurityConfigurerAdapter(false) {
+class WebSecurityConfig : WebSecurityConfigurerAdapter(false) {
 
 	private lateinit @Autowired var rememberMeServices : DatabaseRememberMeServices
 	private lateinit @Autowired var authenticationProvider : PlayerAuthenticationProvider
@@ -35,6 +35,6 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter(false) {
 	}
 
 	@Bean
-	open fun passwordEncoder() = BCryptPasswordEncoder()
+	fun passwordEncoder() = BCryptPasswordEncoder()
 
 }

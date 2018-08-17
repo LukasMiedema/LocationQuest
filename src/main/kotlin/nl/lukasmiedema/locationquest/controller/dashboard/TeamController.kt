@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @Controller
 @RequestMapping("games/{game}/dashboard/team")
-open class TeamController {
+class TeamController {
 
 	@Autowired private lateinit var gamesDao: GamesDao
 
 	@GetMapping
-	open fun getTeam(
+	fun getTeam(
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
 			model: Model,

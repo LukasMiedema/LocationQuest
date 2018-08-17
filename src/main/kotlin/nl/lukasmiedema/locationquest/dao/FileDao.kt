@@ -14,14 +14,14 @@ import java.util.*
  */
 @Repository
 @Transactional
-open class FileDao {
+class FileDao {
 
 	@Autowired private lateinit var sql: DSLContext
 
 	/**
 	 * Retrieve the file by the given file id. If the file does not exist null is returned.
 	 */
-	open fun getFile(fileId: UUID): File? = sql
+	fun getFile(fileId: UUID): File? = sql
 			.selectFrom(Tables.FILE)
 			.where(Tables.FILE.FILE_ID.eq(fileId))
 			.fetchOneInto(File::class.java)
@@ -29,7 +29,7 @@ open class FileDao {
 	/**
 	 * List all files in the system.
 	 */
-	open fun getFiles(): List<File> = sql
+	fun getFiles(): List<File> = sql
 			.selectFrom(Tables.FILE)
 			.fetchInto(File::class.java)
 
@@ -37,7 +37,7 @@ open class FileDao {
 	 * Update all attributes of a file. Will throw a constraint violation exception if the file was used anywhere
 	 * and the primary key changes.
 	 */
-	open fun updateFile(currentId: UUID, newId: UUID, mimeType: String, file: ByteArray) {
+	fun updateFile(currentId: UUID, newId: UUID, mimeType: String, file: ByteArray) {
 		sql
 				.update(Tables.FILE)
 				.set(Tables.FILE.FILE_ID, newId)
@@ -51,7 +51,7 @@ open class FileDao {
 	 * Update metadata attributes of a file. Will throw a constraint violation exception if the file was used anywhere
 	 * and the primary key changes.
 	 */
-	open fun updateFile(currentId: UUID, newId: UUID, mimeType: String) {
+	fun updateFile(currentId: UUID, newId: UUID, mimeType: String) {
 		sql
 				.update(Tables.FILE)
 				.set(Tables.FILE.FILE_ID, newId)
@@ -63,7 +63,7 @@ open class FileDao {
 	/**
 	 * Insert a new file into the database.
 	 */
-	open fun insertFile(uuid: UUID, mimeType: String, file: ByteArray) {
+	fun insertFile(uuid: UUID, mimeType: String, file: ByteArray) {
 		sql
 				.insertInto(Tables.FILE)
 				.set(Tables.FILE.FILE_ID, uuid)

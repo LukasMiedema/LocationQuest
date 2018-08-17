@@ -18,14 +18,14 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Transactional
 @Repository
-open class GamesDao {
+class GamesDao {
 
 	@Autowired private lateinit var sql: DSLContext
 
 	/**
 	 * Retrieve the game by the provided gameId. If the game does not exist, null is returned.
 	 */
-	open fun getGame(gameId: Int): Game? = sql
+	fun getGame(gameId: Int): Game? = sql
 			.selectFrom(Tables.GAME)
 			.where(Tables.GAME.GAME_ID.eq(gameId))
 			.fetchOneInto(Game::class.java)
@@ -34,7 +34,7 @@ open class GamesDao {
 	 * Retrieve detailed information about the teams for a given game.
 	 * If the game does not exist an empty list is returned.
 	 */
-	open fun getTeamsDetailed(gameId: Int): List<TeamInfoDto> {
+	fun getTeamsDetailed(gameId: Int): List<TeamInfoDto> {
 		val t = Tables.TEAM.`as`("t")
 		val tp = Tables.TEAM_PLAYER.`as`("tp")
 
@@ -56,7 +56,7 @@ open class GamesDao {
 	 * Get the team the given player is enrolled in + details. If the player is not enrolled, or either the player
 	 * or the game does not exist, null is returned.
 	 */
-	open fun getTeamDetailed(gameId: Int, playerId: Int): TeamInfoDto? {
+	fun getTeamDetailed(gameId: Int, playerId: Int): TeamInfoDto? {
 		val t = Tables.TEAM.`as`("t")
 		val tp = Tables.TEAM_PLAYER.`as`("tp")
 		return sql
@@ -78,7 +78,7 @@ open class GamesDao {
 	/**
 	 * Retrieve all games + info about the game in which the player is enrolled.
 	 */
-	open fun getEnrolledGamesDetailed(playerId: Int): List<GameInfoDto> {
+	fun getEnrolledGamesDetailed(playerId: Int): List<GameInfoDto> {
 		val g = Tables.GAME.`as`("g")
 		val t = Tables.TEAM.`as`("t")
 		val tp = Tables.TEAM_PLAYER.`as`("tp")
@@ -106,7 +106,7 @@ open class GamesDao {
 	/**
 	 * Retrieve all games the player is enrolled in without extra information.
 	 */
-	open fun getEnrolledGames(playerId: Int): List<Game> = sql
+	fun getEnrolledGames(playerId: Int): List<Game> = sql
 			.select(*Tables.GAME.fields())
 			.from(Tables.GAME
 					.join(Tables.TEAM).on(Tables.TEAM.GAME_ID.eq(Tables.GAME.GAME_ID))
@@ -116,10 +116,10 @@ open class GamesDao {
 			.fetchInto(Game::class.java)
 
 	/**
-	 * Returns all open games with information about the relation with the player to the game, like team name,
+	 * Returns all games with information about the relation with the player to the game, like team name,
 	 * enrollment status.
 	 */
-	open fun getOpenGamesDetailed(playerId: Int): List<GameInfoDto> {
+	fun getOpenGamesDetailed(playerId: Int): List<GameInfoDto> {
 		val g = Tables.GAME.`as`("g")
 		val t = Tables.TEAM.`as`("t")
 		val tp = Tables.TEAM_PLAYER.`as`("tp")
@@ -147,7 +147,7 @@ open class GamesDao {
 	 * Check if the player is already enrolled in the game. If either the game
 	 * or the player does not exist, false is returned.
 	 */
-	open fun isEnrolled(gameId: Int, playerId: Int): Boolean = sql.fetchExists(
+	fun isEnrolled(gameId: Int, playerId: Int): Boolean = sql.fetchExists(
 			DSL.selectFrom(
 					Tables.TEAM.join(Tables.TEAM_PLAYER)
 							.on(Tables.TEAM.TEAM_ID.eq(Tables.TEAM_PLAYER.TEAM_ID))
@@ -158,7 +158,7 @@ open class GamesDao {
 	 * Enroll the player into the provided team. If the player is already enrolled in the team,
 	 * an exception is thrown.
 	 */
-	open fun enroll(teamId: Int, playerId: Int) {
+	fun enroll(teamId: Int, playerId: Int) {
 		val tp = Tables.TEAM_PLAYER
 		sql.insertInto(tp, tp.PLAYER_ID, tp.TEAM_ID)
 				.values(playerId, teamId).execute()
@@ -167,7 +167,7 @@ open class GamesDao {
 	/**
 	 * Create a new team and return that team.
 	 */
-	open fun createTeam(gameId: Int, color: Int, name: String): Team = sql
+	fun createTeam(gameId: Int, color: Int, name: String): Team = sql
 			.insertInto(Tables.TEAM)
 			.set(Tables.TEAM.GAME_ID, gameId)
 			.set(Tables.TEAM.COLOR, color)
@@ -178,7 +178,7 @@ open class GamesDao {
 	/**
 	 * Returns a list of all players in the given team. If the team does not exist, an empty list is returned.
 	 */
-	open fun getTeamMembers(teamId: Int): List<Player> = sql
+	fun getTeamMembers(teamId: Int): List<Player> = sql
 			.select(*Tables.PLAYER.fields())
 			.from(
 					Tables.PLAYER.join(Tables.TEAM_PLAYER)
