@@ -1,6 +1,6 @@
-- [o] Fix missing Dutch translations for file manager
+- [x] Fix missing Dutch translations for file manager
 - [ ] Change locale system to be URL based
-- [ ] Create user account make system
+- [x] Create user account make system
 - [ ] Create interface for managing game states (closed, open, open-for-enrollment, done, hidden)
 - [ ] Create interface for listing users and making admins
 - [ ] Create interface for managing chapters within a game

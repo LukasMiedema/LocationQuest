@@ -23,4 +23,12 @@ class I18nConfig {
 		resolver.setDefaultLocale(Locale("nl"))
 		return resolver
 	}
+
+	@Bean
+	fun messageSource(): MessageSource {
+		val messageSource = ReloadableResourceBundleMessageSource()
+		messageSource.setBasename("classpath:messages")
+		messageSource.setFallbackToSystemLocale(false)
+		return messageSource
+	}
 }
