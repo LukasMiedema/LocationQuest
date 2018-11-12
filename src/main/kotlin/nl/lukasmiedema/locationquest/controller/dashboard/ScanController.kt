@@ -26,18 +26,18 @@ class ScanController {
 	@Autowired private lateinit var questDao: QuestDao
 	@Autowired private lateinit var i18n: I18nService
 
-	@ModelAttribute("quest")
+	@ModelAttribute("quest", binding = false)
 	fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
 			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
 
-	@ModelAttribute("items")
+	@ModelAttribute("items", binding = false)
 	fun getQuestItems(@ModelAttribute("quest") quest: Quest) =
 			questDao.getQuestItems(quest.questId)
 
-	@ModelAttribute("yieldsInventory")
+	@ModelAttribute("yieldsInventory", binding = false)
 	fun getYieldsInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.yieldsInventory
 
-	@ModelAttribute("requiresInventory")
+	@ModelAttribute("requiresInventory", binding = false)
 	fun getRequiresInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.requiresInventory
 
 	@ModelAttribute("passcode")
@@ -49,7 +49,7 @@ class ScanController {
 	/**
 	 * Returns details about the posibility of a claim.
 	 */
-	@ModelAttribute("scanCode")
+	@ModelAttribute("scanCode", binding = false)
 	fun getClaimDetails(
 			@ModelAttribute("quest") quest: Quest,
 			@ModelAttribute("requiresInventory") requiresInventory: InventoryDto,

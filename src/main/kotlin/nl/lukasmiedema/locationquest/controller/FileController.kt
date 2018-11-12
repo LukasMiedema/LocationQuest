@@ -1,15 +1,13 @@
 package nl.lukasmiedema.locationquest.controller
 
 import nl.lukasmiedema.locationquest.dao.FileDao
-import nl.lukasmiedema.locationquest.entity.Tables
-import nl.lukasmiedema.locationquest.entity.tables.pojos.File
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
-import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,6 +20,7 @@ import java.util.*
  * @author Lukas Miedema
  */
 @Controller
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("file/{fileId}")
 class FileController {
 

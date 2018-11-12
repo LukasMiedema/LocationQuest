@@ -1,6 +1,7 @@
 package nl.lukasmiedema.locationquest.controller
 
 import nl.lukasmiedema.locationquest.dao.GamesDao
+import nl.lukasmiedema.locationquest.dto.MessageDto
 import nl.lukasmiedema.locationquest.dto.PageDto
 import nl.lukasmiedema.locationquest.entity.Tables
 import nl.lukasmiedema.locationquest.entity.Tables.*
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
+import java.util.ArrayList
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -32,15 +34,18 @@ class MenuInterceptor : HandlerInterceptorAdapter() {
 
 	@Autowired private lateinit var gamesDao: GamesDao
 
-	@ModelAttribute("page")
+	@ModelAttribute("page", binding = false)
 	fun getPage(@AuthenticationPrincipal player: Player?): PageDto {
-		if (player == null) {
-			return PageDto(false, null, null)
+		return if (player == null) {
+			PageDto(false, null, null)
 		} else {
 			val games = gamesDao.getEnrolledGames(player.playerId)
-			return PageDto(true, player.name, games)
+			PageDto(true, player.name, games)
 		}
 	}
+
+	@ModelAttribute("messages", binding = false)
+	fun getMessages() = ArrayList<MessageDto>()
 
 	override fun postHandle(
 			request: HttpServletRequest,

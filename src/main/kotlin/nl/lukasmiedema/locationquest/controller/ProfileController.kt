@@ -7,6 +7,7 @@ import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.security.PlayerAuthentication
 import nl.lukasmiedema.locationquest.service.AuthenticationService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder

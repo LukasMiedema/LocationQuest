@@ -1,19 +1,12 @@
 package nl.lukasmiedema.locationquest.controller
 
 import nl.lukasmiedema.locationquest.dao.PlayerDao
-import nl.lukasmiedema.locationquest.dto.ChooseNameFormDto
 import nl.lukasmiedema.locationquest.dto.LoginFormDto
-import nl.lukasmiedema.locationquest.dto.PageDto
-import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.security.PlayerAuthentication
 import nl.lukasmiedema.locationquest.service.AuthenticationService
 import nl.lukasmiedema.locationquest.service.I18nService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.authentication.RememberMeServices
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
@@ -55,7 +48,7 @@ class LoginController {
 		if (!bindingResult.hasErrors()) {
 
 			// Retrieve credentials
-			val credentials = playerDao.getCredentials(form.email!!)
+			val credentials = playerDao.getCredentialsByEmail(form.email!!)
 			if (credentials != null && passwordEncoder.matches(form.password, credentials.passwordHash)) {
 
 				// Login

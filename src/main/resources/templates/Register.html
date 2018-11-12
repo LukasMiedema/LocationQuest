@@ -1,0 +1,40 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="#{register.title}"></title>
+</head>
+<body>
+	<div class="ui text container">
+
+		<!--/*@thymesVar id="form" type="nl.lukasmiedema.locationquest.dto.RegisterFormDto"*/-->
+		<div class="column" th:object="${form}">
+			<h2 th:text="#{register.title}"></h2>
+			<p>
+				<th:block th:text="#{register.description}"/>
+			</p>
+
+			<div th:if="${#fields.hasAnyErrors()}" class="ui error message transition">
+				<div class="header" th:text="#{register.validationError}"></div>
+				<ul class="list" th:each="error : ${#fields.detailedErrors()}">
+					<li th:text="${error.message}"></li>
+				</ul>
+			</div>
+
+			<form action="#" method="post" class="ui large form">
+				<div class="field" th:classappend="${#fields.hasErrors('email')} ? error">
+					<label th:text="#{register.email.label}"></label>
+					<input type="text" th:field="*{email}" />
+				</div>
+				<div class="field" th:classappend="${#fields.hasErrors('password')} ? error">
+					<label th:text="#{register.password.label}"></label>
+					<input type="password" th:field="*{password}" />
+				</div>
+				<div class="field" th:classappend="${#fields.hasErrors('password')} ? error">
+					<label th:text="#{register.password-repeat.label}"></label>
+					<input type="password" th:field="*{repeatPassword}" />
+				</div>
+				<input type="submit" class="ui primary button" th:value="#{register.submit}" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

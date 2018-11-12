@@ -1,8 +1,15 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
 <head>
 	<title th:text="#{games.title}">Games</title>
 </head>
 <body>
+	<!-- Notifications -->
+	<div th:each="code: ${messages}"
+		 th:classappend="${code.type.htmlClass}" class="ui message"
+		 th:text="${code.message}">
+		Notification!
+	</div>
 	<th:block>
 		<div class="ui text container" sec:authorize="hasRole('ADMIN')">
 			<h4 th:text="#{games.admin.header}" class="ui horizontal divider header"></h4>
