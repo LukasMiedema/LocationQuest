@@ -6,6 +6,7 @@ import nl.lukasmiedema.locationquest.dto.LoginFormDto
 import nl.lukasmiedema.locationquest.exception.ResourceNotFoundException
 import nl.lukasmiedema.locationquest.service.I18nService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -17,6 +18,7 @@ import javax.validation.Valid
 /**
  * @author Lukas Miedema
  */
+@PreAuthorize("hasRole('ADMIN')")
 @Controller
 @RequestMapping("admin/files")
 class FileManagerController {
@@ -32,7 +34,7 @@ class FileManagerController {
 		val files = fileDao.getFiles()
 		model.addAttribute("files", files)
 
-		return "FileManager"
+		return "admin/FileManager"
 	}
 
 	@GetMapping("/new")
@@ -41,7 +43,7 @@ class FileManagerController {
 		fileDto.uuid = UUID.randomUUID()
 		model.addAttribute("file", fileDto)
 
-		return "FileEditor"
+		return "admin/FileEditor"
 	}
 
 	@PostMapping("/new")
@@ -66,7 +68,7 @@ class FileManagerController {
 			}
 		}
 
-		return "FileEditor"
+		return "admin/FileEditor"
 	}
 
 	@GetMapping("/{fileId}")
@@ -84,7 +86,7 @@ class FileManagerController {
 
 		model.addAttribute("file", fileDto)
 		model.addAttribute("")
-		return "FileEditor"
+		return "admin/FileEditor"
 	}
 
 	@PostMapping("/{fileId}")
@@ -111,6 +113,6 @@ class FileManagerController {
 			}
 		}
 
-		return "FileEditor"
+		return "admin/FileEditor"
 	}
 }

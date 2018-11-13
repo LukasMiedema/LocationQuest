@@ -12,12 +12,9 @@
 	</div>
 	<th:block>
 		<div class="ui text container" sec:authorize="hasRole('ADMIN')">
-			<h4 th:text="#{games.admin.header}" class="ui horizontal divider header"></h4>
-			<div class="ui bulleted list">
-				<div class="item">
-					<a th:href="@{admin/files}" th:text="#{games.admin.manageFiles}"></a>
-				</div>
-			</div>
+			<h4 class="ui horizontal header">
+				<a th:href="@{/admin}" th:text="#{games.admin.header}"></a>
+			</h4>
 		</div>
 		<br/>
 		<br/>

@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
+<head>
+	<title th:text="#{admin.title}">Admin Tools</title>
+</head>
+<body>
+	<!-- Notifications -->
+	<div th:each="code: ${messages}"
+		 th:classappend="${code.type.htmlClass}" class="ui message"
+		 th:text="${code.message}">
+		Notification!
+	</div>
+
+	<div class="ui text container">
+		<h4 class="ui horizontal divider header" th:text="#{admin.general.header}">Admin tools</h4>
+		<div class="ui bulleted list">
+			<div class="item">
+				<a th:href="@{admin/files}" th:text="#{admin.manageFiles}"></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui text container">
+		<p>Hello</p>
+	</div>
+</body>
+</html>
