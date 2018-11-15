@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest" */-->
+<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.dto.QuestDto" */-->
 <!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
 <!--/*@thymesVar id="passcode" type="java.lang.String"*/-->
 <!--/*@thymesVar id="claimable" type="java.lang.Boolean"*/-->
@@ -45,6 +45,18 @@
 				<div class="inline field">
 					<label><i class="key icon"></i></label>
 					<input type="text" name="passcode" th:placeholder="#{dashboard.scan.code.placeholder}" th:value="${passcode}" />
+				</div>
+			</th:block>
+
+			<th:block th:if="${!quest.answers.isEmpty()}">
+				<input type="hidden" id="questAnswer" name="questAnswer" value="" />
+				<div class="ui list" id="questAnswers">
+					<div th:each="answer, iter : ${quest.answers}" class="item">
+						<div class="ui fluid labeled button answer-item" th:attr="data-index=${iter.index}">
+							<div class="ui button">[[${answer.label}]]</div>
+							<div class="ui fluid left pointing label">[[${answer.text}]]</div>
+						</div>
+					</div>
 				</div>
 			</th:block>
 

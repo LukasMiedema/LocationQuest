@@ -73,6 +73,14 @@ CREATE TABLE "LOCATION_QUEST"."QUEST" (
   "passcode_text" TEXT -- NULL means no passcode
 );
 
+CREATE TABLE "LOCATION_QUEST"."QUEST_ANSWER" (
+  "quest_id" INT NOT NULL REFERENCES "LOCATION_QUEST"."QUEST"("quest_id"),
+  "label" VARCHAR(255) NOT NULL,
+  "text" VARCHAR(255) NOT NULL,
+
+  PRIMARY KEY ("quest_id", "label")
+);
+
 -- Collectibles
 CREATE TABLE "LOCATION_QUEST"."COLLECTIBLE" (
   "collectible_id" SERIAL PRIMARY KEY,
@@ -94,6 +102,7 @@ CREATE TABLE "LOCATION_QUEST"."QUEST_COLLECTIBLE" (
 CREATE TABLE "LOCATION_QUEST"."CLAIMED_QUEST" (
   "quest_id" INT NOT NULL REFERENCES "LOCATION_QUEST"."QUEST"("quest_id"),
   "team_id" INT NOT NULL REFERENCES "LOCATION_QUEST"."TEAM"("team_id"),
+  "answer_label" VARCHAR(255) DEFAULT NULL,
   "claimed_at" TIMESTAMP NOT NULL DEFAULT now(),
 
   PRIMARY KEY ("quest_id", "team_id")

@@ -27,7 +27,7 @@ class ScanController {
 	@Autowired private lateinit var i18n: I18nService
 
 	@ModelAttribute("quest", binding = false)
-	fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID) =
+	fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID): QuestDto =
 			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
 
 	@ModelAttribute("items", binding = false)
@@ -107,8 +107,9 @@ class ScanController {
 	fun claimQuest(
 			@ModelAttribute("game") game: Game,
 			@ModelAttribute("team") team: TeamInfoDto,
-			@ModelAttribute("quest") quest: Quest,
+			@ModelAttribute("quest") quest: QuestDto,
 			@RequestParam("passcode", required = false) passcode: String?,
+			@RequestParam("questAnswer", required = false) questAnswer: Int?,
 
 			@ModelAttribute("messages") messages: MutableList<MessageDto>,
 			@ModelAttribute("inventory") inventory: InventoryDto,
@@ -118,19 +119,19 @@ class ScanController {
 		// Check if the quest is claimable
 		if (scanCode == ScanCode.CLAIMABLE) {
 
-			// Check if the passcode is correct, if there is one
 			if (quest.passcodeText != null && quest.passcodeText != passcode) {
-
 				// Wrong code
 				messages.add(MessageDto(MessageDto.MessageType.WARNING, i18n["dashboard.scan.wrongCode"]))
-
-				// Override the passcode model parameter
 				model.addAttribute("passcode", passcode)
 
+			} else if (quest.answers.isNotEmpty() && (questAnswer == null || questAnswer !in quest.answers.indices )) {
+				// Wrong answer or answer out of bounds
+				// This can only be caused by form hacking
+				messages.add(MessageDto(MessageDto.MessageType.WARNING, i18n["dashboard.scan.wrongCode"]))
 			} else {
-
 				// Store
-				val claim = ClaimedQuest(quest.questId, team.teamId!!, Timestamp(System.currentTimeMillis()))
+				val claim = ClaimedQuest(quest.questId, team.teamId, questAnswer?.let { quest.answers[it].label },
+						Timestamp(System.currentTimeMillis()))
 				questDao.insertClaim(claim)
 
 				// Redirect to the normal page

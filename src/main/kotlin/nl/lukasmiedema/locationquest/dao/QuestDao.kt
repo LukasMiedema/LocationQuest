@@ -23,6 +23,19 @@ class QuestDao {
 	@Autowired private lateinit var sql: DSLContext
 
 	/**
+	 * Gets all quests in a particular game.
+	 */
+	fun getQuestsByGame(gameId: Int): List<Quest> {
+		return sql
+				.select(*QUEST.fields())
+				.from(QUEST)
+				.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
+				.where(CHAPTER.GAME_ID.eq(gameId))
+				.orderBy(QUEST.QUEST_ID.asc())
+				.fetchInto(Quest::class.java)
+	}
+
+	/**
 	 * Gets the next required question not answered by this team. If the team
 	 * has completed all the questions or the team does not exist, null
 	 * is returned.
@@ -53,15 +66,19 @@ class QuestDao {
 	 * Gets the quest by QR code. Even though QR codes are (typically) globally unique, the game id is also provided to validate
 	 * if the quest is actually part of the current game. Null is returned if either do not match.
 	 */
-	fun getQuestByQR(gameId: Int, code: UUID): Quest? = sql
-			.select(*QUEST.fields())
-			.from(QUEST
-					.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
-					.join(GAME).on(GAME.GAME_ID.eq(CHAPTER.GAME_ID))
-			)
-			.where(QUEST.QR_CODE.eq(code))
-			.and(GAME.GAME_ID.eq(gameId))
-			.fetchOneInto(Quest::class.java)
+	fun getQuestByQR(gameId: Int, code: UUID): QuestDto? {
+		val questDto = sql
+				.select(*QUEST.fields())
+				.from(QUEST
+						.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
+						.join(GAME).on(GAME.GAME_ID.eq(CHAPTER.GAME_ID))
+				)
+				.where(QUEST.QR_CODE.eq(code))
+				.and(GAME.GAME_ID.eq(gameId))
+				.fetchOneInto(QuestDto::class.java)
+		questDto.answers = this.getQuestAnswers(questDto.questId)
+		return questDto
+	}
 
 	/**
 	 * Stores the claim into the database.
@@ -144,7 +161,7 @@ class QuestDao {
 	 * Returns a single claimed quest for a given quest and team id. If the team has not yet claimed the quest,
 	 * null will be returned.
 	 */
-	fun getClaimedQuest(questId: Int, teamId: Int) = sql
+	fun getClaimedQuest(questId: Int, teamId: Int): ClaimedQuestInfoDto? = sql
 			.select(*CLAIMED_QUEST.fields(), *QUEST.fields(), *CHAPTER.fields())
 			.from(CLAIMED_QUEST
 					.join(QUEST).on(CLAIMED_QUEST.QUEST_ID.eq(QUEST.QUEST_ID))
@@ -206,4 +223,12 @@ class QuestDao {
 
 		return record.map { it.into(ChapterDto::class.java) }
 	}
+
+	/**
+	 * Get all answers for a quest.
+	 */
+	fun getQuestAnswers(questId: Int): List<QuestAnswer> = sql
+			.selectFrom(QUEST_ANSWER)
+			.where(QUEST_ANSWER.QUEST_ID.eq(questId))
+			.fetchInto(QuestAnswer::class.java)
 }

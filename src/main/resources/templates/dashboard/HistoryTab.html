@@ -26,7 +26,12 @@
 				<td>
 					<a th:href="@{/games/{id}/dashboard/history/details(id=${game.gameId})} + '/' + ${item.quest.questId}" th:text="${item.quest.name}"></a>
 				</td>
-				<td th:text="${{item.claimedAt}}"></td>
+				<td>
+					[[${{item.claimedAt}}]]
+					<div class="ui circular label" th:if="${item.claimedQuest.answerLabel != null}">
+						[[${item.claimedQuest.answerLabel}]]
+					</div>
+				</td>
 			</tr>
 		</th:block>
 	</table>

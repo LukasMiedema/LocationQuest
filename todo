@@ -2,6 +2,8 @@
 - [ ] Change locale system to be URL based
 - [x] Create user account make system
 - [x] Create admin page and move admin tools there
+- [x] Create admin page for a game
+- [x] Support multiple choice questions in quests
 - [ ] Create interface for managing game states (closed, open, open-for-enrollment, done, hidden)
 - [ ] Create interface for listing users and making admins
 - [ ] Create interface for managing chapters within a game
@@ -11,6 +13,6 @@
  - [ ] Reorder question
  - [ ] Set item requirements for question claim
 - [ ] Create interface for managing items within a game
-- [ ] Create game progress view
+- [x] Create game progress view
  - [ ] Create admin tools for claiming questions for teams
  - [ ] Create admin tools for managing teams (kick people, rename team, delete team)

@@ -51,6 +51,12 @@ INSERT INTO "LOCATION_QUEST"."QUEST" (quest_id, chapter_id, qr_code, required, n
 (13, 3, '050d10ef-9940-48f2-9abc-bd0aff022a13', true,	'Q13', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
 (14, 3, '050d10ef-9940-48f2-9abc-bd0aff022a14', true,	'Q14', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null);
 
+INSERT INTO "LOCATION_QUEST"."QUEST_ANSWER" (quest_id, label, text) VALUES
+(7, 'A', 'Choose A'),
+(7, 'B', 'Choose B'),
+(7, 'C', 'No its not C'),
+(7, 'D', 'Or could it be a very long-winded answer thats really just D');
+
 INSERT INTO "LOCATION_QUEST"."QUEST_COLLECTIBLE" (collectible_id, quest_id, requires, yields) VALUES
 (0, 0, 0, 5),
 (0, 1, 10, 0),
@@ -70,3 +76,22 @@ INSERT INTO "LOCATION_QUEST"."TEAM_PLAYER" (player_id, team_id) VALUES
 (1, 0),
 (2, 0),
 (3, 0);
+
+-- Claims
+INSERT INTO "LOCATION_QUEST"."CLAIMED_QUEST" (quest_id, team_id, claimed_at) VALUES
+(0,0, '2020-10-4 20:10:10'),
+(2,0, '2020-10-4 20:12:10'),
+(1,0, '2020-10-4 20:14:10'),
+(3,0, '2020-10-4 20:22:10'),
+(4,0, '2020-10-4 21:04:10'),
+(5,0, '2020-10-4 21:18:10'),
+(6,0, '2020-10-4 21:37:10'),
+(0,1, '2020-10-4 20:08:10'),
+(2,1, '2020-10-4 20:13:10'),
+(1,1, '2020-10-4 20:15:10'),
+(3,1, '2020-10-4 20:21:10'),
+(4,1, '2020-10-4 20:35:10'),
+(5,1, '2020-10-4 21:03:10'),
+(6,1, '2020-10-4 21:14:10'),
+(7,1, '2020-10-4 21:24:10'),
+(8,1, '2020-10-4 21:42:10');

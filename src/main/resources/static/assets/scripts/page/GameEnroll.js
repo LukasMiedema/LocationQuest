@@ -11,19 +11,17 @@
 	$(document).ready(function () {
 		var items = $(ENROLL_ITEM);
 		var input = $(ENROLL_INPUT);
-		var currOption = $(ENROLL_ITEM + "." + SELECTED_CLASS)
+		var currOption = $(ENROLL_ITEM + "." + SELECTED_CLASS);
 
 		items.click(function(e) {
 			var $this = $(e.currentTarget);
-			var $btn = $this.find(ADD_CLASS_TO)
+			var $btn = $this.find(ADD_CLASS_TO);
 			var name = $this.attr(NAME_ATTRIBUTE);
 
-			// Update
 			currOption.removeClass(SELECTED_CLASS);
 			$btn.addClass(SELECTED_CLASS);
 			currOption = $btn;
 
-			// Set val
 			input.val(name)
 		});
 	});

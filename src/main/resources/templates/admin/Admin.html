@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
+<!--/*@thymesVar id="games" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.Game>"*/-->
 <head>
 	<title th:text="#{admin.title}">Admin Tools</title>
 </head>
@@ -18,10 +19,16 @@
 				<a th:href="@{admin/files}" th:text="#{admin.manageFiles}"></a>
 			</div>
 		</div>
+		<br/>
 	</div>
 
 	<div class="ui text container">
-		<p>Hello</p>
+		<h4 class="ui horizontal divider header" th:text="#{admin.games.header}">Games</h4>
+		<div class="ui bulleted list">
+			<div class="item" th:each="game: ${games}">
+				<a th:href="@{admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

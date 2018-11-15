@@ -22,6 +22,12 @@ class GamesDao {
 
 	@Autowired private lateinit var sql: DSLContext
 
+
+	/**
+	 * Retrieve all games
+	 */
+	fun getGames(): List<Game> = sql.selectFrom(Tables.GAME).fetchInto(Game::class.java)
+
 	/**
 	 * Retrieve the game by the provided gameId. If the game does not exist, null is returned.
 	 */
@@ -186,5 +192,4 @@ class GamesDao {
 							)
 			).where(Tables.TEAM_PLAYER.TEAM_ID.eq(teamId))
 			.fetchInto(Player::class.java)
-
 }
