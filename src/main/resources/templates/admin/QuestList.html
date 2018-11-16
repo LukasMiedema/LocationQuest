@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="quests" type="java.util.List<nl.lukasmiedema.locationquest.dto.QuestDto>"*/-->
+<head>
+	<title th:text="#{admin.quests.title(${game.name})}">Manage quests of ...</title>
+</head>
+<body>
+	<div class="ui text container">
+		<div class="ui breadcrumb">
+			<a class="section" th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
+			<div class="divider"> / </div>
+			<div class="active section">Quests</div>
+		</div>
+
+
+		<h2 class="ui header" th:text="#{admin.quests.title(${game.name})}">Quests for ...</h2>
+
+		<table class="ui celled compact table">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Chapter</th>
+				<th>Required</th>
+				<th>Passcode</th>
+				<th>Multiple choice</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="quest: ${quests}">
+				<td th:text="${quest.questId}"></td>
+				<td th:text="${quest.name}"></td>
+				<td th:text="${quest.chapterId}"></td>
+				<td>
+					<i th:if="${quest.required}" class="check icon"></i>
+				</td>
+				<td>
+					<i th:if="${quest.passcodeText != null}" class="check icon"></i>
+				</td>
+				<td>
+					<div th:each="answer: ${quest.answers}" class="ui tiny label">
+						[[${answer.label}]]
+					</div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+
+		<div class="ui bulleted list">
+			<div class="item"><a>Add quest (TODO)</a></div>
+		</div>
+		<br>
+	</div>
+</body>
+</html>

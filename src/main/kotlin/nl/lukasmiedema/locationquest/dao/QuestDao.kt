@@ -25,14 +25,16 @@ class QuestDao {
 	/**
 	 * Gets all quests in a particular game.
 	 */
-	fun getQuestsByGame(gameId: Int): List<Quest> {
-		return sql
+	fun getQuestsByGame(gameId: Int): List<QuestDto> {
+		val quests = sql
 				.select(*QUEST.fields())
 				.from(QUEST)
 				.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
 				.where(CHAPTER.GAME_ID.eq(gameId))
 				.orderBy(QUEST.QUEST_ID.asc())
-				.fetchInto(Quest::class.java)
+				.fetchInto(QuestDto::class.java)
+		quests.forEach { it.answers = this.getQuestAnswers(it.questId) }
+		return quests
 	}
 
 	/**

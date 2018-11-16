@@ -7,8 +7,8 @@
 - [ ] Create interface for managing game states (closed, open, open-for-enrollment, done, hidden)
 - [ ] Create interface for listing users and making admins
 - [ ] Create interface for managing chapters within a game
-- [ ] Create interface for managing questions within a game with
- - [ ] Create/update/delete question (set required, set chapter from dropdown)
+- [w] Create interface for managing questions within a game with
+ - [w] Create/update/delete question (set required, set chapter from dropdown)
  - [ ] Generate QR code for question
  - [ ] Reorder question
  - [ ] Set item requirements for question claim

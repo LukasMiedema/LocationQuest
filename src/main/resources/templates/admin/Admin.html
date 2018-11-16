@@ -16,7 +16,7 @@
 		<h4 class="ui horizontal divider header" th:text="#{admin.general.header}">Admin tools</h4>
 		<div class="ui bulleted list">
 			<div class="item">
-				<a th:href="@{admin/files}" th:text="#{admin.manageFiles}"></a>
+				<a th:href="@{/admin/files}" th:text="#{admin.manageFiles}"></a>
 			</div>
 		</div>
 		<br/>
@@ -26,7 +26,7 @@
 		<h4 class="ui horizontal divider header" th:text="#{admin.games.header}">Games</h4>
 		<div class="ui bulleted list">
 			<div class="item" th:each="game: ${games}">
-				<a th:href="@{admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
+				<a th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
 			</div>
 		</div>
 	</div>

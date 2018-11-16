@@ -1,5 +1,4 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="messages" type="java.util.List<nl.lukasmiedema.locationquest.dto.MessageDto>"*/-->
 <!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
 <!--/*@thymesVar id="teams" type="java.util.List<nl.lukasmiedema.locationquest.dto.TeamSelectionDto>"*/-->
 <!--/*@thymesVar id="quests" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.Quest>"*/-->
@@ -8,13 +7,6 @@
 	<title th:text="#{admin.game.title(${game.name})}">Admin for ...</title>
 </head>
 <body>
-	<!-- Notifications -->
-	<div th:each="code: ${messages}"
-		 th:classappend="${code.type.htmlClass}" class="ui message"
-		 th:text="${code.message}">
-		Notification!
-	</div>
-
 	<div class="ui text container">
 		<h2 class="ui header" th:text="#{admin.game.title(${game.name})}">Admin for ...</h2>
 
@@ -107,7 +99,7 @@
 
 		<h4 class="ui horizontal divider header" th:text="#{admin.game.options}">Options</h4>
 		<div class="ui bulleted list">
-			<div class="item"><a>Manage quests... (TODO)</a></div>
+			<div class="item"><a th:href="@{/admin/games/{gameId}/quests(gameId=${game.gameId})}">Manage quests... (TODO)</a></div>
 			<div class="item"><a>Manage items... (TODO)</a></div>
 		</div>
 		<br>
