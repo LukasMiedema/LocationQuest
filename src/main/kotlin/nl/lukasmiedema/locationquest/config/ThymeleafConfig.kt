@@ -2,7 +2,7 @@ package nl.lukasmiedema.locationquest.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect
 
 /**
  * Adds some dialect beans to Thymeleaf.
