@@ -3,9 +3,11 @@ package nl.lukasmiedema.locationquest.dao
 import nl.lukasmiedema.locationquest.dto.GameInfoDto
 import nl.lukasmiedema.locationquest.dto.TeamInfoDto
 import nl.lukasmiedema.locationquest.entity.Tables
+import nl.lukasmiedema.locationquest.entity.Tables.*
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Game
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Player
 import nl.lukasmiedema.locationquest.entity.tables.pojos.Team
+import nl.lukasmiedema.locationquest.entity.tables.records.GameRecord
 import nl.lukasmiedema.locationquest.exception.UnauthorizedException
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -26,15 +28,36 @@ class GamesDao {
 	/**
 	 * Retrieve all games
 	 */
-	fun getGames(): List<Game> = sql.selectFrom(Tables.GAME).fetchInto(Game::class.java)
+	fun getGames(): List<Game> = sql.selectFrom(GAME).fetchInto(Game::class.java)
 
 	/**
 	 * Retrieve the game by the provided gameId. If the game does not exist, null is returned.
 	 */
 	fun getGame(gameId: Int): Game? = sql
-			.selectFrom(Tables.GAME)
-			.where(Tables.GAME.GAME_ID.eq(gameId))
+			.selectFrom(GAME)
+			.where(GAME.GAME_ID.eq(gameId))
 			.fetchOneInto(Game::class.java)
+
+	/**
+	 * Update the game.
+	 */
+	fun updateGame(game: Game) {
+		sql
+				.update(GAME)
+				.set(GAME.NAME, game.name)
+				.set(GAME.ACTIVE, game.active)
+				.set(GAME.ALLOW_NEW_MEMBERS, game.allowNewMembers)
+				.where(GAME.GAME_ID.eq(game.gameId))
+				.execute()
+	}
+
+	fun insertGame(game: Game): Game = sql
+				.insertInto(GAME)
+				.set(GAME.NAME, game.name)
+				.set(GAME.ACTIVE, game.active)
+				.set(GAME.ALLOW_NEW_MEMBERS, game.allowNewMembers)
+				.returning(*GAME.fields())
+				.fetchOne().into(Game::class.java)
 
 	/**
 	 * Retrieve detailed information about the teams for a given game.
@@ -85,7 +108,7 @@ class GamesDao {
 	 * Retrieve all games + info about the game in which the player is enrolled.
 	 */
 	fun getEnrolledGamesDetailed(playerId: Int): List<GameInfoDto> {
-		val g = Tables.GAME.`as`("g")
+		val g = GAME.`as`("g")
 		val t = Tables.TEAM.`as`("t")
 		val tp = Tables.TEAM_PLAYER.`as`("tp")
 
@@ -113,9 +136,9 @@ class GamesDao {
 	 * Retrieve all games the player is enrolled in without extra information.
 	 */
 	fun getEnrolledGames(playerId: Int): List<Game> = sql
-			.select(*Tables.GAME.fields())
-			.from(Tables.GAME
-					.join(Tables.TEAM).on(Tables.TEAM.GAME_ID.eq(Tables.GAME.GAME_ID))
+			.select(*GAME.fields())
+			.from(GAME
+					.join(Tables.TEAM).on(Tables.TEAM.GAME_ID.eq(GAME.GAME_ID))
 					.join(Tables.TEAM_PLAYER).on(Tables.TEAM_PLAYER.TEAM_ID.eq(Tables.TEAM.TEAM_ID))
 			)
 			.where(Tables.TEAM_PLAYER.PLAYER_ID.eq(playerId))
@@ -126,9 +149,9 @@ class GamesDao {
 	 * enrollment status.
 	 */
 	fun getOpenGamesDetailed(playerId: Int): List<GameInfoDto> {
-		val g = Tables.GAME.`as`("g")
-		val t = Tables.TEAM.`as`("t")
-		val tp = Tables.TEAM_PLAYER.`as`("tp")
+		val g = GAME.`as`("g")
+		val t = TEAM.`as`("t")
+		val tp = TEAM_PLAYER.`as`("tp")
 
 		return sql
 				.select(
@@ -142,9 +165,12 @@ class GamesDao {
 				)
 				.from(
 						g.leftJoin(t.join(tp)
-								.on(tp.TEAM_ID.eq(t.TEAM_ID))
-								.and(tp.PLAYER_ID.eq(playerId)))
+								.on(tp.TEAM_ID.eq(t.TEAM_ID)))
 								.on(t.GAME_ID.eq(g.GAME_ID))
+								.and(tp.PLAYER_ID.eq(playerId))
+				)
+				.where(
+						tp.PLAYER_ID.isNotNull.or(g.ALLOW_NEW_MEMBERS)
 				)
 				.fetchInto(GameInfoDto::class.java)
 	}

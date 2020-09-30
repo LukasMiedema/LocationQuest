@@ -24,11 +24,40 @@
 
 	<div class="ui text container">
 		<h4 class="ui horizontal divider header" th:text="#{admin.games.header}">Games</h4>
-		<div class="ui bulleted list">
-			<div class="item" th:each="game: ${games}">
-				<a th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
-			</div>
-		</div>
+		<table class="ui celled compact table">
+			<thead>
+				<tr>
+					<th th:text="#{admin.game.info.gameId}">Id</th>
+					<th th:text="#{admin.game.info.name}">Name</th>
+					<th th:text="#{admin.game.info.createdOn}">Created</th>
+					<th th:text="#{admin.game.info.allowNewMembers}">Allow new members</th>
+					<th th:text="#{admin.game.info.active}">Active</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="game: ${games}">
+					<td><a th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.gameId}"/></td>
+					<td><a th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}"/></td>
+					<td th:text="${game.timestamp}"/>
+					<td>
+						<i th:if="${game.allowNewMembers}" class="check icon"></i>
+						<i th:if="${!game.allowNewMembers}" class="close icon"></i>
+					</td>
+					<td>
+						<i th:if="${game.active}" class="check icon"></i>
+						<i th:if="${!game.active}" class="close icon"></i>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<a th:href="@{/admin/games/new}">
+							<i class="plus icon"></i>
+							<th:block th:text="#{admin.game.createNew}" />
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 </html>

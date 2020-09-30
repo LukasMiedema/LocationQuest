@@ -1,107 +1,110 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="gameDto" type="nl.lukasmiedema.locationquest.dto.GameDto"*/-->
 <!--/*@thymesVar id="teams" type="java.util.List<nl.lukasmiedema.locationquest.dto.TeamSelectionDto>"*/-->
 <!--/*@thymesVar id="quests" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.Quest>"*/-->
 <!--/*@thymesVar id="claimedQuests" type="java.util.Map<java.lang.Integer, java.util.Map<java.lang.Integer, nl.lukasmiedema.locationquest.dto.ClaimedQuestInfoDto>>"*/-->
 <head>
-	<title th:text="#{admin.game.title(${game.name})}">Admin for ...</title>
+	<title th:text="#{admin.game.title(${game?.name} ?: '')}">Admin for ...</title>
 </head>
 <body>
 	<div class="ui text container">
-		<h2 class="ui header" th:text="#{admin.game.title(${game.name})}">Admin for ...</h2>
+		<h2 class="ui header" th:text="${game} ? #{admin.game.title(${game.name})} : #{admin.game.createNew}">Admin for ...</h2>
 
-		<h4 class="ui horizontal divider header" th:text="#{admin.game.info}">Game info</h4>
-		<table class="ui definition compact table">
-			<tbody>
-				<tr>
-					<td th:text="#{admin.game.info.name}">Name</td>
-					<td th:text="${game.name}">Blah</td>
-				</tr>
-				<tr>
-					<td th:text="#{admin.game.info.createdOn}"></td>
-					<td th:text="${game.timestamp}"></td>
-				</tr>
-				<tr>
-					<td th:text="#{admin.game.info.allowNewMembers}">Allow new members</td>
-					<td>
-						<i th:if="${game.allowNewMembers}" class="check icon"></i>
-						<i th:if="${!game.allowNewMembers}" class="close icon"></i>
-					</td>
-				</tr>
-				<tr>
-					<td th:text="#{admin.game.info.active}">Active</td>
-					<td>
-						<i th:if="${game.active}" class="check icon"></i>
-						<i th:if="${!game.active}" class="close icon"></i>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<h4 class="ui horizontal divider header" th:text="#{admin.game.info}">Game properties</h4>
+		<form th:action="@{/admin/games/{id}(id=(${game?.gameId} ?: 'new'))}" method="post" class="ui large form enroll"
+			  th:object="${gameDto}" th:classappend="${#fields.hasAnyErrors()} ? error">
 
+			<table class="ui definition compact table">
+				<tbody>
+					<tr>
+						<td th:text="#{admin.game.info.gameId}"/>
+						<td th:text="${game?.gameId} ?: '-'"/>
+					</tr>
+					<tr>
+						<td th:text="#{admin.game.info.name}">Name</td>
+						<td><input type="text" th:field="*{name}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{admin.game.info.createdOn}"></td>
+						<td th:text="${game?.timestamp} ?: '-'"></td>
+					</tr>
+					<tr>
+						<td th:text="#{admin.game.info.allowNewMembers}">Allow new members</td>
+						<td><input type="checkbox" th:field="*{allowNewMembers}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{admin.game.info.active}">Active</td>
+						<td><input type="checkbox" th:field="*{active}"/></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="submit" th:value="#{admin.game.info.save}" class="ui button right">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 
-		<h4 class="ui horizontal divider header" th:text="#{admin.game.teams}">Teams</h4>
-		<table class="ui celled compact table">
-			<thead>
-				<tr>
-					<th th:text="#{admin.game.teams.id}">Id</th>
-					<th th:text="#{admin.game.teams.name}">Name</th>
-					<th th:text="#{admin.game.teams.members}">Members</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="team: ${teams}">
-					<!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto"*/-->
-					<td th:text="${team.teamId}"></td>
-					<td>
-						<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
-						[[${team.name}]]
-					</td>
-					<td th:text="${team.memberCount}"></td>
-				</tr>
+		<th:block th:if="${game}">
+			<h4 class="ui horizontal divider header" th:text="#{admin.game.teams}">Teams</h4>
+			<table class="ui celled compact table">
+				<thead>
+					<tr>
+						<th th:text="#{admin.game.teams.id}">Id</th>
+						<th th:text="#{admin.game.teams.name}">Name</th>
+						<th th:text="#{admin.game.teams.members}">Members</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="team: ${teams}">
+						<!--/*@thymesVar id="team" type="nl.lukasmiedema.locationquest.dto.TeamInfoDto"*/-->
+						<td th:text="${team.teamId}"></td>
+						<td>
+							<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
+							[[${team.name}]]
+						</td>
+						<td th:text="${team.memberCount}"></td>
+					</tr>
 
-				<tr th:if="${teams.empty}">
-					<td colspan="3" th:text="#{admin.game.teams.empty}">No teams</td>
-				</tr>
-			</tbody>
-		</table>
+					<tr th:if="${teams.empty}">
+						<td colspan="3" th:text="#{admin.game.teams.empty}">No teams</td>
+					</tr>
+				</tbody>
+			</table>
 
-		<h4 class="ui horizontal divider header" th:text="#{admin.game.progress}">Progress</h4>
-		<table class="ui celled compact table">
-			<thead>
-				<tr>
-					<th></th>
-					<th nowrap th:each="team: ${teams}">
-						<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
-						[[${team.name}]]
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="quest: ${quests}">
-					<td th:text="${quest.name}">Quest name</td>
-					<td
-							th:each="team: ${teams}"
-							th:with="claim=${claimedQuests[team.teamId][quest.questId]}"
-							th:classappend="${claim != null ? 'positive' : 'disabled'}"
-							th:title="${claim == null ? 'Not claimed' : #dates.format(claim.claimedAt)}">
+			<h4 class="ui horizontal divider header" th:text="#{admin.game.progress}">Progress</h4>
+			<table class="ui celled compact table">
+				<thead>
+					<tr>
+						<th></th>
+						<th nowrap th:each="team: ${teams}">
+							<div class="ui empty circular label" th:style="|background-color: #${team.colorHex}|"></div>
+							[[${team.name}]]
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="quest: ${quests}">
+						<td th:text="${quest.name}">Quest name</td>
+						<td
+								th:each="team: ${teams}"
+								th:with="claim=${claimedQuests[team.teamId][quest.questId]}"
+								th:classappend="${claim != null ? 'positive' : 'disabled'}"
+								th:title="${claim == null ? 'Not claimed' : #dates.format(claim.claimedAt)}">
 
-						<th:block th:if="${claim != null}">
-							[[${#dates.format(claim.claimedAt, 'HH:mm')}]]
-							<div class="ui circular label" th:if="${claim.claimedQuest.answerLabel != null}">
-								[[${claim.claimedQuest.answerLabel}]]
-							</div>
-						</th:block>
-						<th:block th:if="${claim == null}">-</th:block>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<h4 class="ui horizontal divider header" th:text="#{admin.game.options}">Options</h4>
-		<div class="ui bulleted list">
-			<div class="item"><a th:href="@{/admin/games/{gameId}/quests(gameId=${game.gameId})}">Manage quests... (TODO)</a></div>
-			<div class="item"><a>Manage items... (TODO)</a></div>
-		</div>
+							<th:block th:if="${claim != null}">
+								[[${#dates.format(claim.claimedAt, 'HH:mm')}]]
+								<div class="ui circular label" th:if="${claim.claimedQuest.answerLabel != null}">
+									[[${claim.claimedQuest.answerLabel}]]
+								</div>
+							</th:block>
+							<th:block th:if="${claim == null}">-</th:block>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
 		<br>
 	</div>
 </body>
