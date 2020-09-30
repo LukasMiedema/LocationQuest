@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: 'jdbc:h2:mem:sketchlab;MODE=PostgreSQL;database_to_upper=false'
+    url: 'jdbc:h2:mem:locationquest;MODE=PostgreSQL;database_to_upper=false'
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
@@ -11,9 +11,9 @@ spring:
   flyway:
     schemas: 'LOCATION_QUEST'
 
-server:
-  session.cookie.name: 'LocationQuestSession'
-  session.persistent: false
+server.servlet.session:
+  cookie.name: 'LocationQuestSession'
+  persistent: false
 
 # Nerf the self-ad spam of jooq
 logging.level.org.jooq.Constants: WARN
