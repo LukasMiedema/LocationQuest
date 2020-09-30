@@ -7,12 +7,12 @@
 	<link rel="icon" type="image/png" th:href="|@{/assets/favicon.png}|" />
 
 	<!-- Styles -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css" />
+	<link rel="stylesheet" th:href="@{/assets/styles/semantic.min.css}" />
 	<link rel="stylesheet" th:href="@{/assets/styles/main.css}" />
 
 	<!-- Scripts -->
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
+	<script type="text/javascript" th:src="@{/assets/scripts/jquery-3.1.1.min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/scripts/semantic.min.js}"></script>
 	<script type="text/javascript" th:src="@{/assets/scripts/main.js}"></script>
 
 	<!-- Page styles and scripts -->
@@ -29,7 +29,8 @@
 
 			<th:block th:if="${page.loggedIn}">
 				<div class="ui simple dropdown item">
-					<th:block th:text="#{menubar.games}"></th:block> <i class="dropdown icon"></i>
+					<th:block th:text="#{menubar.games}"/>
+					<i class="dropdown icon"></i>
 					<div class="menu">
 						<a class="item" th:href="@{/games}" th:text="#{menubar.games.overview}"></a>
 						<div class="divider"></div>
