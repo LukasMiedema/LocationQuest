@@ -65,21 +65,59 @@ class QuestDao {
 	}
 
 	/**
-	 * Gets the quest by QR code. Even though QR codes are (typically) globally unique, the game id is also provided to validate
-	 * if the quest is actually part of the current game. Null is returned if either do not match.
+	 * Fetch one quest, or null.
 	 */
-	fun getQuestByQR(gameId: Int, code: UUID): QuestDto? {
-		val questDto = sql
-				.select(*QUEST.fields())
+	fun getQuest(questId: Int): Quest? = sql
+			.selectFrom(QUEST)
+			.where(QUEST.QUEST_ID.eq(questId))
+			.fetchOneInto(Quest::class.java)
+
+	/**
+	 * Update an existing quest.
+	 */
+	fun updateQuest(quest: Quest): Quest = sql
+			.update(QUEST)
+			.set(QUEST.CHAPTER_ID, quest.chapterId)
+			.set(QUEST.NAME, quest.name)
+			.set(QUEST.FETCH_TEXT, quest.fetchText)
+			.set(QUEST.SCAN_TEXT, quest.scanText)
+			.set(QUEST.REQUIRED, quest.required)
+			.set(QUEST.QR_CODE, quest.qrCode)
+			.set(QUEST.PASSCODE_TEXT, quest.passcodeText)
+			.where(QUEST.QUEST_ID.eq(quest.questId))
+			.returning(*QUEST.fields())
+			.fetchOne().into(Quest::class.java)
+
+	/**
+	 * Create a new quest.
+	 */
+	fun insertQuest(quest: Quest): Quest = sql
+			.insertInto(QUEST)
+			.set(QUEST.CHAPTER_ID, quest.chapterId)
+			.set(QUEST.NAME, quest.name)
+			.set(QUEST.FETCH_TEXT, quest.fetchText)
+			.set(QUEST.SCAN_TEXT, quest.scanText)
+			.set(QUEST.REQUIRED, quest.required)
+			.set(QUEST.QR_CODE, quest.qrCode)
+			.set(QUEST.PASSCODE_TEXT, quest.passcodeText)
+			.returning(*QUEST.fields())
+			.fetchOne().into(Quest::class.java)
+
+	/**
+	 * Gets the quest by QR code. Quests may have the same QR code in certain circumstances
+	 */
+	fun getQuestByQR(gameId: Int, code: String): List<QuestDto> {
+		return sql
+				.select(*QUEST.fields(), GAME.GAME_ID)
 				.from(QUEST
 						.join(CHAPTER).on(QUEST.CHAPTER_ID.eq(CHAPTER.CHAPTER_ID))
 						.join(GAME).on(GAME.GAME_ID.eq(CHAPTER.GAME_ID))
 				)
 				.where(QUEST.QR_CODE.eq(code))
 				.and(GAME.GAME_ID.eq(gameId))
-				.fetchOneInto(QuestDto::class.java)
-		questDto.answers = this.getQuestAnswers(questDto.questId)
-		return questDto
+				.orderBy(QUEST.QUEST_ID.asc())
+				.fetch { result -> result.into(QuestDto::class.java)
+						.also { it.answers = getQuestAnswers(it.questId) }}
 	}
 
 	/**
@@ -193,10 +231,42 @@ class QuestDao {
 	/**
 	 * Gets the chapter for a given chapterId.
 	 */
-	fun getChapter(chapterId: Int): ChapterDto? = sql
+	fun getChapter(chapterId: Int): Chapter? = sql
 			.selectFrom(CHAPTER)
 			.where(CHAPTER.CHAPTER_ID.eq(chapterId))
-			.fetchOneInto(ChapterDto::class.java)
+			.fetchOneInto(Chapter::class.java)
+
+	/**
+	 * Update the chapter
+	 */
+	fun updateChapter(chapter: Chapter) {
+		sql
+				.update(CHAPTER)
+				.set(CHAPTER.NAME, chapter.name)
+				.set(CHAPTER.COLOR, chapter.color)
+				.where(CHAPTER.CHAPTER_ID.eq(chapter.chapterId))
+				.execute()
+	}
+
+	/**
+	 * Create a new chapter.
+	 */
+	fun insertChapter(chapter: Chapter) {
+		sql
+				.insertInto(CHAPTER)
+				.set(CHAPTER.GAME_ID, chapter.gameId)
+				.set(CHAPTER.NAME, chapter.name)
+				.set(CHAPTER.COLOR, chapter.color)
+				.execute()
+	}
+
+	/**
+	 * Get all chapers for the given game.
+	 */
+	fun getChaptersByGame(gameId: Int): List<ChapterDto> = sql
+			.selectFrom(CHAPTER)
+			.where(CHAPTER.GAME_ID.eq(gameId))
+			.fetchInto(ChapterDto::class.java)
 
 	/**
 	 * Fetches all quests with chapter info for a given gameId, with info about if the team already has the chapter.

@@ -9,6 +9,12 @@
 </head>
 <body>
 	<div class="ui text container">
+		<div class="ui breadcrumb">
+			<a class="section" th:href="@{/admin}" th:text="#{admin}">Admin</a>
+			<div class="divider"> / </div>
+			<div class="active section" th:text="${game?.name} ?: #{breadcrumbs.new}">Game</div>
+		</div>
+
 		<h2 class="ui header" th:text="${game} ? #{admin.game.title(${game.name})} : #{admin.game.createNew}">Admin for ...</h2>
 
 		<h4 class="ui horizontal divider header" th:text="#{admin.game.info}">Game properties</h4>
@@ -45,6 +51,10 @@
 				</tbody>
 			</table>
 		</form>
+
+		<div th:if="${game}" class="ui bulleted list">
+			<div class="item"><a th:href="@{/admin/games/{id}/quests(id=${game.gameId})}">Manage quests</a></div>
+		</div>
 
 		<th:block th:if="${game}">
 			<h4 class="ui horizontal divider header" th:text="#{admin.game.teams}">Teams</h4>

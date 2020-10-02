@@ -4,5 +4,7 @@ spring:
     username: locationquest
     password: locationquest
     driver-class-name: org.postgresql.Driver
-  jooq.sql_dialect: POSTGRES_9_4
+  jooq.sql_dialect: POSTGRES
   h2.console.enabled: false
+locationquest:
+  domain: "https://autohike.eu"

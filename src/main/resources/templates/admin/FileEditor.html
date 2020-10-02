@@ -7,6 +7,14 @@
 <!--/*@thymesVar id="file" type="nl.lukasmiedema.locationquest.dto.FileEditDto"*/-->
 
 <div class="ui text container" th:object="${file}">
+	<div class="ui breadcrumb">
+		<a class="section" th:href="@{/admin}" th:text="#{admin}">Admin</a>
+		<div class="divider"> / </div>
+		<a class="section" th:href="@{/admin/files}" th:text="#{breadcrumbs.files}">Files</a>
+		<div class="divider"> / </div>
+		<div class="active section" th:text="${file.uuid}"></div>
+	</div>
+
 	<div class="ui tiny horizontal divider header" th:text="#{fileManager.editor.title}"></div>
 
 	<div th:if="${#fields.hasAnyErrors()}" class="ui error message transition">

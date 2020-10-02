@@ -53,7 +53,7 @@ class QuestController {
 			// Get next question
 			quest = questDao.getNextQuest(game.gameId!!, team.teamId!!)
 			questPhase = if (quest == null) QuestPhase.DONE else QuestPhase.RUNNING
-			chapter = if (quest == null) null else questDao.getChapter(quest.chapterId)
+			chapter = if (quest == null) null else questDao.getChapter(quest.chapterId)?.let(::ChapterDto)
 		}
 
 		// Add a message if this was a redirect

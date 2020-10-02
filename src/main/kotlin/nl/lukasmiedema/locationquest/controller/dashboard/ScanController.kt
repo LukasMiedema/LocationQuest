@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import java.lang.IllegalStateException
 import java.sql.Timestamp
 import java.util.*
 
@@ -26,9 +27,30 @@ class ScanController {
 	@Autowired private lateinit var questDao: QuestDao
 	@Autowired private lateinit var i18n: I18nService
 
+	/**
+	 * Gets the current quest. If the code is unique, this is rather trivial.
+	 * However, if the code is not unique, which can happen in a set of required quests to allow revisiting
+	 * old locations, find the quest in the set that matches the teams next quest.
+	 */
 	@ModelAttribute("quest", binding = false)
-	fun getQuest(@ModelAttribute game: Game, @PathVariable("code") code: UUID): QuestDto =
-			questDao.getQuestByQR(game.gameId, code) ?: throw ResourceNotFoundException("No such quest")
+	fun getQuest(@ModelAttribute("game") game: Game,
+				 @ModelAttribute("team") team: TeamInfoDto,
+				 @PathVariable("code") code: String): QuestDto {
+		var quests = questDao.getQuestByQR(game.gameId, code)
+
+		// all quests have this code, but the game state may narrow it to just one
+		if (quests.size > 1)
+			quests = quests.filter { it.required }
+		if (quests.isEmpty())
+			throw ResourceNotFoundException("No quest with code $code")
+		if (quests.size == 1)
+			return quests[0]
+		val nextQuest = questDao.getNextQuest(game.gameId, team.teamId!!)
+				?: throw ResourceNotFoundException("No quest with code $code")
+		return quests.firstOrNull { it.questId == nextQuest.questId }
+				?: throw ResourceNotFoundException("No quest with code $code")
+	}
+
 
 	@ModelAttribute("items", binding = false)
 	fun getQuestItems(@ModelAttribute("quest") quest: Quest) =
@@ -41,10 +63,10 @@ class ScanController {
 	fun getRequiresInventory(@ModelAttribute("items") items: QuestInventoryDto) = items.requiresInventory
 
 	@ModelAttribute("passcode")
-	fun getPasscode() = "" // default is empty. This can be overridden by the controller
+	fun getPasscode() = "" // default is empty
 
 	@ModelAttribute("chapter")
-	fun getChapter(@ModelAttribute("quest") quest: Quest) = questDao.getChapter(quest.chapterId)
+	fun getChapter(@ModelAttribute("quest") quest: Quest) = questDao.getChapter(quest.chapterId)?.let(::ChapterDto)
 
 	/**
 	 * Returns details about the posibility of a claim.

@@ -7,6 +7,12 @@
 <!--/*@thymesVar id="files" type="java.util.List<nl.lukasmiedema.locationquest.entity.tables.pojos.File>"*/-->
 
 <div class="ui text container">
+	<div class="ui breadcrumb">
+		<a class="section" th:href="@{/admin}" th:text="#{admin}">Admin</a>
+		<div class="divider"> / </div>
+		<div class="active section" th:text="#{breadcrumbs.files}">Files</div>
+	</div>
+
 	<div class="ui tiny horizontal divider header" th:text="#{fileManager.title}"></div>
 	<table class="ui table">
 		<thead>

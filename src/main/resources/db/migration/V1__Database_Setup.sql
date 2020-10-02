@@ -69,7 +69,7 @@ CREATE TABLE "LOCATION_QUEST"."QUEST" (
   "scan_text" TEXT NOT NULL,
   "required" BOOLEAN NOT NULL DEFAULT TRUE, -- required for the chapter to complete. When false, order is not checked
   CHECK (NOT "required" OR "fetch_text" IS NOT NULL), -- when required, there has to be a fetch text
-  "qr_code" UUID NOT NULL,
+  "qr_code" VARCHAR(128) NOT NULL,
   "passcode_text" TEXT -- NULL means no passcode
 );
 

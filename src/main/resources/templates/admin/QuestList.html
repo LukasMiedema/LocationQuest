@@ -1,20 +1,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
 <!--/*@thymesVar id="quests" type="java.util.List<nl.lukasmiedema.locationquest.dto.QuestDto>"*/-->
+<!--/*@thymesVar id="chapters" type="java.util.List<nl.lukasmiedema.locationquest.dto.ChapterDto>"*/-->
 <head>
 	<title th:text="#{admin.quests.title(${game.name})}">Manage quests of ...</title>
 </head>
 <body>
 	<div class="ui text container">
 		<div class="ui breadcrumb">
+			<a class="section" th:href="@{/admin}" th:text="#{admin}">Admin</a>
+			<div class="divider"> / </div>
 			<a class="section" th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
 			<div class="divider"> / </div>
-			<div class="active section">Quests</div>
+			<div class="active section" th:text="#{admin.quests}">Quests</div>
 		</div>
-
 
 		<h2 class="ui header" th:text="#{admin.quests.title(${game.name})}">Quests for ...</h2>
 
+		<h4 class="ui horizontal divider header" th:text="#{admin.chapters}">Chapters</h4>
+		<div class="ui segments">
+			<div th:each="chapter, i: ${chapters}" class="ui segment">
+				<form th:action="@{/admin/games/{gameId}/chapters/{chapterId}(gameId=${game.gameId},chapterId=${chapter.chapterId})}"
+					  method="post" class="ui form">
+					<table class="ui definition compact table">
+						<tbody>
+							<tr>
+								<td>Id</td>
+								<td th:text="${chapter.chapterId}"></td>
+							</tr>
+							<tr>
+								<td>Name</td>
+								<td><input name="name" th:value="${chapter.name}" type="text"></td>
+							</tr>
+							<tr>
+								<td>Color</td>
+								<td><input name="colorHex" th:value="${'#' + chapter.colorHex}" type="color"></td>
+							</tr>
+							<tr>
+								<td>Update chapter</td>
+								<td><input type="submit" value="Update"></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="ui segment">
+				<h4 class="ui horizontal divider header">Add chapter</h4>
+				<form th:action="@{/admin/games/{gameId}/chapters/new(gameId=${game.gameId})}"
+					  method="post" class="ui form">
+					<table class="ui definition compact table">
+						<tbody>
+						<tr>
+							<td>Name</td>
+							<td><input name="name" type="text" value="name"></td>
+						</tr>
+						<tr>
+							<td>Color</td>
+							<td><input name="colorHex" type="color" value="blue"></td>
+						</tr>
+						<tr>
+							<td>Add chapter</td>
+							<td><input type="submit" value="Add"></td>
+						</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+
+		<h4 class="ui horizontal divider header" th:text="#{admin.quests}">Quests</h4>
 		<table class="ui celled compact table">
 			<thead>
 			<tr>
@@ -24,11 +78,16 @@
 				<th>Required</th>
 				<th>Passcode</th>
 				<th>Multiple choice</th>
+				<th>QR code</th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr th:each="quest: ${quests}">
-				<td th:text="${quest.questId}"></td>
+				<td>
+					<a th:href="@{/admin/games/{gameId}/quests/{questId}(gameId=${game.gameId},questId=${quest.questId})}"
+					   th:text="${quest.questId}">
+					</a>
+				</td>
 				<td th:text="${quest.name}"></td>
 				<td th:text="${quest.chapterId}"></td>
 				<td>
@@ -42,14 +101,23 @@
 						[[${answer.label}]]
 					</div>
 				</td>
+				<td>
+					<a th:href="@{/file/qr/games/{gameId}/secret/{secret}(gameId=${game.gameId},secret=${quest.qrCode})}" th:text="${quest.qrCode}"/>
+					<div class="ui tiny image">
+						<img style="width: 2em; height: 2em;" th:src="@{/file/qr/games/{gameId}/secret/{secret}(gameId=${game.gameId},secret=${quest.qrCode})}"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td th:colspan="7">
+					<a th:href="@{/admin/games/{id}/quests/new(id=${game.gameId})}">
+						<i class="plus icon"></i>
+						<th:block th:text="#{admin.quest.createNew}" />
+					</a>
+				</td>
 			</tr>
 			</tbody>
 		</table>
-
-
-		<div class="ui bulleted list">
-			<div class="item"><a>Add quest (TODO)</a></div>
-		</div>
 		<br>
 	</div>
 </body>

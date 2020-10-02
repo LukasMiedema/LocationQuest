@@ -1,0 +1,85 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="claimUrl" type="java.lang.String"*/-->
+<!--/*@thymesVar id="game" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Game"*/-->
+<!--/*@thymesVar id="quest" type="nl.lukasmiedema.locationquest.entity.tables.pojos.Quest"*/-->
+<!--/*@thymesVar id="questDto" type="nl.lukasmiedema.locationquest.dto.QuestEditDto"*/-->
+<!--/*@thymesVar id="markdown" type="nl.lukasmiedema.locationquest.service.MarkdownService"*/-->
+<head>
+	<title th:text="${quest} ? #{admin.quest.title(${quest.name})} : #{admin.quest.createNew}">Admin for ...</title>
+</head>
+<body>
+<div class="ui text container">
+	<div class="ui breadcrumb">
+		<a class="section" th:href="@{/admin}" th:text="#{admin}">Admin</a>
+		<div class="divider"> / </div>
+		<a class="section" th:href="@{/admin/games/{gameId}(gameId=${game.gameId})}" th:text="${game.name}">Game</a>
+		<div class="divider"> / </div>
+		<a class="section" th:href="@{/admin/games/{gameId}/quests(gameId=${game.gameId})}" th:text="#{admin.quests}">Quests</a>
+		<div class="divider"> / </div>
+		<div class="active section" th:text="${quest?.name} ?: #{breadcrumbs.new}">This</div>
+	</div>
+
+	<h2 class="ui header" th:text="${quest} ? #{admin.quest.title(${quest.name})} : #{admin.quest.createNew}">Admin for ...</h2>
+	<form method="post" th:action="@{/admin/games/{gameId}/quests/{questId}(gameId=${game.gameId},questId=(${quest?.questId} ?: 'new'))}"
+		  class="ui large form"
+		  th:object="${questDto}"
+		  th:classappend="${#fields.hasAnyErrors()} ? error">
+		<th:block th:if="${quest}">
+			<h4 class="ui horizontal divider header" th:text="#{admin.quest.qr}">QR code</h4>
+			<div class="ui small image">
+				<img th:src="@{/file/qr/games/{gameId}/secret/{secret}(gameId=${game.gameId},secret=${quest.qrCode})}">
+			</div>
+			<p><a th:href="${claimUrl}" th:text="${claimUrl}"></a></p>
+		</th:block>
+		<h4 class="ui horizontal divider header" th:text="#{admin.quest.properties}">Quest properties</h4>
+		<table class="ui definition compact table">
+			<tbody>
+				<tr>
+					<td th:text="#{admin.quest.info.questId}"/>
+					<td th:text="${quest?.questId} ?: '-'"/>
+				</tr>
+				<tr>
+					<td th:text="#{admin.quest.info.chapter}">Chapter</td>
+					<td><input type="number" th:field="*{chapterId}"/></td>
+				</tr>
+				<tr>
+					<td th:text="#{admin.quest.info.name}">Name</td>
+					<td><input type="text" th:field="*{name}"/></td>
+				</tr>
+				<tr>
+					<td th:text="#{admin.quest.info.required}">Required</td>
+					<td><input type="checkbox" th:field="*{required}"/></td>
+				</tr>
+				<tr>
+					<td th:text="#{admin.quest.info.qrSecret}">QR Secret</td>
+					<td><input type="text" th:field="*{qrCode}"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<h4 th:text="#{admin.quest.info.fetchText}">Fetch text</h4>
+		<div class="ui segments">
+			<div class="ui segment">
+				<textarea th:field="*{fetchText}"></textarea>
+			</div>
+			<div class="ui segment">
+				<p class="ui top right attached label" th:text="#{markdown.render}">Markdown render</p>
+				<p th:utext="${markdown.toHtml(questDto.fetchText)}"></p>
+			</div>
+		</div>
+
+		<h4 th:text="#{admin.quest.info.scanText}">Scan text</h4>
+		<div class="ui segments">
+			<div class="ui segment">
+				<textarea th:field="*{scanText}"></textarea>
+			</div>
+			<div class="ui segment">
+				<p class="ui top right attached label" th:text="#{markdown.render}">Markdown render</p>
+				<p th:utext="${markdown.toHtml(questDto.scanText)}"></p>
+			</div>
+		</div>
+
+		<h4 class="ui horizontal divider header" th:text="#{admin.quest.answers}">Answers</h4>
+		<input type="submit" th:value="#{admin.quest.save}" class="ui button primary">
+	</form>
+</div>
+</body>

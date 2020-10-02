@@ -4,3 +4,5 @@
 
 spring.flyway.locations: classpath:db/migration, filesystem:dev-migration
 #logging.level.org.jooq.tools.LoggerListener: DEBUG
+locationquest:
+  domain: "http://localhost:8080"

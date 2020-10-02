@@ -35,21 +35,23 @@ INSERT INTO "LOCATION_QUEST"."COLLECTIBLE" (collectible_id, name, file_id) VALUE
 
 -- Locations for the game
 INSERT INTO "LOCATION_QUEST"."QUEST" (quest_id, chapter_id, qr_code, required, name, fetch_text, scan_text, passcode_text) VALUES
-(0, 0, '050d10ef-9940-48f2-9abc-bd0aff022a00', false, 'Top Secret Cookie Chest', null, 'Looks like its not so secret anymore', null),
-(1, 0, '050d10ef-9940-48f2-9abc-bd0aff022a01', true, 'This requires lots of cookies', '<script>alert("so yes");</script>', '#There you are.# About time', null),
-(2, 0, '050d10ef-9940-48f2-9abc-bd0aff022a02', false,	'Got some delicious cookies for ya', null, 'Fresh from grandmas oven', 'abcd'),
-(3, 0, '050d10ef-9940-48f2-9abc-bd0aff022a03', true,	'Q3', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(4, 0, '050d10ef-9940-48f2-9abc-bd0aff022a04', true,	'Q4', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(5, 1, '050d10ef-9940-48f2-9abc-bd0aff022a05', true,	'Q5', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(6, 1, '050d10ef-9940-48f2-9abc-bd0aff022a06', true,	'Q6', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(7, 1, '050d10ef-9940-48f2-9abc-bd0aff022a07', true,	'Q7', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(8, 1, '050d10ef-9940-48f2-9abc-bd0aff022a08', true,	'Q8', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(9, 2, '050d10ef-9940-48f2-9abc-bd0aff022a09', true,	'Q9', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(10, 2, '050d10ef-9940-48f2-9abc-bd0aff022a10', true,	'Q10', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(11, 2, '050d10ef-9940-48f2-9abc-bd0aff022a11', true,	'Q11', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(12, 3, '050d10ef-9940-48f2-9abc-bd0aff022a12', true,	'Q12', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(13, 3, '050d10ef-9940-48f2-9abc-bd0aff022a13', true,	'Q13', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
-(14, 3, '050d10ef-9940-48f2-9abc-bd0aff022a14', true,	'Q14', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null);
+(0, 0, 'bd0aff022a00', false, 'Top Secret Cookie Chest', null, 'Looks like its not so secret anymore', null),
+(1, 0, 'bd0aff022a01', true, 'This requires lots of cookies',
+    STRINGDECODE('<script>alert("so yes");</script>'),
+    STRINGDECODE('#There you are.\n# About time'), null),
+(2, 0, 'bd0aff022a02', false,	'Got some delicious cookies for ya', null, 'Fresh from grandmas oven', 'abcd'),
+(3, 0, 'bd0aff022a03', true,	'Q3', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(4, 0, 'bd0aff022a04', true,	'Q4', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(5, 1, 'bd0aff022a05', true,	'Q5', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(6, 1, 'bd0aff022a06', true,	'Q6', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(7, 1, 'bd0aff022a07', true,	'Q7', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(8, 1, 'bd0aff022a08', true,	'Q8', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(9, 2, 'bd0aff022a09', true,	'Q9', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(10, 2, 'bd0aff022a10', true,	'Q10', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(11, 2, 'bd0aff022a11', true,	'Q11', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(12, 3, 'bd0aff022a12', true,	'Q12', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(13, 3, 'bd0aff022a13', true,	'Q13', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null),
+(14, 3, 'bd0aff022a14', true,	'Q14', 'FETCH ME IF YOU CAN - TESTING', 'TESTING TESTING', null);
 
 INSERT INTO "LOCATION_QUEST"."QUEST_ANSWER" (quest_id, label, text) VALUES
 (7, 'A', 'Choose A'),
