@@ -34,7 +34,7 @@
 		<database.password/>
 		<database.groupId>com.h2database</database.groupId>
 		<database.artifactId>h2</database.artifactId>
-		<database.version>1.4.200</database.version>
+		<database.version>2.0.206</database.version>
 	</properties>
 
 	<dependencies>
